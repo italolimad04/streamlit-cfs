@@ -1,5 +1,6 @@
 pandas
+requests
 streamlit
-matplotlib
 plotly
-openpyxl
+matplotlib
+st-aggrid
