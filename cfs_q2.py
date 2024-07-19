@@ -432,6 +432,7 @@ def ajustar_layout(fig):
         legend_font=dict(size=16, family='Roboto'),
         margin=dict(l=40, r=40, t=60, b=40)
     )
+    fig.update_yaxes(range=[0, None])  # Ajustar o eixo y para iniciar em zero
     fig.update_traces(marker=dict(size=10), selector=dict(type='violin'))
 
 ajustar_layout(fig_relevante)
