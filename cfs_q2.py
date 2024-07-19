@@ -24,7 +24,7 @@ def calcular_semana_fiscal(data, start_date):
     return delta.days // 7 + 1
 
 # Converter a coluna 'Data' para datetime
-data['Data'] = pd.to_datetime(data['Data'], format='%Y-%m-%d')
+data['Data'] = pd.to_datetime(data['Data'], format='%Y-%m-%d', errors='coerce')
 
 # Definir a data de início do terceiro trimestre
 start_date_q3 = datetime.strptime('2024-07-05', '%Y-%m-%d')
