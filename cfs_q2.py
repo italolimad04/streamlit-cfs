@@ -52,9 +52,6 @@ agg_data['Data_Inicio_Semana'] = agg_data['Semana'].apply(lambda x: start_date_q
 # Verificar e converter 'Data_Inicio_Semana' para datetime
 agg_data['Data_Inicio_Semana'] = pd.to_datetime(agg_data['Data_Inicio_Semana'], errors='coerce')
 
-# Formatar a coluna 'Data_Inicio_Semana' de volta para o formato yyyy-mm-dd
-print(agg_data['Data_Inicio_Semana'])
-
 # Reorganizar as colunas
 agg_data = agg_data[['Data_Inicio_Semana', 'Semana', 'Novos CFs', 'Total CFs', 'Meta Q3', 'Total_Geral']]
 
