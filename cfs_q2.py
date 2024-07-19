@@ -51,10 +51,6 @@ agg_data['Data_Inicio_Semana'] = agg_data['Semana'].apply(lambda x: start_date_q
 # Verificar e converter 'Data_Inicio_Semana' para datetime
 agg_data['Data_Inicio_Semana'] = pd.to_datetime(agg_data['Data_Inicio_Semana'], errors='coerce')
 
-# Verificar se há valores NaT após a conversão
-if agg_data['Data_Inicio_Semana'].isna().any():
-    st.error("Há valores inválidos na coluna 'Data_Inicio_Semana' que não puderam ser convertidos para datetime.")
-
 # Formatar a coluna 'Data_Inicio_Semana' de volta para o formato yyyy-mm-dd
 agg_data['Data_Inicio_Semana'] = agg_data['Data_Inicio_Semana'].dt.strftime('%Y-%m-%d')
 
