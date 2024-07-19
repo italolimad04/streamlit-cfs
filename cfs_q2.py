@@ -26,6 +26,11 @@ def calcular_semana_fiscal(data, start_date):
 # Converter a coluna 'Data' para datetime
 data['Data'] = pd.to_datetime(data['Data'], format='%Y-%m-%d', errors='coerce')
 
+# Função para calcular a semana fiscal
+def calcular_semana_fiscal(data, start_date):
+    delta = data - start_date
+    return delta.days // 7 + 1
+
 # Definir a data de início do terceiro trimestre
 start_date_q3 = datetime.strptime('2024-07-05', '%Y-%m-%d')
 
@@ -40,8 +45,17 @@ agg_data['Total CFs'] = agg_data['Novos CFs'].cumsum()
 agg_data['Meta Q3'] = 400
 agg_data['Total_Geral'] = agg_data['Total CFs'] + 4178  # Ajuste conforme necessário
 
-# Formatar a coluna 'Semana' de volta para o formato yyyy-mm-dd
+# Adicionar coluna 'Data_Inicio_Semana'
 agg_data['Data_Inicio_Semana'] = agg_data['Semana'].apply(lambda x: start_date_q3 + timedelta(weeks=x-1))
+
+# Verificar e converter 'Data_Inicio_Semana' para datetime
+agg_data['Data_Inicio_Semana'] = pd.to_datetime(agg_data['Data_Inicio_Semana'], errors='coerce')
+
+# Verificar se há valores NaT após a conversão
+if agg_data['Data_Inicio_Semana'].isna().any():
+    st.error("Há valores inválidos na coluna 'Data_Inicio_Semana' que não puderam ser convertidos para datetime.")
+
+# Formatar a coluna 'Data_Inicio_Semana' de volta para o formato yyyy-mm-dd
 agg_data['Data_Inicio_Semana'] = agg_data['Data_Inicio_Semana'].dt.strftime('%Y-%m-%d')
 
 # Reorganizar as colunas
