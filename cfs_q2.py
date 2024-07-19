@@ -24,7 +24,8 @@ def calcular_semana_fiscal(data, start_date):
     return delta.days // 7 + 1
 
 # Converter a coluna 'Data' para datetime
-data['Data'] = pd.to_datetime(data['Data'], format='%Y-%m-%d', errors='coerce')
+
+data['Data'] = pd.to_datetime(data['Data'], errors='coerce', infer_datetime_format=True)
 
 # Função para calcular a semana fiscal
 def calcular_semana_fiscal(data, start_date):
@@ -52,7 +53,7 @@ agg_data['Data_Inicio_Semana'] = agg_data['Semana'].apply(lambda x: start_date_q
 agg_data['Data_Inicio_Semana'] = pd.to_datetime(agg_data['Data_Inicio_Semana'], errors='coerce')
 
 # Formatar a coluna 'Data_Inicio_Semana' de volta para o formato yyyy-mm-dd
-agg_data['Data_Inicio_Semana'] = agg_data['Data_Inicio_Semana'].dt.strftime('%Y-%m-%d')
+print(agg_data['Data_Inicio_Semana'])
 
 # Reorganizar as colunas
 agg_data = agg_data[['Data_Inicio_Semana', 'Semana', 'Novos CFs', 'Total CFs', 'Meta Q3', 'Total_Geral']]
