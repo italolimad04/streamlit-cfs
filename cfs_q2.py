@@ -429,8 +429,14 @@ def ajustar_layout(fig):
         legend_font=dict(size=16, family='Roboto'),
         margin=dict(l=40, r=40, t=60, b=40)
     )
-    fig.update_yaxes(range=[0, None])  # Ajustar o eixo y para iniciar em zero
+    fig.update_yaxes(rangemode="tozero")  # Ajustar o eixo y para iniciar em zero
     fig.update_traces(marker=dict(size=10), selector=dict(type='violin'))
+
+
+fig_relevante.update_yaxes(range=[0, data_relevante['Valor Economizado'].max() * 1.1])  # Ajustar o eixo y para iniciar em zero
+
+
+fig_muito_relevante.update_yaxes(range=[0, data_muito_relevante['Valor Economizado'].max() * 1.1])
 
 ajustar_layout(fig_relevante)
 ajustar_layout(fig_muito_relevante)
@@ -664,9 +670,9 @@ with tab6:
     st.subheader('Estatísticas - Relevante')
     st.write(f"Quantidade de respostas: {estatisticas_relevante['count']}")
     st.write(f"Valor Mínimo: R$ {estatisticas_relevante['min']:.2f}")
-    st.write(f"q2: R$ {estatisticas_relevante['25%']:.2f}")
+    st.write(f"Quartil 1: R$ {estatisticas_relevante['25%']:.2f}")
     st.write(f"Mediana: R$ {estatisticas_relevante['50%']:.2f}")
-    st.write(f"Q3: R$ {estatisticas_relevante['75%']:.2f}")
+    st.write(f"Quartil 3: R$ {estatisticas_relevante['75%']:.2f}")
     st.write(f"Valor Máximo: R$ {estatisticas_relevante['max']:.2f}")
     st.write(f"Média: R$ {estatisticas_relevante['mean']:.2f}")
    with col2:
@@ -674,9 +680,9 @@ with tab6:
     st.subheader('Estatísticas - Muito Relevante')
     st.write(f"Quantidade de respostas: {estatisticas_muito_relevante['count']}")
     st.write(f"Valor Mínimo: R$ {estatisticas_muito_relevante['min']:.2f}")
-    st.write(f"q2: R$ {estatisticas_muito_relevante['25%']:.2f}")
+    st.write(f"Quartil 1: R$ {estatisticas_muito_relevante['25%']:.2f}")
     st.write(f"Mediana: R$ {estatisticas_muito_relevante['50%']:.2f}")
-    st.write(f"Q3: R$ {estatisticas_muito_relevante['75%']:.2f}")
+    st.write(f"Quartil 3: R$ {estatisticas_muito_relevante['75%']:.2f}")
     st.write(f"Valor Máximo: R$ {estatisticas_muito_relevante['max']:.2f}")
     st.write(f"Média: R$ {estatisticas_muito_relevante['mean']:.2f}")    
    with col3:
