@@ -14,7 +14,7 @@ st.set_page_config(layout="wide")
 st.title("Painel de Clientes Fidelizados no Q3")
 
 data = pd.read_excel(
-    "Dados/[Urbis] - Resultados CFs Q3.xlsx",
+    "Dados/[Urbis]-Resultados_CFs_Q3.xlsx",
     dtype=str,
 )
 
