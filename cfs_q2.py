@@ -6,71 +6,104 @@ import matplotlib.pyplot as plt
 #import seaborn as sns
 import plotly.graph_objects as go
 from st_aggrid import AgGrid, GridOptionsBuilder, AgGridTheme, DataReturnMode, GridUpdateMode
-
+from datetime import datetime, timedelta
 
 # Opções
 st.set_page_config(layout="wide")
 
-st.title("Painel de Clientes Fidelizados no Q2")
+st.title("Painel de Clientes Fidelizados no Q3")
 
 data = pd.read_excel(
-    "Dados/Resultados CFs Q2.xlsx",
+    "Dados/[Urbis] - Resultados CFs Q3.xlsx",
     dtype=str,
 )
 
-print(data.head())
+# Função para calcular a semana fiscal
+def calcular_semana_fiscal(data, start_date):
+    delta = data - start_date
+    return delta.days // 7 + 1
 
-# Dados fornecidos
-data_per_week = {
-    'Semana': [
-        '26/04/2024', '03/05/2024', '10/05/2024', '17/05/2024', '24/05/2024',
-        '31/05/2024', '07/06/2024', '14/06/2024', '21/06/2024', '28/06/2024'
-    ],
-    'Novos CFs': [5, 172, 16, 6, 70, 122, 65, 64, 9, 4],
-    'Total CFs': [5, 177, 191, 197, 267, 389, 454, 518, 527, 531],
-    'Meta Q2': [900]*10,
-    'Total Geral': [3650, 3822, 3838, 3844, 3914, 4036, 4101, 4165, 4174, 4178]
-}
+# Converter a coluna 'Data' para datetime
+data['Data'] = pd.to_datetime(data['Data'], format='%Y-%m-%d')
 
-data_per_week_q1 = {
-    "Semana": [
-        "02/02/2024", "09/02/2024", "16/02/2024", "23/02/2024", "01/03/2024",
-        "08/03/2024", "15/03/2024", "22/03/2024", "28/03/2024", "02/04/2024",
-        "05/04/2024"
-    ],
-    "Novos CFs": [6, 3, 0, 125, 34, 96, 218, 110, 15, 6, 2],
-    "Total CFs": [149, 152, 152, 277, 311, 407, 625, 771, 786, 792, 794]
-}
+# Definir a data de início do terceiro trimestre
+start_date_q3 = datetime.strptime('2024-07-05', '%Y-%m-%d')
 
-# Criar DataFrame
-data_per_week = pd.DataFrame(data_per_week)
-# Converter a coluna 'Semana' para datetime
-data_per_week['Semana'] = pd.to_datetime(data_per_week['Semana'], format='%d/%m/%Y')
+# Calcular a semana fiscal para cada registro
+data['Semana'] = data['Data'].apply(lambda x: calcular_semana_fiscal(x, start_date_q3))
 
-# Criar dataframe do Q2
+# Agrupar os dados por semana
+agg_data = data.groupby('Semana').size().reset_index(name='Novos CFs')
 
-data_q1 = pd.DataFrame(data_per_week_q1)
-data_q1['Semana'] = pd.to_datetime(data_q1['Semana'], format='%d/%m/%Y')
-data_q1 = data_q1.sort_values(by='Semana').reset_index(drop=True)
-data_q1['Semana'] = data_q1.index + 1
+# Adicionar colunas adicionais
+agg_data['Total CFs'] = agg_data['Novos CFs'].cumsum()
+agg_data['Meta Q3'] = 400
+agg_data['Total_Geral'] = agg_data['Total CFs'] + 4178  # Ajuste conforme necessário
+
+# Formatar a coluna 'Semana' de volta para o formato yyyy-mm-dd
+agg_data['Data_Inicio_Semana'] = agg_data['Semana'].apply(lambda x: start_date_q3 + timedelta(weeks=x-1))
+agg_data['Data_Inicio_Semana'] = agg_data['Data_Inicio_Semana'].dt.strftime('%Y-%m-%d')
+
+# Reorganizar as colunas
+agg_data = agg_data[['Data_Inicio_Semana', 'Semana', 'Novos CFs', 'Total CFs', 'Meta Q3', 'Total_Geral']]
+
+# Identificar a semana atual e a semana anterior
+data_atual = datetime.today()
+semana_atual = calcular_semana_fiscal(data_atual, start_date_q3)
+semana_anterior = semana_atual - 1
+
+# Pegar os resultados para esta semana e a anterior
+resultados_semana_atual = agg_data[agg_data['Semana'] == semana_atual].shape[0]
+resultados_semana_anterior = agg_data[agg_data['Semana'] == semana_anterior].shape[0]
+
+# # Dados fornecidos
+# data_per_week = {
+#     'Semana': ['05/07/2024', '12/07/2024', '19/07/2024', '26/07/2024', '02/08/2024', '09/08/2024', '16/08/2024', '23/08/2024', '30/08/2024', '06/09/2024'],
+#     'Novos CFs': [5, 172, 16, 6, 70, 122, 65, 64, 9, 4],
+#     'Total CFs': [5, 177, 191, 197, 267, 389, 454, 518, 527, 531],
+#     'Meta Q3': [400]*10,
+#     'Total Geral': [3650, 3822, 3838, 3844, 3914, 4036, 4101, 4165, 4174, 4178]
+# }
+
+# data_per_week_Q3 = {
+#     'Semana': [
+#         '26/04/2024', '03/05/2024', '10/05/2024', '17/05/2024', '24/05/2024',
+#         '31/05/2024', '07/06/2024', '14/06/2024', '21/06/2024', '28/06/2024'
+#     ],
+#     "Novos CFs": [6, 3, 0, 125, 34, 96, 218, 110, 15, 6, 2],
+#     "Total CFs": [149, 152, 152, 277, 311, 407, 625, 771, 786, 792, 794]
+# }
+
+# # Criar DataFrame
+# data_per_week = pd.DataFrame(data_per_week)
+# # Converter a coluna 'Semana' para datetime
+# data_per_week['Semana'] = pd.to_datetime(data_per_week['Semana'], format='%d/%m/%Y')
+
+# # Criar dataframe do Q3
+
+# data_q2 = pd.DataFrame(data_per_week_Q3)
+# data_q2['Semana'] = pd.to_datetime(data_q2['Semana'], format='%d/%m/%Y')
+# data_q2 = data_q2.sort_values(by='Semana').reset_index(drop=True)
+# data_q2['Semana'] = data_q2.index + 1
 
 
-data_q2 = pd.DataFrame(data_per_week)
-data_q2['Semana'] = pd.to_datetime(data_q2['Semana'], format='%d/%m/%Y')
-data_q2 = data_q2.sort_values(by='Semana').reset_index(drop=True)
-data_q2['Semana'] = data_q2.index + 1
+# data_Q3 = pd.DataFrame(data_per_week)
+# data_Q3['Semana'] = pd.to_datetime(data_Q3['Semana'], format='%d/%m/%Y')
+# data_Q3 = data_Q3.sort_values(by='Semana').reset_index(drop=True)
+# data_Q3['Semana'] = data_Q3.index + 1
 
 
 ## Tratando dados
-data['Parceiro'].loc[data['Parceiro'] == 'Cantinho do Frango - Aldeota'] = 'Cantinho do Frango'
-data['Parceiro'].loc[data['Parceiro'] == 'PAGUE MENOS'] = 'Pague Menos'
-data['Parceiro'].loc[data['Parceiro'] == 'Farmácias'] = 'Pague Menos'
-data['Parceiro'].loc[data['Parceiro'] == 'CENTAURO'] = 'Centauro'
-data['Parceiro'].loc[data['Parceiro'] == 'CASAS BAHIA'] = 'Casas Bahia'
+# Corrigir os valores na coluna 'Parceiro' usando .loc para evitar warnings
+data.loc[data['Parceiro'] == 'Cantinho do Frango - Aldeota', 'Parceiro'] = 'Cantinho do Frango'
+data.loc[data['Parceiro'] == 'PAGUE MENOS', 'Parceiro'] = 'Pague Menos'
+data.loc[data['Parceiro'] == 'Farmácias', 'Parceiro'] = 'Pague Menos'
+data.loc[data['Parceiro'] == 'CENTAURO', 'Parceiro'] = 'Centauro'
+data.loc[data['Parceiro'] == 'CASAS BAHIA', 'Parceiro'] = 'Casas Bahia'
 
 # Calcular o número total de CFs
 total_cfs = data.shape[0]
-meta_cfs = 900
+meta_cfs = 400
 
 # Criar a visualização
 fig = go.Figure(data=[
@@ -125,7 +158,8 @@ fig2.update_layout(
     yaxis=dict(
         title='Clientes Fidelizados',
         titlefont=dict(size=20, color='black', family='Roboto'),
-        tickfont=dict(size=18, color='black', family='Roboto')
+        tickfont=dict(size=18, color='black', family='Roboto'),
+        dtick=1
     ),
     bargap=0.1,  # Diminuir o espaçamento entre as barras
     paper_bgcolor='white'
@@ -226,10 +260,10 @@ fig4.update_layout(
 # Criar a visualização
 fig5 = go.Figure()
 
-# Adicionar trace para Total Q2
+# Adicionar trace para Total Q3
 fig5.add_trace(go.Scatter(
-    x=data_per_week['Semana'], y=data_per_week['Total CFs'], mode='lines+markers+text',
-    name='Total Q2', text=data_per_week['Total CFs'], textposition='top center',
+    x=agg_data['Semana'], y=agg_data['Total CFs'], mode='lines+markers+text',
+    name='Total Q3', text=agg_data['Total CFs'], textposition='top center',
     line=dict(color='blue', width=2),
     marker=dict(size=10, symbol='diamond', color='blue'),
     offsetgroup=1
@@ -237,20 +271,20 @@ fig5.add_trace(go.Scatter(
 
 # Adicionar trace para Novos CFs
 fig5.add_trace(go.Bar(
-    x=data_per_week['Semana'], y=data_per_week['Novos CFs'], name='Novos CFs', text=data_per_week['Novos CFs'],
+    x=agg_data['Semana'], y=agg_data['Novos CFs'], name='Novos CFs', text=agg_data['Novos CFs'],
     textposition='outside', marker_color='orange',
     offsetgroup=2
 ))
 
-# Adicionar trace para Meta Q2
+# Adicionar trace para Meta Q3
 fig5.add_trace(go.Scatter(
-    x=data_per_week['Semana'], y=data_per_week['Meta Q2'], mode='lines',
-    name='Meta Q2', line=dict(color='red', dash='dash'), marker=dict(size=0)
+    x=agg_data['Semana'], y=agg_data['Meta Q3'], mode='lines',
+    name='Meta Q3', line=dict(color='red', dash='dash'), marker=dict(size=0)
 ))
 
 # Atualizar layout do gráfico
 fig5.update_layout(
-    title='Novos CFs e Total Q2',
+    title='Novos CFs e Total Q3',
     xaxis_title='Semana',
     yaxis_title='Número de CFs',
     barmode='group',
@@ -269,8 +303,8 @@ fig5.update_layout(
     xaxis=dict(
         tickangle=-45,
         tickmode='array',
-        tickvals=data_per_week['Semana'],
-        ticktext=[d.strftime('%d/%m/%Y') for d in data_per_week['Semana']]
+        tickvals=agg_data['Data_Inicio_Semana'],
+        ticktext=agg_data['Data_Inicio_Semana']
     )
 )
 
@@ -395,7 +429,7 @@ data['Valor Economizado'] = data['Valor Economizado'].replace('-', '0,00').str.r
 def criar_tabela_interativa(df):
     gb = GridOptionsBuilder.from_dataframe(df)
     gb.configure_default_column(filterable=True, sortable=True, editable=False, resizable=True)
-    gb.configure_pagination(paginationAutoPageSize=False, paginationPageSize=50)
+    gb.configure_pagination(paginationAutoPageSize=False, paginationPageSize=20)
     gb.configure_side_bar(filters_panel=True, columns_panel=True)
     gb.configure_selection('single', use_checkbox=True)
     
@@ -456,34 +490,34 @@ def criar_histograma(df):
     
     return fig
 
-# Função para criar o gráfico de comparação entre Q1 e Q2
-def criar_comparacao_q1_q2(df_q1, df_q2):
+#Função para criar o gráfico de comparação entre Q2 e Q3
+def criar_comparacao_q2_Q3(df_q2, df_Q3):
     fig = go.Figure()
-
-    fig.add_trace(go.Scatter(
-        x=df_q1['Semana'],
-        y=df_q1['Total CFs'],
-        mode='lines+markers+text',
-        name='CFs Q1',
-        line=dict(color='#19C78A'),
-        marker=dict(color='#19C78A'),
-        text=df_q1['Novos CFs'],
-        textposition='top center'
-    ))
 
     fig.add_trace(go.Scatter(
         x=df_q2['Semana'],
         y=df_q2['Total CFs'],
         mode='lines+markers+text',
-        name='  CFs Q2',
-        line=dict(color='red'),
-        marker=dict(color='red'),
+        name='CFs Q2',
+        line=dict(color='#19C78A'),
+        marker=dict(color='#19C78A'),
         text=df_q2['Novos CFs'],
         textposition='top center'
     ))
 
+    fig.add_trace(go.Scatter(
+        x=df_Q3['Semana'],
+        y=df_Q3['Total CFs'],
+        mode='lines+markers+text',
+        name='  CFs Q3',
+        line=dict(color='red'),
+        marker=dict(color='red'),
+        text=df_Q3['Novos CFs'],
+        textposition='top center'
+    ))
+
     fig.update_layout(
-        title='CFs Q1 X Q2 por Semana',
+        title='CFs q2 X Q3 por Semana',
         xaxis_title='Semana',
         yaxis_title='Número de CFs',
         height=600,
@@ -501,41 +535,125 @@ def criar_comparacao_q1_q2(df_q1, df_q2):
 
     return fig
 
+
+# Quantidade geral de clientes fidelizados
+total_fidelizados = 4178 + data.shape[0]
+meta_anual = 5000
+total_cfs_q3 = data.shape[0]
+total_cfs_2024 = total_fidelizados - 2851  # Total de clientes fidelizados em 2024
+
+# Calcular a diferença entre as semanas
+diferenca_semanal = resultados_semana_atual - resultados_semana_anterior
+
+# Calcular quantos faltam para a meta
+faltam_para_meta = meta_anual - total_fidelizados
+
+# Calcular porcentagens
+porcentagem_meta_anual = (total_fidelizados / meta_anual) * 100
+porcentagem_meta_q3 = (total_cfs_q3 / meta_anual) * 100
+porcentagem_meta_2024 = (total_cfs_2024 / meta_anual) * 100
+restante_meta_anual = 100 - porcentagem_meta_anual
+
+# Criar painel informativo
+fig_total = go.Figure()
+
+# Adicionar total fidelizados
+fig_total.add_trace(go.Indicator(
+    mode="number+delta",
+    value=total_fidelizados,
+    title={"text": f"<span style='color:#1B0A63;'>Clientes Fidelizados</span><br><span style='font-size:0.9em;color:#19C78A'>{porcentagem_meta_anual:.2f}% da meta anual</span>"},
+    domain={'row': 0, 'column': 0},
+    number={"font": {"size": 70, "color": "#1B0A63"}},
+    delta={'position': "bottom", 'increasing': {'color': 'green'}, 'decreasing': {'color': 'red'}}
+))
+
+# Adicionar faltam para meta
+fig_total.add_trace(go.Indicator(
+    mode="number+delta",
+    value=faltam_para_meta,
+    title={"text": f"<span style='color:#1B0A63;'>Faltam para a Meta Anual</span><br><span style='font-size:0.9em;color:#19C78A'>{restante_meta_anual:.2f}% da meta em aberto</span>"},
+    domain={'row': 0, 'column': 1},
+    number={"font": {"size": 70, "color": "#1B0A63"}},
+    delta={'position': "bottom", 'increasing': {'color': 'green'}, 'decreasing': {'color': 'red'}}
+))
+
+# Adicionar total CFs Q3
+fig_total.add_trace(go.Indicator(
+    mode="number+delta",
+    value=total_cfs_q3,
+    title={"text": f"<span style='color:#1B0A63;'>Total CFs no Q3</span><br><span style='font-size:0.9em;color:#19C78A'>{porcentagem_meta_q3:.2f}% da meta do trimestre</span>"},
+    domain={'row': 0, 'column': 2},
+    number={"font": {"size": 70, "color": "#1B0A63"}},
+    delta={'position': "bottom", 'increasing': {'color': 'green'}, 'decreasing': {'color': 'red'}}
+))
+
+# Adicionar total de clientes fidelizados em 2024
+fig_total.add_trace(go.Indicator(
+    mode="number+delta",
+    value=total_cfs_2024,
+    title={"text": f"<span style='color:#1B0A63;'>Total CFs em 2024</span><br>"},
+    domain={'row': 0, 'column': 3},
+    number={"font": {"size": 70, "color": "#1B0A63"}},
+    delta={'position': "bottom", 'increasing': {'color': 'green'}, 'decreasing': {'color': 'red'}}
+))
+
+# Adicionar total de clientes fidelizados na semana
+fig_total.add_trace(go.Indicator(
+    mode="number+delta",
+    value=resultados_semana_atual,
+    delta={'reference': resultados_semana_anterior, 'relative': True, 'valueformat': '.0%', 'position': "bottom", 'increasing': {'color': 'green'}, 'decreasing': {'color': 'red'}},
+    title={"text": f"<span style='color:#1B0A63;'>Novos CFs</span><br><span style='font-size:0.9em;color:#19C78A'>em relação à semana anterior</span>"},
+    domain={'row': 0, 'column': 4},
+    number={"font": {"size": 70, "color": "#1B0A63"}}
+))
+
+# Atualizar layout
+fig_total.update_layout(
+    margin=dict(t=0, b=0),
+    grid={'rows': 1, 'columns': 5, 'pattern': "independent"},
+    template={'data': {'indicator': [{
+        'title': {'text': "<b>Dias</b>"},
+        'mode': "number+delta+gauge"}]}}
+)
+
 # Tabs
 tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(
-    ["Sumarização Resultados", "CFs por Clube", "CFs por Parceiros", "CFs por Canal", "Valores Economizados", "Tabela Interativa", "Q1XQ2"]
+    ["Resumo", "Resultados Q3", "CFs por Clube", "CFs por Parceiros", "CFs por Canal", "Valores Economizados", "Tabela Interativa"]
 )
 
 with tab1:
+    st.plotly_chart(fig_total, use_container_width=True)
+
+with tab2:
     col1, col2 = st.columns(2)
     with col1:
         st.plotly_chart(fig, use_container_width=True)
     with col2:
         st.plotly_chart(fig5, use_container_width=True)
 
-with tab2:
+with tab3:
     col1, col2 = st.columns(2)
     with col1:
       st.plotly_chart(fig4, use_container_width=True)
 
-with tab3:
+with tab4:
     col1, col2 = st.columns(2)
     with col1:
       st.plotly_chart(fig2, use_container_width=True)
 
-with tab4:
+with tab5:
     col1, col2 = st.columns(2)
     with col1:
       st.plotly_chart(fig3, use_container_width=True)
 
-with tab5:
+with tab6:
    col1, col2, col3 = st.columns(3)
    with col1:
     st.plotly_chart(fig_relevante, use_container_width=True)
     st.subheader('Estatísticas - Relevante')
     st.write(f"Quantidade de respostas: {estatisticas_relevante['count']}")
     st.write(f"Valor Mínimo: R$ {estatisticas_relevante['min']:.2f}")
-    st.write(f"Q1: R$ {estatisticas_relevante['25%']:.2f}")
+    st.write(f"q2: R$ {estatisticas_relevante['25%']:.2f}")
     st.write(f"Mediana: R$ {estatisticas_relevante['50%']:.2f}")
     st.write(f"Q3: R$ {estatisticas_relevante['75%']:.2f}")
     st.write(f"Valor Máximo: R$ {estatisticas_relevante['max']:.2f}")
@@ -545,7 +663,7 @@ with tab5:
     st.subheader('Estatísticas - Muito Relevante')
     st.write(f"Quantidade de respostas: {estatisticas_muito_relevante['count']}")
     st.write(f"Valor Mínimo: R$ {estatisticas_muito_relevante['min']:.2f}")
-    st.write(f"Q1: R$ {estatisticas_muito_relevante['25%']:.2f}")
+    st.write(f"q2: R$ {estatisticas_muito_relevante['25%']:.2f}")
     st.write(f"Mediana: R$ {estatisticas_muito_relevante['50%']:.2f}")
     st.write(f"Q3: R$ {estatisticas_muito_relevante['75%']:.2f}")
     st.write(f"Valor Máximo: R$ {estatisticas_muito_relevante['max']:.2f}")
@@ -553,11 +671,10 @@ with tab5:
    with col3:
     st.plotly_chart(criar_histograma(data), use_container_width=True) 
 
-with tab6:
+with tab7:
     criar_tabela_interativa(data)
 
-with tab7:
-    st.header("Comparação de CFs entre Q1 e Q2")
-    comparacao_fig = criar_comparacao_q1_q2(data_q1, data_q2)
-    st.plotly_chart(comparacao_fig, use_container_width=True)
-    
+
+#     st.header("Comparação de CFs entre Q2 e Q3")
+#     comparacao_fig = criar_comparacao_q2_Q3(data_q2, data_Q3)
+#     st.plotly_chart(comparacao_fig, use_container_width=True)
