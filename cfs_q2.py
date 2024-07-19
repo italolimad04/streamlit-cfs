@@ -25,7 +25,7 @@ def calcular_semana_fiscal(data, start_date):
 
 # Converter a coluna 'Data' para datetime
 
-data['Data'] = pd.to_datetime(data['Data'], errors='coerce', infer_datetime_format=True)
+data['Data'] = pd.to_datetime(data['Data'], errors='coerce')
 
 # Função para calcular a semana fiscal
 def calcular_semana_fiscal(data, start_date):
@@ -111,6 +111,8 @@ data.loc[data['Parceiro'] == 'PAGUE MENOS', 'Parceiro'] = 'Pague Menos'
 data.loc[data['Parceiro'] == 'Farmácias', 'Parceiro'] = 'Pague Menos'
 data.loc[data['Parceiro'] == 'CENTAURO', 'Parceiro'] = 'Centauro'
 data.loc[data['Parceiro'] == 'CASAS BAHIA', 'Parceiro'] = 'Casas Bahia'
+
+data['Parceiro'] = data['Parceiro'].str.strip().str.title()
 
 # Calcular o número total de CFs
 total_cfs = data.shape[0]
