@@ -359,11 +359,11 @@ data_aux = pd.DataFrame()
 data_aux['Valor Economizado'] = data['Valor Economizado'].str.replace('.', '', regex=True)
 data_aux['Valor Economizado'] = data['Valor Economizado'].str.replace(',', '.', regex=True)
 data_aux['Valor Economizado'] = data['Valor Economizado'].fillna(0.00)
-data_aux = data[(pd.notna(data['Valor Economizado'])) & (data['Valor Economizado'] != 0.00)]
+data_aux = data[(pd.notna(data['Valor Economizado'])) & (data['Valor Economizado'] != '0,00')]
 
 print(data_aux['Valor Economizado'])
 
-data_aux['Valor Economizado'].astype(float, inplace=True)
+data_aux['Valor Economizado'] = data_aux['Valor Economizado'].astype(float, )
 
 
 #data_aux.replace(0, np.nan, inplace = True)
