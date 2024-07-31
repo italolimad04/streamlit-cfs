@@ -358,7 +358,7 @@ data_aux = data.copy()
 
 data_aux['Valor Economizado'] = data_aux['Valor Economizado'].str.replace('.', '', regex=True)
 data_aux['Valor Economizado'] = data_aux['Valor Economizado'].str.replace(',', '.', regex=True)
-data_aux['Valor Economizado'] = data_aux['Valor Economizado'].astype(float)
+data_aux['Valor Economizado'] = data_aux['Valor Economizado'].astype(float, errors='ignore')
 data_aux.replace(0, np.nan, inplace = True)
 data_aux.dropna(subset=['Valor Economizado'], inplace=True)
 
