@@ -21,10 +21,12 @@ st.title("Painel de Clientes Fidelizados no Q3")
 
 load_dotenv()
 #Configuração do Google Cloud - Sheets API
+
 def carregar_dados_do_google_sheets():
     key_sheet = os.getenv('SHEET_KEY')
     scopes = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
     creds_json = os.getenv('GOOGLE_SHEETS_CREDENTIALS')
+    print(creds_json)
     creds_dict = json.loads(creds_json)
     credentials = Credentials.from_service_account_info(creds_dict, scopes=scopes)
     client = gs.authorize(credentials)
