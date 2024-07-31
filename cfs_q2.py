@@ -358,8 +358,8 @@ data_aux = data.copy()
 data_aux['Valor Economizado'] = data_aux['Valor Economizado'].str.replace('.', '', regex=True)
 data_aux['Valor Economizado'] = data_aux['Valor Economizado'].str.replace(',', '.', regex=True)
 data_aux['Valor Economizado'] = data_aux['Valor Economizado'].fillna(0.00)
-data_aux['Valor Economizado'] = data_aux['Valor Economizado'].astype(float)
 data_aux = data_aux[(pd.notna(data_aux['Valor Economizado'])) & (data_aux['Valor Economizado'] != 0.00)]
+data_aux['Valor Economizado'] = data_aux['Valor Economizado'].astype(float)
 
 print(data_aux['Valor Economizado'].head())
 
