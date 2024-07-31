@@ -23,15 +23,17 @@ load_dotenv()
 #Configuração do Google Cloud - Sheets API
 
 def carregar_dados_do_google_sheets():
-    key_sheet = os.getenv('SHEET_KEY')
+    #key_sheet = os.getenv('SHEET_KEY')
+    print(st.secrets["SHEET_KEY"])
+    print(st.secrets["general"]["GOOGLE_SHEETS_CREDENTIALS"])
     scopes = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-    creds_json = os.getenv('GOOGLE_SHEETS_CREDENTIALS')
+    creds_json = st.secrets["general"]["GOOGLE_SHEETS_CREDENTIALS"]
     print(creds_json)
     creds_dict = json.loads(creds_json)
     credentials = Credentials.from_service_account_info(creds_dict, scopes=scopes)
     client = gs.authorize(credentials)
     #spreadsheet_name = '[Urbis] - Resultados CFs Q3'
-    sheet = client.open_by_key(key_sheet).sheet1
+    sheet = client.open_by_key(st.secrets["SHEET_KEY"]).sheet1
     data = sheet.get_all_values()  # Tenta obter todos os valores como strings
     headers = data.pop(0)  # Remove o cabeçalho da lista de dados
     return pd.DataFrame(data, columns=headers, dtype=str)
