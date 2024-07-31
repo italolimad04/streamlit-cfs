@@ -37,7 +37,7 @@ def carregar_dados_do_google_sheets():
 
 data = carregar_dados_do_google_sheets()
 
-print(data.shape)
+print('INÍCIO DA APLICAÇÃO')
 
 
 # data = pd.read_excel(
@@ -357,7 +357,14 @@ for trace in fig5.data:
 data_aux = data.copy()
 data_aux['Valor Economizado'] = data_aux['Valor Economizado'].str.replace('.', '', regex=True)
 data_aux['Valor Economizado'] = data_aux['Valor Economizado'].str.replace(',', '.', regex=True)
+data_aux['Valor Economizado'] = pd.to_numeric(data_aux['Valor Economizado'], errors='coerce')
+data_aux['Valor Economizado'] = data_aux['Valor Economizado'].fillna(0.00)
 data_aux['Valor Economizado'] = data_aux['Valor Economizado'].astype(float)
+data_aux = data_aux[(pd.notna(data_aux['Valor Economizado'])) & (data_aux['Valor Economizado'] != 0.00)]
+
+print('primeiro aqui')
+print(data_aux['Valor Economizado'].head())
+
 #data_aux.replace(0, np.nan, inplace = True)
 #data_aux.dropna(subset=['Valor Economizado'], inplace=True)
 
@@ -411,8 +418,11 @@ fig7.update_layout(
 )
 
 # Filtrar os dados para cada nível de satisfação
-data_relevante = data_aux.loc[data_aux['Satisfação'] == 'Relevante']
-data_muito_relevante = data_aux.loc[data_aux['Satisfação'] == 'Muito Relevante']
+
+data_satisfacao = data_aux.copy()
+
+data_relevante = data_satisfacao.loc[data_satisfacao['Satisfação'] == 'Relevante']
+data_muito_relevante = data_satisfacao.loc[data_satisfacao['Satisfação'] == 'Muito Relevante']
 
 print(data_relevante.shape)
 print(data_relevante['Valor Economizado'].head(5))
