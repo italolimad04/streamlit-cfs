@@ -357,12 +357,10 @@ for trace in fig5.data:
 data_aux = data.copy()
 data_aux['Valor Economizado'] = data_aux['Valor Economizado'].str.replace('.', '', regex=True)
 data_aux['Valor Economizado'] = data_aux['Valor Economizado'].str.replace(',', '.', regex=True)
-data_aux['Valor Economizado'] = pd.to_numeric(data_aux['Valor Economizado'], errors='coerce')
 data_aux['Valor Economizado'] = data_aux['Valor Economizado'].fillna(0.00)
 data_aux['Valor Economizado'] = data_aux['Valor Economizado'].astype(float)
 data_aux = data_aux[(pd.notna(data_aux['Valor Economizado'])) & (data_aux['Valor Economizado'] != 0.00)]
 
-print('primeiro aqui')
 print(data_aux['Valor Economizado'].head())
 
 #data_aux.replace(0, np.nan, inplace = True)
@@ -430,6 +428,9 @@ def calcular_estatisticas(df, coluna):
 
 estatisticas_relevante = calcular_estatisticas(data_relevante, 'Valor Economizado')
 estatisticas_muito_relevante = calcular_estatisticas(data_muito_relevante, 'Valor Economizado')
+
+print(estatisticas_relevante)
+print(estatisticas_muito_relevante)
 
 # Criar gráficos de violino
 fig_relevante = px.violin(
