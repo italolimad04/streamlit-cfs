@@ -1,11 +1,12 @@
 pandas
 requests
-numpy
 streamlit
 plotly
 matplotlib
-seaborn
-st-aggrid
+streamlit-aggrid
+openpyxl
 gspread
 google-auth
+pandas
+numpy
 python-dotenv
