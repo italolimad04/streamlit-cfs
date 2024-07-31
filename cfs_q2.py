@@ -424,17 +424,11 @@ data_satisfacao = data_aux.copy()
 data_relevante = data_satisfacao.loc[data_satisfacao['Satisfação'] == 'Relevante']
 data_muito_relevante = data_satisfacao.loc[data_satisfacao['Satisfação'] == 'Muito Relevante']
 
-print(data_relevante.shape)
-print(data_relevante['Valor Economizado'].head(5))
-
 # Calcular estatísticas descritivas
 def calcular_estatisticas(df, coluna):
-    print('aquiii')
-    print(df['Valor Economizado'].head(10))
-    estatisticas = df['Valor Economizado'].describe(percentiles=[.25, .5, .75]).to_dict()
-    print(estatisticas)
-    estatisticas['mean'] = df['Valor Economizado'].mean()
-    estatisticas['count'] = df['Valor Economizado'].count()
+    estatisticas = df[coluna].describe(percentiles=[.25, .5, .75]).to_dict()
+    estatisticas['mean'] = df[coluna].mean()
+    estatisticas['count'] = df[coluna].count()
     return estatisticas
 
 estatisticas_relevante = calcular_estatisticas(data_relevante, 'Valor Economizado')
@@ -615,6 +609,7 @@ total_cfs_2024 = total_fidelizados - 2851  # Total de clientes fidelizados em 20
 
 # Calcular a diferença entre as semanas
 diferenca_semanal = resultados_semana_atual - resultados_semana_anterior
+
 
 # Calcular quantos faltam para a meta
 faltam_para_meta = meta_anual - total_fidelizados
