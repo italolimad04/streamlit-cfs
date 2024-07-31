@@ -362,6 +362,8 @@ data_aux['Valor Economizado'] = data_aux['Valor Economizado'].astype(float, erro
 data_aux.replace(0, np.nan, inplace = True)
 data_aux.dropna(subset=['Valor Economizado'], inplace=True)
 
+print(data_aux)
+
 
 #data_aux['Valor Economizado'] = pd.to_numeric(data_aux['Valor Economizado'], errors='coerce')
 # Criar o scatter plot com valor economizado no eixo y e nível de satisfação no eixo x
@@ -419,6 +421,8 @@ data_muito_relevante = data_aux[data_aux['Satisfação'] == 'Muito Relevante']
 
 # Calcular estatísticas descritivas
 def calcular_estatisticas(df, coluna):
+    df = df.astype(float)
+    print(df[coluna])
     estatisticas = df[coluna].describe(percentiles=[.25, .5, .75]).to_dict()
     print(estatisticas)
     estatisticas['mean'] = df[coluna].mean()
