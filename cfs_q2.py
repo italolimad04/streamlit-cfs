@@ -421,6 +421,7 @@ data_muito_relevante = data_aux[data_aux['Satisfação'] == 'Muito Relevante']
 
 # Calcular estatísticas descritivas
 def calcular_estatisticas(df, coluna):
+    print(df)
     df[coluna] = df[coluna].astype(float)
     print(df[coluna])
     estatisticas = df[coluna].describe(percentiles=[.25, .5, .75]).to_dict()
