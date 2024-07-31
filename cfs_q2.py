@@ -24,8 +24,6 @@ load_dotenv()
 
 def carregar_dados_do_google_sheets():
     #key_sheet = os.getenv('SHEET_KEY')
-    print(st.secrets["SHEET_KEY"])
-    print(st.secrets["GOOGLE_SHEETS_CREDENTIALS"])
     scopes = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
     creds_json = st.secrets["GOOGLE_SHEETS_CREDENTIALS"]
     creds_dict = json.loads(creds_json)
@@ -38,6 +36,8 @@ def carregar_dados_do_google_sheets():
     return pd.DataFrame(data, columns=headers, dtype=str)
 
 data = carregar_dados_do_google_sheets()
+
+print(data.shape)
 
 
 # data = pd.read_excel(
@@ -420,6 +420,7 @@ data_muito_relevante = data_aux[data_aux['Satisfação'] == 'Muito Relevante']
 # Calcular estatísticas descritivas
 def calcular_estatisticas(df, coluna):
     estatisticas = df[coluna].describe(percentiles=[.25, .5, .75]).to_dict()
+    print(estatisticas)
     estatisticas['mean'] = df[coluna].mean()
     estatisticas['count'] = df[coluna].count()
     return estatisticas
