@@ -355,15 +355,11 @@ for trace in fig5.data:
 
 # Filtrar dados onde 'Valor Economizado' está preenchido e pode ser convertido para float
 data_aux = data.copy()
-
 data_aux['Valor Economizado'] = data_aux['Valor Economizado'].str.replace('.', '', regex=True)
 data_aux['Valor Economizado'] = data_aux['Valor Economizado'].str.replace(',', '.', regex=True)
-data_aux['Valor Economizado'] = data_aux['Valor Economizado'].astype(float, errors='ignore')
+data_aux['Valor Economizado'] = data_aux['Valor Economizado'].astype(float)
 #data_aux.replace(0, np.nan, inplace = True)
 #data_aux.dropna(subset=['Valor Economizado'], inplace=True)
-
-print(data_aux)
-
 
 #data_aux['Valor Economizado'] = pd.to_numeric(data_aux['Valor Economizado'], errors='coerce')
 # Criar o scatter plot com valor economizado no eixo y e nível de satisfação no eixo x
@@ -419,12 +415,12 @@ data_relevante = data_aux.loc[data_aux['Satisfação'] == 'Relevante']
 data_muito_relevante = data_aux.loc[data_aux['Satisfação'] == 'Muito Relevante']
 
 print(data_relevante.shape)
-print(data_relevante.head(5))
+print(data_relevante['Valor Economizado'].head(5))
 
 # Calcular estatísticas descritivas
 def calcular_estatisticas(df, coluna):
     print('aquiii')
-    print(df['Valor Economizado'])
+    print(df['Valor Economizado'].head(10))
     estatisticas = df['Valor Economizado'].describe(percentiles=[.25, .5, .75]).to_dict()
     print(estatisticas)
     estatisticas['mean'] = df['Valor Economizado'].mean()
