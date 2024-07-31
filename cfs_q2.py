@@ -1,5 +1,6 @@
 import pandas as pd
 import requests as reqs
+import numpy as np
 import streamlit as st
 import plotly.express as px
 import matplotlib.pyplot as plt
@@ -7,16 +8,39 @@ import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 from st_aggrid import AgGrid, GridOptionsBuilder, AgGridTheme, DataReturnMode, GridUpdateMode
 from datetime import datetime, timedelta
+import gspread as gs
+from google.oauth2.service_account import Credentials
+import os
+import json
+from dotenv import load_dotenv
 
 # Opções
 st.set_page_config(layout="wide")
 
 st.title("Painel de Clientes Fidelizados no Q3")
 
-data = pd.read_excel(
-    "Dados/[Urbis]-Resultados_CFs_Q3.xlsx",
-    dtype=str,
-)
+load_dotenv()
+#Configuração do Google Cloud - Sheets API
+def carregar_dados_do_google_sheets():
+    key_sheet = os.getenv('SHEET_KEY')
+    scopes = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+    creds_json = os.getenv('GOOGLE_SHEETS_CREDENTIALS')
+    creds_dict = json.loads(creds_json)
+    credentials = Credentials.from_service_account_info(creds_dict, scopes=scopes)
+    client = gs.authorize(credentials)
+    #spreadsheet_name = '[Urbis] - Resultados CFs Q3'
+    sheet = client.open_by_key(key_sheet).sheet1
+    data = sheet.get_all_values()  # Tenta obter todos os valores como strings
+    headers = data.pop(0)  # Remove o cabeçalho da lista de dados
+    return pd.DataFrame(data, columns=headers, dtype=str)
+
+data = carregar_dados_do_google_sheets()
+
+
+# data = pd.read_excel(
+#     "Dados/[Urbis]-Resultados_CFs_Q3.xlsx",
+#     dtype=str,
+# )
 
 # Função para calcular a semana fiscal
 def calcular_semana_fiscal(data, start_date):
@@ -169,7 +193,7 @@ fig2.update_layout(
         title='Clientes Fidelizados',
         titlefont=dict(size=20, color='black', family='Roboto'),
         tickfont=dict(size=18, color='black', family='Roboto'),
-        dtick=1
+        dtick=10
     ),
     bargap=0.1,  # Diminuir o espaçamento entre as barras
     paper_bgcolor='white'
@@ -318,11 +342,25 @@ fig5.update_layout(
     )
 )
 
+# Ajustar a posição do texto nos traces individuais
+for trace in fig5.data:
+    if trace.name == 'Total Q3':
+        trace.textposition = 'top center'
+    elif trace.name == 'Novos CFs':
+        trace.textposition = 'outside'
+
+
 # Filtrar dados onde 'Valor Economizado' está preenchido e pode ser convertido para float
 data_aux = data.copy()
-data_aux['Valor Economizado'] = pd.to_numeric(data_aux['Valor Economizado'], errors='coerce')
-data_aux = data_aux.dropna(subset=['Valor Economizado'])
 
+data_aux['Valor Economizado'] = data_aux['Valor Economizado'].str.replace('.', '', regex=True)
+data_aux['Valor Economizado'] = data_aux['Valor Economizado'].str.replace(',', '.', regex=True)
+data_aux['Valor Economizado'] = data_aux['Valor Economizado'].astype(float)
+data_aux.replace(0, np.nan, inplace = True)
+data_aux.dropna(subset=['Valor Economizado'], inplace=True)
+
+
+#data_aux['Valor Economizado'] = pd.to_numeric(data_aux['Valor Economizado'], errors='coerce')
 # Criar o scatter plot com valor economizado no eixo y e nível de satisfação no eixo x
 fig6 = px.scatter(
     data_frame=data_aux,

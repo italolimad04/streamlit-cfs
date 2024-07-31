@@ -3,3 +3,5 @@
 ambientevirtual
 Outros
 packages
+credentials.json
+.env
