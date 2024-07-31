@@ -354,15 +354,16 @@ for trace in fig5.data:
 
 
 # Filtrar dados onde 'Valor Economizado' está preenchido e pode ser convertido para float
-data_aux = data.copy()
-data_aux['Valor Economizado'] = data_aux['Valor Economizado'].str.replace('.', '', regex=True)
-data_aux['Valor Economizado'] = data_aux['Valor Economizado'].str.replace(',', '.', regex=True)
-data_aux['Valor Economizado'] = data_aux['Valor Economizado'].fillna(0.00)
-data_aux = data_aux[(pd.notna(data_aux['Valor Economizado'])) & (data_aux['Valor Economizado'] != 0.00)]
+#data_aux = data.copy()
+data_aux = pd.DataFrame()
+data_aux['Valor Economizado'] = data['Valor Economizado'].str.replace('.', '', regex=True)
+data_aux['Valor Economizado'] = data['Valor Economizado'].str.replace(',', '.', regex=True)
+data_aux['Valor Economizado'] = data['Valor Economizado'].fillna(0.00)
+data_aux = data[(pd.notna(data['Valor Economizado'])) & (data['Valor Economizado'] != 0.00)]
 
-print(data_aux['Valor Economizado'].head())
+print(data_aux['Valor Economizado'])
 
-data_aux['Valor Economizado'] = data_aux['Valor Economizado'].astype(float)
+data_aux['Valor Economizado'].astype(float, inplace=True)
 
 
 #data_aux.replace(0, np.nan, inplace = True)
