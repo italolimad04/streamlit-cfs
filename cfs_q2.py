@@ -414,18 +414,17 @@ fig7.update_layout(
     margin=dict(l=40, r=40, t=60, b=40)
 )
 
-
 # Filtrar os dados para cada nível de satisfação
 data_relevante = data_aux[data_aux['Satisfação'] == 'Relevante']
 data_muito_relevante = data_aux[data_aux['Satisfação'] == 'Muito Relevante']
 
 # Calcular estatísticas descritivas
 def calcular_estatisticas(df, coluna):
-    print(df[coluna])
-    estatisticas = df[coluna].describe(percentiles=[.25, .5, .75]).to_dict()
+    print(df['Valor Economizado'])
+    estatisticas = df['Valor Economizado'].describe(percentiles=[.25, .5, .75]).to_dict()
     print(estatisticas)
-    estatisticas['mean'] = df[coluna].mean()
-    estatisticas['count'] = df[coluna].count()
+    estatisticas['mean'] = df['Valor Economizado'].mean()
+    estatisticas['count'] = df['Valor Economizado'].count()
     return estatisticas
 
 estatisticas_relevante = calcular_estatisticas(data_relevante, 'Valor Economizado')
