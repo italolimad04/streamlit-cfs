@@ -396,7 +396,7 @@ logger.info(data_aux.shape)
 data_aux['Valor Economizado'] = data_aux['Valor Economizado'].astype(float)
 
 logger.info('Debug após conversão:')
-logger.info(data_aux.shape)
+logger.info(data_aux['Valor Economizado'])
 
 # Verificar se há dados após o processamento
 if data_aux.empty:
@@ -454,7 +454,10 @@ data_relevante = data_aux.loc[data_aux['Satisfação'] == 'Relevante']
 data_muito_relevante = data_aux.loc[data_aux['Satisfação'] == 'Muito Relevante']
 
 logger.info('data_relevante')
-logger.info(data_relevante.head(5))
+logger.info(data_relevante['Valor Economizado'])
+
+logger.info('data_muito_relevante')
+logger.info(data_muito_relevante['Valor Economizado'])
 
 # Calcular estatísticas descritivas
 # def calcular_estatisticas(df, coluna):
