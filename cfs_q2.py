@@ -14,6 +14,20 @@ import os
 import json
 from dotenv import load_dotenv
 
+import logging
+
+# Configurar o logger
+logging.basicConfig(
+    format='%(asctime)s - %(message)s',
+    level=logging.INFO,
+    handlers=[
+        logging.FileHandler("app.log"),
+        logging.StreamHandler()
+    ]
+)
+
+logger = logging.getLogger(__name__)
+
 # Opções
 st.set_page_config(layout="wide")
 
@@ -352,14 +366,16 @@ for trace in fig5.data:
     elif trace.name == 'Novos CFs':
         trace.textposition = 'outside'
 
+# Copiar os dados
 data_aux = data.copy()
+
 # Remover pontos (separador de milhares) e substituir vírgulas por pontos (separador decimal)
 data_aux['Valor Economizado'] = data_aux['Valor Economizado'].astype(str).str.replace('.', '', regex=True)
 data_aux['Valor Economizado'] = data_aux['Valor Economizado'].str.replace(',', '.', regex=True)
 
 # Exibir os valores após as substituições
-print('Novo debug')
-print(data_aux['Valor Economizado'].head(5))
+logger.info('Novo debug')
+logger.info(data_aux['Valor Economizado'].head(5))
 
 # Converter valores não convertíveis para NaN
 data_aux['Valor Economizado'] = pd.to_numeric(data_aux['Valor Economizado'], errors='coerce')
@@ -373,124 +389,131 @@ data_aux = data_aux[data_aux['Valor Economizado'] != 0.00]
 # Converter a coluna para float
 data_aux['Valor Economizado'] = data_aux['Valor Economizado'].astype(float)
 
-fig6 = px.scatter(
-    data_frame=data_aux,
-    x='Satisfação',
-    y='Valor Economizado',
-    color='Satisfação',
-    title='Distribuição dos Valores Economizados e Nível de Satisfação',
-    labels={
-        'Valor Economizado': 'Valor Economizado (R$)',
-        'Satisfação': 'Nível de Satisfação'
-    },
-    template='plotly_white'
-)
+logger.info('Debug após conversão:')
+logger.info(data_aux.head(5))
 
-# Atualizar layout do gráfico
-fig6.update_layout(
-    height=600,
-    xaxis_title='Nível de Satisfação',
-    yaxis_title='Valor Economizado (R$)',
-    legend_title='Nível de Satisfação',
-    margin=dict(l=40, r=40, t=60, b=40)
-)
+# Verificar se há dados após o processamento
+if data_aux.empty:
+    logger.warning("Nenhum dado disponível após o processamento.")
+else:
+    # Criar os gráficos
+    fig6 = px.scatter(
+        data_frame=data_aux,
+        x='Satisfação',
+        y='Valor Economizado',
+        color='Satisfação',
+        title='Distribuição dos Valores Economizados e Nível de Satisfação',
+        labels={
+            'Valor Economizado': 'Valor Economizado (R$)',
+            'Satisfação': 'Nível de Satisfação'
+        },
+        template='plotly_white'
+    )
 
-# Criar o gráfico de violino para a distribuição dos valores economizados por nível de satisfação
-fig7 = px.violin(
-    data_frame=data_aux,
-    y='Valor Economizado',
-    x='Satisfação',
-    color='Satisfação',
-    box=True,  # Adicionar box plot dentro do gráfico de violino
-    points="all",  # Mostrar todos os pontos
-    title='Distribuição dos Valores Economizados por Nível de Satisfação',
-    labels={
-        'Valor Economizado': 'Valor Economizado (R$)',
-        'Satisfação': 'Nível de Satisfação'
-    },
-    template='plotly_white'
-)
-
-# Atualizar layout do gráfico
-fig7.update_layout(
-    height=600,
-    xaxis_title='Nível de Satisfação',
-    yaxis_title='Valor Economizado (R$)',
-    legend_title='Nível de Satisfação',
-    margin=dict(l=40, r=40, t=60, b=40)
-)
-
-# Filtrar os dados para cada nível de satisfação
-data_relevante = data_aux[data_aux['Satisfação'] == 'Relevante']
-data_muito_relevante = data_aux[data_aux['Satisfação'] == 'Muito Relevante']
-
-# Calcular estatísticas descritivas
-def calcular_estatisticas(df, coluna):
-    estatisticas = df[coluna].describe(percentiles=[.25, .5, .75]).to_dict()
-    estatisticas['mean'] = df[coluna].mean()
-    estatisticas['count'] = df[coluna].count()
-    return estatisticas
-
-estatisticas_relevante = calcular_estatisticas(data_relevante, 'Valor Economizado')
-estatisticas_muito_relevante = calcular_estatisticas(data_muito_relevante, 'Valor Economizado')
-
-print('estatisticas_relevante')
-print(estatisticas_muito_relevante)
-
-# Criar gráficos de violino
-fig_relevante = px.violin(
-    data_frame=data_relevante,
-    y='Valor Economizado',
-    x='Satisfação',
-    color='Satisfação',
-    box=True,
-    points="all",
-    title='Valores Economizados X Relevância',
-    labels={
-        'Valor Economizado': 'Valor Economizado (R$)',
-        'Satisfação': 'Nível de Satisfação'
-    },
-    template='plotly_white'
-)
-
-fig_muito_relevante = px.violin(
-    data_frame=data_muito_relevante,
-    y='Valor Economizado',
-    x='Satisfação',
-    color='Satisfação',
-    box=True,
-    points="all",
-    title='Valores Economizados X Relevância',
-    labels={
-        'Valor Economizado': 'Valor Economizado (R$)',
-        'Satisfação': 'Nível de Satisfação'
-    },
-    template='plotly_white',
-    color_discrete_map={'Muito Relevante': '#19C78A'}
-)
-
-# Ajustar layout e fontes dos gráficos
-def ajustar_layout(fig):
-    fig.update_layout(
+    # Atualizar layout do gráfico
+    fig6.update_layout(
         height=600,
-        width=800,
-        xaxis_title_font=dict(size=18, family='Roboto'),
-        yaxis_title_font=dict(size=18, family='Roboto'),
-        title_font=dict(size=22, family='Roboto'),
-        legend_font=dict(size=16, family='Roboto'),
+        xaxis_title='Nível de Satisfação',
+        yaxis_title='Valor Economizado (R$)',
+        legend_title='Nível de Satisfação',
         margin=dict(l=40, r=40, t=60, b=40)
     )
-    fig.update_yaxes(rangemode="tozero")  # Ajustar o eixo y para iniciar em zero
-    fig.update_traces(marker=dict(size=10), selector=dict(type='violin'))
 
+    # Criar o gráfico de violino para a distribuição dos valores economizados por nível de satisfação
+    fig7 = px.violin(
+        data_frame=data_aux,
+        y='Valor Economizado',
+        x='Satisfação',
+        color='Satisfação',
+        box=True,  # Adicionar box plot dentro do gráfico de violino
+        points="all",  # Mostrar todos os pontos
+        title='Distribuição dos Valores Economizados por Nível de Satisfação',
+        labels={
+            'Valor Economizado': 'Valor Economizado (R$)',
+            'Satisfação': 'Nível de Satisfação'
+        },
+        template='plotly_white'
+    )
 
-fig_relevante.update_yaxes(range=[0, data_relevante['Valor Economizado'].max() * 1.1])  # Ajustar o eixo y para iniciar em zero
+    # Atualizar layout do gráfico
+    fig7.update_layout(
+        height=600,
+        xaxis_title='Nível de Satisfação',
+        yaxis_title='Valor Economizado (R$)',
+        legend_title='Nível de Satisfação',
+        margin=dict(l=40, r=40, t=60, b=40)
+    )
 
+    # Filtrar os dados para cada nível de satisfação
+    data_relevante = data_aux[data_aux['Satisfação'] == 'Relevante']
+    data_muito_relevante = data_aux[data_aux['Satisfação'] == 'Muito Relevante']
 
-fig_muito_relevante.update_yaxes(range=[0, data_muito_relevante['Valor Economizado'].max() * 1.1])
+    # Calcular estatísticas descritivas
+    def calcular_estatisticas(df, coluna):
+        estatisticas = df[coluna].describe(percentiles=[.25, .5, .75]).to_dict()
+        estatisticas['mean'] = df[coluna].mean()
+        estatisticas['count'] = df[coluna].count()
+        return estatisticas
 
-ajustar_layout(fig_relevante)
-ajustar_layout(fig_muito_relevante)
+    estatisticas_relevante = calcular_estatisticas(data_relevante, 'Valor Economizado')
+    estatisticas_muito_relevante = calcular_estatisticas(data_muito_relevante, 'Valor Economizado')
+
+    logger.info('Estatísticas - Relevante:')
+    logger.info(estatisticas_relevante)
+    logger.info('Estatísticas - Muito Relevante:')
+    logger.info(estatisticas_muito_relevante)
+
+    # Criar gráficos de violino
+    fig_relevante = px.violin(
+        data_frame=data_relevante,
+        y='Valor Economizado',
+        x='Satisfação',
+        color='Satisfação',
+        box=True,
+        points="all",
+        title='Valores Economizados X Relevância',
+        labels={
+            'Valor Economizado': 'Valor Economizado (R$)',
+            'Satisfação': 'Nível de Satisfação'
+        },
+        template='plotly_white'
+    )
+
+    fig_muito_relevante = px.violin(
+        data_frame=data_muito_relevante,
+        y='Valor Economizado',
+        x='Satisfação',
+        color='Satisfação',
+        box=True,
+        points="all",
+        title='Valores Economizados X Relevância',
+        labels={
+            'Valor Economizado': 'Valor Economizado (R$)',
+            'Satisfação': 'Nível de Satisfação'
+        },
+        template='plotly_white',
+        color_discrete_map={'Muito Relevante': '#19C78A'}
+    )
+
+    # Ajustar layout e fontes dos gráficos
+    def ajustar_layout(fig):
+        fig.update_layout(
+            height=600,
+            width=800,
+            xaxis_title_font=dict(size=18, family='Roboto'),
+            yaxis_title_font=dict(size=18, family='Roboto'),
+            title_font=dict(size=22, family='Roboto'),
+            legend_font=dict(size=16, family='Roboto'),
+            margin=dict(l=40, r=40, t=60, b=40)
+        )
+        fig.update_yaxes(rangemode="tozero")  # Ajustar o eixo y para iniciar em zero
+        fig.update_traces(marker=dict(size=10), selector=dict(type='violin'))
+
+    ajustar_layout(fig_relevante)
+    ajustar_layout(fig_muito_relevante)
+
+    fig_relevante.update_yaxes(range=[0, data_relevante['Valor Economizado'].max() * 1.1])
+    fig_muito_relevante.update_yaxes(range=[0, data_muito_relevante['Valor Economizado'].max() * 1.1])
 
 data['Valor Economizado'] = data['Valor Economizado'].replace('-', '0,00').str.replace(',', '.').astype(float).round(2)
 

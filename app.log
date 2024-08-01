@@ -1,0 +1,36 @@
+2024-07-31 21:20:20,457 - Novo debug
+2024-07-31 21:20:20,457 - 0      0.00
+1      0.00
+2      0.00
+3    200.00
+4     58.03
+Name: Valor Economizado, dtype: object
+2024-07-31 21:20:20,459 - Debug após conversão:
+2024-07-31 21:20:20,459 -               Clube                            Usuário       Data  Valor Economizado        Parceiro       Satisfação  Canal  Semana
+3       Sócio Vozão       FRANCINANDO DE SOUZA RIBEIRO 2024-07-02             200.00  Magazine Luiza        Relevante  Clube       0
+4  Clube Bigodinhos       MARIA KECIANE CUNHA PINHEIRO 2024-07-02              58.03         Flixbus  Muito Relevante  Clube       0
+5       Sócio Vozão  CARLOS AUGUSTO TEIXEIRA MAGALHAES 2024-07-04              75.00        Netshoes        Relevante  Clube       0
+6       Sócio Vozão  JOAO BATISTA MAGALHAES DE ALMEIDA 2024-07-05              75.00        Netshoes  Muito Relevante  Clube       1
+7       Sócio Vozão    ANTONIO CASSIO DE CARVALHO BLUM 2024-07-09              70.20     Mundo Pixar        Relevante  Clube       1
+2024-07-31 21:20:20,612 - Estatísticas - Relevante:
+2024-07-31 21:20:20,612 - {'count': 14, 'mean': 48.96642857142857, 'std': 47.53814704766347, 'min': 11.29, '25%': 28.372500000000002, '50%': 32.935, '75%': 53.83, 'max': 200.0}
+2024-07-31 21:20:20,612 - Estatísticas - Muito Relevante:
+2024-07-31 21:20:20,612 - {'count': 64, 'mean': 95.77374999999999, 'std': 197.66658069138094, 'min': 8.0, '25%': 23.39, '50%': 47.455, '75%': 71.85, 'max': 1473.47}
+2024-07-31 21:22:27,869 - Novo debug
+2024-07-31 21:22:27,871 - 0      0.00
+1      0.00
+2      0.00
+3    200.00
+4     58.03
+Name: Valor Economizado, dtype: object
+2024-07-31 21:22:27,872 - Debug após conversão:
+2024-07-31 21:22:27,873 -               Clube                            Usuário       Data  Valor Economizado        Parceiro       Satisfação  Canal  Semana
+3       Sócio Vozão       FRANCINANDO DE SOUZA RIBEIRO 2024-07-02             200.00  Magazine Luiza        Relevante  Clube       0
+4  Clube Bigodinhos       MARIA KECIANE CUNHA PINHEIRO 2024-07-02              58.03         Flixbus  Muito Relevante  Clube       0
+5       Sócio Vozão  CARLOS AUGUSTO TEIXEIRA MAGALHAES 2024-07-04              75.00        Netshoes        Relevante  Clube       0
+6       Sócio Vozão  JOAO BATISTA MAGALHAES DE ALMEIDA 2024-07-05              75.00        Netshoes  Muito Relevante  Clube       1
+7       Sócio Vozão    ANTONIO CASSIO DE CARVALHO BLUM 2024-07-09              70.20     Mundo Pixar        Relevante  Clube       1
+2024-07-31 21:22:27,989 - Estatísticas - Relevante:
+2024-07-31 21:22:27,989 - {'count': 14, 'mean': 48.96642857142857, 'std': 47.53814704766347, 'min': 11.29, '25%': 28.372500000000002, '50%': 32.935, '75%': 53.83, 'max': 200.0}
+2024-07-31 21:22:27,989 - Estatísticas - Muito Relevante:
+2024-07-31 21:22:27,989 - {'count': 64, 'mean': 95.77374999999999, 'std': 197.66658069138094, 'min': 8.0, '25%': 23.39, '50%': 47.455, '75%': 71.85, 'max': 1473.47}

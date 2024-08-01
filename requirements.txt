@@ -10,3 +10,4 @@ google-auth
 pandas
 numpy
 python-dotenv
+logging
