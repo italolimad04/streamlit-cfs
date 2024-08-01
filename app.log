@@ -110,3 +110,1036 @@ Name: Valor Economizado, dtype: object
 3    200.00
 4     58.03
 Name: Valor Economizado, dtype: float64
+2024-07-31 22:35:16,086 - data_aux AQUI 
+2024-07-31 22:35:16,088 - (81, 8)
+2024-07-31 22:35:16,088 - Dados pós copy
+2024-07-31 22:35:16,088 - 0      0,00
+1      0,00
+2      0,00
+3    200,00
+4     58,03
+Name: Valor Economizado, dtype: object
+2024-07-31 22:35:16,089 - Remover pontos (separador de milhares) e substituir vírgulas por pontos (separador decimal)
+2024-07-31 22:35:16,089 - 0      0.00
+1      0.00
+2      0.00
+3    200.00
+4     58.03
+Name: Valor Economizado, dtype: object
+2024-07-31 22:35:16,090 - Converter valores não convertíveis para NaN
+2024-07-31 22:35:16,090 - 0      0.00
+1      0.00
+2      0.00
+3    200.00
+4     58.03
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:35:16,092 - Converter a coluna para float
+2024-07-31 22:35:16,092 - 0      0.00
+1      0.00
+2      0.00
+3    200.00
+4     58.03
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:35:16,093 - Debug após filtro:
+2024-07-31 22:35:16,093 - 3    200.00
+4     58.03
+5     75.00
+6     75.00
+7     70.20
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:35:16,203 - DATA AUX AQUI NO DATA_RELEVANTE
+2024-07-31 22:35:16,203 - 3     200.00
+4      58.03
+5      75.00
+6      75.00
+7      70.20
+       ...  
+76    124.16
+77     23.27
+78     22.50
+79     20.90
+80     35.10
+Name: Valor Economizado, Length: 78, dtype: float64
+2024-07-31 22:35:16,206 - data_relevante
+2024-07-31 22:35:16,206 - 3     200.00
+5      75.00
+7      70.20
+12     11.60
+13     11.29
+14     35.43
+15     32.28
+16     28.71
+17     22.56
+18     33.59
+53     28.26
+54     54.49
+55     30.27
+69     51.85
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:35:16,207 - data_muito_relevante
+2024-07-31 22:35:16,207 - 4      58.03
+6      75.00
+8      35.00
+9      20.00
+10     70.80
+       ...  
+76    124.16
+77     23.27
+78     22.50
+79     20.90
+80     35.10
+Name: Valor Economizado, Length: 64, dtype: float64
+2024-07-31 22:35:16,213 - {'count': 14, 'mean': 48.96642857142857, 'std': 47.53814704766347, 'min': 11.29, '25%': 28.372500000000002, '50%': 32.935, '75%': 53.83, 'max': 200.0}
+2024-07-31 22:35:16,214 - {'count': 64, 'mean': 95.77374999999999, 'std': 197.66658069138094, 'min': 8.0, '25%': 23.39, '50%': 47.455, '75%': 71.85, 'max': 1473.47}
+2024-07-31 22:35:16,214 - data_relevante
+2024-07-31 22:35:16,214 -     Valor Economizado Satisfação
+3              200.00  Relevante
+5               75.00  Relevante
+7               70.20  Relevante
+12              11.60  Relevante
+13              11.29  Relevante
+14              35.43  Relevante
+15              32.28  Relevante
+16              28.71  Relevante
+17              22.56  Relevante
+18              33.59  Relevante
+53              28.26  Relevante
+54              54.49  Relevante
+55              30.27  Relevante
+69              51.85  Relevante
+2024-07-31 22:35:16,294 - Data original
+2024-07-31 22:35:16,294 - 0      0.00
+1      0.00
+2      0.00
+3    200.00
+4     58.03
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:35:16,314 - resultados_semana_atual:: 
+2024-07-31 22:35:16,314 - 1
+2024-07-31 22:35:16,314 - resultados_semana_anterior:: 
+2024-07-31 22:35:16,314 - 1
+2024-07-31 22:35:55,204 - data_aux AQUI 
+2024-07-31 22:35:55,204 - (81, 8)
+2024-07-31 22:35:55,204 - Dados pós copy
+2024-07-31 22:35:55,205 - 0      0,00
+1      0,00
+2      0,00
+3    200,00
+4     58,03
+Name: Valor Economizado, dtype: object
+2024-07-31 22:35:55,206 - Remover pontos (separador de milhares) e substituir vírgulas por pontos (separador decimal)
+2024-07-31 22:35:55,206 - 0      0.00
+1      0.00
+2      0.00
+3    200.00
+4     58.03
+Name: Valor Economizado, dtype: object
+2024-07-31 22:35:55,206 - Converter valores não convertíveis para NaN
+2024-07-31 22:35:55,206 - 0      0.00
+1      0.00
+2      0.00
+3    200.00
+4     58.03
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:35:55,207 - Converter a coluna para float
+2024-07-31 22:35:55,207 - 0      0.00
+1      0.00
+2      0.00
+3    200.00
+4     58.03
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:35:55,208 - Debug após filtro:
+2024-07-31 22:35:55,208 - 3    200.00
+4     58.03
+5     75.00
+6     75.00
+7     70.20
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:35:55,264 - DATA AUX AQUI NO DATA_RELEVANTE
+2024-07-31 22:35:55,265 - 3     200.00
+4      58.03
+5      75.00
+6      75.00
+7      70.20
+       ...  
+76    124.16
+77     23.27
+78     22.50
+79     20.90
+80     35.10
+Name: Valor Economizado, Length: 78, dtype: float64
+2024-07-31 22:35:55,266 - data_relevante
+2024-07-31 22:35:55,266 - 3     200.00
+5      75.00
+7      70.20
+12     11.60
+13     11.29
+14     35.43
+15     32.28
+16     28.71
+17     22.56
+18     33.59
+53     28.26
+54     54.49
+55     30.27
+69     51.85
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:35:55,267 - data_muito_relevante
+2024-07-31 22:35:55,268 - 4      58.03
+6      75.00
+8      35.00
+9      20.00
+10     70.80
+       ...  
+76    124.16
+77     23.27
+78     22.50
+79     20.90
+80     35.10
+Name: Valor Economizado, Length: 64, dtype: float64
+2024-07-31 22:35:55,271 - {'count': 14, 'mean': 48.96642857142857, 'std': 47.53814704766347, 'min': 11.29, '25%': 28.372500000000002, '50%': 32.935, '75%': 53.83, 'max': 200.0}
+2024-07-31 22:35:55,273 - {'count': 64, 'mean': 95.77374999999999, 'std': 197.66658069138094, 'min': 8.0, '25%': 23.39, '50%': 47.455, '75%': 71.85, 'max': 1473.47}
+2024-07-31 22:35:55,273 - data_relevante
+2024-07-31 22:35:55,274 -     Valor Economizado Satisfação
+3              200.00  Relevante
+5               75.00  Relevante
+7               70.20  Relevante
+12              11.60  Relevante
+13              11.29  Relevante
+14              35.43  Relevante
+15              32.28  Relevante
+16              28.71  Relevante
+17              22.56  Relevante
+18              33.59  Relevante
+53              28.26  Relevante
+54              54.49  Relevante
+55              30.27  Relevante
+69              51.85  Relevante
+2024-07-31 22:35:55,349 - Data original
+2024-07-31 22:35:55,349 - 0      0.00
+1      0.00
+2      0.00
+3    200.00
+4     58.03
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:35:55,353 - resultados_semana_atual:: 
+2024-07-31 22:35:55,353 - 1
+2024-07-31 22:35:55,353 - resultados_semana_anterior:: 
+2024-07-31 22:35:55,353 - 1
+2024-07-31 22:36:14,383 - data_aux AQUI 
+2024-07-31 22:36:14,384 - (81, 8)
+2024-07-31 22:36:14,384 - Dados pós copy
+2024-07-31 22:36:14,384 - 0      0,00
+1      0,00
+2      0,00
+3    200,00
+4     58,03
+Name: Valor Economizado, dtype: object
+2024-07-31 22:36:14,385 - Remover pontos (separador de milhares) e substituir vírgulas por pontos (separador decimal)
+2024-07-31 22:36:14,385 - 0      0.00
+1      0.00
+2      0.00
+3    200.00
+4     58.03
+Name: Valor Economizado, dtype: object
+2024-07-31 22:36:14,386 - Converter valores não convertíveis para NaN
+2024-07-31 22:36:14,386 - 0      0.00
+1      0.00
+2      0.00
+3    200.00
+4     58.03
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:36:14,387 - Converter a coluna para float
+2024-07-31 22:36:14,387 - 0      0.00
+1      0.00
+2      0.00
+3    200.00
+4     58.03
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:36:14,389 - Debug após filtro:
+2024-07-31 22:36:14,389 - 3    200.00
+4     58.03
+5     75.00
+6     75.00
+7     70.20
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:36:14,451 - DATA AUX AQUI NO DATA_RELEVANTE
+2024-07-31 22:36:14,451 - 3     200.00
+4      58.03
+5      75.00
+6      75.00
+7      70.20
+       ...  
+76    124.16
+77     23.27
+78     22.50
+79     20.90
+80     35.10
+Name: Valor Economizado, Length: 78, dtype: float64
+2024-07-31 22:36:14,453 - data_relevante
+2024-07-31 22:36:14,453 - 3     200.00
+5      75.00
+7      70.20
+12     11.60
+13     11.29
+14     35.43
+15     32.28
+16     28.71
+17     22.56
+18     33.59
+53     28.26
+54     54.49
+55     30.27
+69     51.85
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:36:14,454 - data_muito_relevante
+2024-07-31 22:36:14,454 - 4      58.03
+6      75.00
+8      35.00
+9      20.00
+10     70.80
+       ...  
+76    124.16
+77     23.27
+78     22.50
+79     20.90
+80     35.10
+Name: Valor Economizado, Length: 64, dtype: float64
+2024-07-31 22:36:14,458 - {'count': 14, 'mean': 48.96642857142857, 'std': 47.53814704766347, 'min': 11.29, '25%': 28.372500000000002, '50%': 32.935, '75%': 53.83, 'max': 200.0}
+2024-07-31 22:36:14,458 - {'count': 64, 'mean': 95.77374999999999, 'std': 197.66658069138094, 'min': 8.0, '25%': 23.39, '50%': 47.455, '75%': 71.85, 'max': 1473.47}
+2024-07-31 22:36:14,458 - data_relevante
+2024-07-31 22:36:14,458 -     Valor Economizado Satisfação
+3              200.00  Relevante
+5               75.00  Relevante
+7               70.20  Relevante
+12              11.60  Relevante
+13              11.29  Relevante
+14              35.43  Relevante
+15              32.28  Relevante
+16              28.71  Relevante
+17              22.56  Relevante
+18              33.59  Relevante
+53              28.26  Relevante
+54              54.49  Relevante
+55              30.27  Relevante
+69              51.85  Relevante
+2024-07-31 22:36:14,531 - Data original
+2024-07-31 22:36:14,531 - 0      0.00
+1      0.00
+2      0.00
+3    200.00
+4     58.03
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:36:14,536 - resultados_semana_atual:: 
+2024-07-31 22:36:14,536 - 1
+2024-07-31 22:36:14,536 - resultados_semana_anterior:: 
+2024-07-31 22:36:14,536 - 1
+2024-07-31 22:36:19,056 - data_aux AQUI 
+2024-07-31 22:36:19,056 - (81, 8)
+2024-07-31 22:36:19,056 - Dados pós copy
+2024-07-31 22:36:19,056 - 0      0,00
+1      0,00
+2      0,00
+3    200,00
+4     58,03
+Name: Valor Economizado, dtype: object
+2024-07-31 22:36:19,057 - Remover pontos (separador de milhares) e substituir vírgulas por pontos (separador decimal)
+2024-07-31 22:36:19,057 - 0      0.00
+1      0.00
+2      0.00
+3    200.00
+4     58.03
+Name: Valor Economizado, dtype: object
+2024-07-31 22:36:19,058 - Converter valores não convertíveis para NaN
+2024-07-31 22:36:19,058 - 0      0.00
+1      0.00
+2      0.00
+3    200.00
+4     58.03
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:36:19,059 - Converter a coluna para float
+2024-07-31 22:36:19,059 - 0      0.00
+1      0.00
+2      0.00
+3    200.00
+4     58.03
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:36:19,060 - Debug após filtro:
+2024-07-31 22:36:19,060 - 3    200.00
+4     58.03
+5     75.00
+6     75.00
+7     70.20
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:36:19,134 - DATA AUX AQUI NO DATA_RELEVANTE
+2024-07-31 22:36:19,134 - 3     200.00
+4      58.03
+5      75.00
+6      75.00
+7      70.20
+       ...  
+76    124.16
+77     23.27
+78     22.50
+79     20.90
+80     35.10
+Name: Valor Economizado, Length: 78, dtype: float64
+2024-07-31 22:36:19,136 - data_relevante
+2024-07-31 22:36:19,136 - 3     200.00
+5      75.00
+7      70.20
+12     11.60
+13     11.29
+14     35.43
+15     32.28
+16     28.71
+17     22.56
+18     33.59
+53     28.26
+54     54.49
+55     30.27
+69     51.85
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:36:19,137 - data_muito_relevante
+2024-07-31 22:36:19,138 - 4      58.03
+6      75.00
+8      35.00
+9      20.00
+10     70.80
+       ...  
+76    124.16
+77     23.27
+78     22.50
+79     20.90
+80     35.10
+Name: Valor Economizado, Length: 64, dtype: float64
+2024-07-31 22:36:19,142 - {'count': 14, 'mean': 48.96642857142857, 'std': 47.53814704766347, 'min': 11.29, '25%': 28.372500000000002, '50%': 32.935, '75%': 53.83, 'max': 200.0}
+2024-07-31 22:36:19,142 - {'count': 64, 'mean': 95.77374999999999, 'std': 197.66658069138094, 'min': 8.0, '25%': 23.39, '50%': 47.455, '75%': 71.85, 'max': 1473.47}
+2024-07-31 22:36:19,142 - data_relevante
+2024-07-31 22:36:19,143 -     Valor Economizado Satisfação
+3              200.00  Relevante
+5               75.00  Relevante
+7               70.20  Relevante
+12              11.60  Relevante
+13              11.29  Relevante
+14              35.43  Relevante
+15              32.28  Relevante
+16              28.71  Relevante
+17              22.56  Relevante
+18              33.59  Relevante
+53              28.26  Relevante
+54              54.49  Relevante
+55              30.27  Relevante
+69              51.85  Relevante
+2024-07-31 22:36:19,215 - Data original
+2024-07-31 22:36:19,215 - 0      0.00
+1      0.00
+2      0.00
+3    200.00
+4     58.03
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:36:19,220 - resultados_semana_atual:: 
+2024-07-31 22:36:19,220 - 1
+2024-07-31 22:36:19,220 - resultados_semana_anterior:: 
+2024-07-31 22:36:19,220 - 1
+2024-07-31 22:36:32,072 - Remover pontos (separador de milhares) e substituir vírgulas por pontos (separador decimal)
+2024-07-31 22:36:32,073 - 0      0.00
+1      0.00
+2      0.00
+3    200.00
+4     58.03
+Name: Valor Economizado, dtype: object
+2024-07-31 22:36:32,074 - Converter valores não convertíveis para NaN
+2024-07-31 22:36:32,074 - 0      0.00
+1      0.00
+2      0.00
+3    200.00
+4     58.03
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:36:32,075 - Converter a coluna para float
+2024-07-31 22:36:32,075 - 0      0.00
+1      0.00
+2      0.00
+3    200.00
+4     58.03
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:36:32,076 - Debug após filtro:
+2024-07-31 22:36:32,076 - 3    200.00
+4     58.03
+5     75.00
+6     75.00
+7     70.20
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:36:32,135 - DATA AUX AQUI NO DATA_RELEVANTE
+2024-07-31 22:36:32,135 - 3     200.00
+4      58.03
+5      75.00
+6      75.00
+7      70.20
+       ...  
+76    124.16
+77     23.27
+78     22.50
+79     20.90
+80     35.10
+Name: Valor Economizado, Length: 78, dtype: float64
+2024-07-31 22:36:32,137 - data_relevante
+2024-07-31 22:36:32,137 - 3     200.00
+5      75.00
+7      70.20
+12     11.60
+13     11.29
+14     35.43
+15     32.28
+16     28.71
+17     22.56
+18     33.59
+53     28.26
+54     54.49
+55     30.27
+69     51.85
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:36:32,138 - data_muito_relevante
+2024-07-31 22:36:32,138 - 4      58.03
+6      75.00
+8      35.00
+9      20.00
+10     70.80
+       ...  
+76    124.16
+77     23.27
+78     22.50
+79     20.90
+80     35.10
+Name: Valor Economizado, Length: 64, dtype: float64
+2024-07-31 22:36:32,142 - {'count': 14, 'mean': 48.96642857142857, 'std': 47.53814704766347, 'min': 11.29, '25%': 28.372500000000002, '50%': 32.935, '75%': 53.83, 'max': 200.0}
+2024-07-31 22:36:32,142 - {'count': 64, 'mean': 95.77374999999999, 'std': 197.66658069138094, 'min': 8.0, '25%': 23.39, '50%': 47.455, '75%': 71.85, 'max': 1473.47}
+2024-07-31 22:36:32,142 - data_relevante
+2024-07-31 22:36:32,142 -     Valor Economizado Satisfação
+3              200.00  Relevante
+5               75.00  Relevante
+7               70.20  Relevante
+12              11.60  Relevante
+13              11.29  Relevante
+14              35.43  Relevante
+15              32.28  Relevante
+16              28.71  Relevante
+17              22.56  Relevante
+18              33.59  Relevante
+53              28.26  Relevante
+54              54.49  Relevante
+55              30.27  Relevante
+69              51.85  Relevante
+2024-07-31 22:36:32,218 - Data original
+2024-07-31 22:36:32,219 - 0      0.00
+1      0.00
+2      0.00
+3    200.00
+4     58.03
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:36:32,223 - resultados_semana_atual:: 
+2024-07-31 22:36:32,223 - 1
+2024-07-31 22:36:32,223 - resultados_semana_anterior:: 
+2024-07-31 22:36:32,223 - 1
+2024-07-31 22:36:42,063 - Converter a coluna para float
+2024-07-31 22:36:42,064 - 0      0.00
+1      0.00
+2      0.00
+3    200.00
+4     58.03
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:36:42,066 - Debug após filtro:
+2024-07-31 22:36:42,066 - 3    200.00
+4     58.03
+5     75.00
+6     75.00
+7     70.20
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:36:42,141 - DATA AUX AQUI NO DATA_RELEVANTE
+2024-07-31 22:36:42,141 - 3     200.00
+4      58.03
+5      75.00
+6      75.00
+7      70.20
+       ...  
+76    124.16
+77     23.27
+78     22.50
+79     20.90
+80     35.10
+Name: Valor Economizado, Length: 78, dtype: float64
+2024-07-31 22:36:42,143 - data_relevante
+2024-07-31 22:36:42,143 - 3     200.00
+5      75.00
+7      70.20
+12     11.60
+13     11.29
+14     35.43
+15     32.28
+16     28.71
+17     22.56
+18     33.59
+53     28.26
+54     54.49
+55     30.27
+69     51.85
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:36:42,144 - data_muito_relevante
+2024-07-31 22:36:42,144 - 4      58.03
+6      75.00
+8      35.00
+9      20.00
+10     70.80
+       ...  
+76    124.16
+77     23.27
+78     22.50
+79     20.90
+80     35.10
+Name: Valor Economizado, Length: 64, dtype: float64
+2024-07-31 22:36:42,147 - {'count': 14, 'mean': 48.96642857142857, 'std': 47.53814704766347, 'min': 11.29, '25%': 28.372500000000002, '50%': 32.935, '75%': 53.83, 'max': 200.0}
+2024-07-31 22:36:42,148 - {'count': 64, 'mean': 95.77374999999999, 'std': 197.66658069138094, 'min': 8.0, '25%': 23.39, '50%': 47.455, '75%': 71.85, 'max': 1473.47}
+2024-07-31 22:36:42,148 - data_relevante
+2024-07-31 22:36:42,148 -     Valor Economizado Satisfação
+3              200.00  Relevante
+5               75.00  Relevante
+7               70.20  Relevante
+12              11.60  Relevante
+13              11.29  Relevante
+14              35.43  Relevante
+15              32.28  Relevante
+16              28.71  Relevante
+17              22.56  Relevante
+18              33.59  Relevante
+53              28.26  Relevante
+54              54.49  Relevante
+55              30.27  Relevante
+69              51.85  Relevante
+2024-07-31 22:36:42,224 - Data original
+2024-07-31 22:36:42,224 - 0      0.00
+1      0.00
+2      0.00
+3    200.00
+4     58.03
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:36:42,228 - resultados_semana_atual:: 
+2024-07-31 22:36:42,228 - 1
+2024-07-31 22:36:42,228 - resultados_semana_anterior:: 
+2024-07-31 22:36:42,228 - 1
+2024-07-31 22:36:46,607 - Converter a coluna para float
+2024-07-31 22:36:46,608 - 0      0.00
+1      0.00
+2      0.00
+3    200.00
+4     58.03
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:36:46,668 - DATA AUX AQUI NO DATA_RELEVANTE
+2024-07-31 22:36:46,668 - 3     200.00
+4      58.03
+5      75.00
+6      75.00
+7      70.20
+       ...  
+76    124.16
+77     23.27
+78     22.50
+79     20.90
+80     35.10
+Name: Valor Economizado, Length: 78, dtype: float64
+2024-07-31 22:36:46,670 - data_relevante
+2024-07-31 22:36:46,670 - 3     200.00
+5      75.00
+7      70.20
+12     11.60
+13     11.29
+14     35.43
+15     32.28
+16     28.71
+17     22.56
+18     33.59
+53     28.26
+54     54.49
+55     30.27
+69     51.85
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:36:46,671 - data_muito_relevante
+2024-07-31 22:36:46,671 - 4      58.03
+6      75.00
+8      35.00
+9      20.00
+10     70.80
+       ...  
+76    124.16
+77     23.27
+78     22.50
+79     20.90
+80     35.10
+Name: Valor Economizado, Length: 64, dtype: float64
+2024-07-31 22:36:46,677 - {'count': 14, 'mean': 48.96642857142857, 'std': 47.53814704766347, 'min': 11.29, '25%': 28.372500000000002, '50%': 32.935, '75%': 53.83, 'max': 200.0}
+2024-07-31 22:36:46,677 - {'count': 64, 'mean': 95.77374999999999, 'std': 197.66658069138094, 'min': 8.0, '25%': 23.39, '50%': 47.455, '75%': 71.85, 'max': 1473.47}
+2024-07-31 22:36:46,677 - data_relevante
+2024-07-31 22:36:46,677 -     Valor Economizado Satisfação
+3              200.00  Relevante
+5               75.00  Relevante
+7               70.20  Relevante
+12              11.60  Relevante
+13              11.29  Relevante
+14              35.43  Relevante
+15              32.28  Relevante
+16              28.71  Relevante
+17              22.56  Relevante
+18              33.59  Relevante
+53              28.26  Relevante
+54              54.49  Relevante
+55              30.27  Relevante
+69              51.85  Relevante
+2024-07-31 22:36:46,802 - Data original
+2024-07-31 22:36:46,803 - 0      0.00
+1      0.00
+2      0.00
+3    200.00
+4     58.03
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:36:46,807 - resultados_semana_atual:: 
+2024-07-31 22:36:46,808 - 1
+2024-07-31 22:36:46,808 - resultados_semana_anterior:: 
+2024-07-31 22:36:46,808 - 1
+2024-07-31 22:36:49,634 - DATA AUX AQUI NO DATA_RELEVANTE
+2024-07-31 22:36:49,634 - 3     200.00
+4      58.03
+5      75.00
+6      75.00
+7      70.20
+       ...  
+76    124.16
+77     23.27
+78     22.50
+79     20.90
+80     35.10
+Name: Valor Economizado, Length: 78, dtype: float64
+2024-07-31 22:36:49,637 - data_relevante
+2024-07-31 22:36:49,637 - 3     200.00
+5      75.00
+7      70.20
+12     11.60
+13     11.29
+14     35.43
+15     32.28
+16     28.71
+17     22.56
+18     33.59
+53     28.26
+54     54.49
+55     30.27
+69     51.85
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:36:49,638 - data_muito_relevante
+2024-07-31 22:36:49,638 - 4      58.03
+6      75.00
+8      35.00
+9      20.00
+10     70.80
+       ...  
+76    124.16
+77     23.27
+78     22.50
+79     20.90
+80     35.10
+Name: Valor Economizado, Length: 64, dtype: float64
+2024-07-31 22:36:49,641 - {'count': 14, 'mean': 48.96642857142857, 'std': 47.53814704766347, 'min': 11.29, '25%': 28.372500000000002, '50%': 32.935, '75%': 53.83, 'max': 200.0}
+2024-07-31 22:36:49,642 - {'count': 64, 'mean': 95.77374999999999, 'std': 197.66658069138094, 'min': 8.0, '25%': 23.39, '50%': 47.455, '75%': 71.85, 'max': 1473.47}
+2024-07-31 22:36:49,642 - data_relevante
+2024-07-31 22:36:49,643 -     Valor Economizado Satisfação
+3              200.00  Relevante
+5               75.00  Relevante
+7               70.20  Relevante
+12              11.60  Relevante
+13              11.29  Relevante
+14              35.43  Relevante
+15              32.28  Relevante
+16              28.71  Relevante
+17              22.56  Relevante
+18              33.59  Relevante
+53              28.26  Relevante
+54              54.49  Relevante
+55              30.27  Relevante
+69              51.85  Relevante
+2024-07-31 22:36:49,715 - Data original
+2024-07-31 22:36:49,715 - 0      0.00
+1      0.00
+2      0.00
+3    200.00
+4     58.03
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:36:49,719 - resultados_semana_atual:: 
+2024-07-31 22:36:49,719 - 1
+2024-07-31 22:36:49,719 - resultados_semana_anterior:: 
+2024-07-31 22:36:49,719 - 1
+2024-07-31 22:36:59,767 - data_relevante
+2024-07-31 22:36:59,768 - 3     200.00
+5      75.00
+7      70.20
+12     11.60
+13     11.29
+14     35.43
+15     32.28
+16     28.71
+17     22.56
+18     33.59
+53     28.26
+54     54.49
+55     30.27
+69     51.85
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:36:59,770 - data_muito_relevante
+2024-07-31 22:36:59,770 - 4      58.03
+6      75.00
+8      35.00
+9      20.00
+10     70.80
+       ...  
+76    124.16
+77     23.27
+78     22.50
+79     20.90
+80     35.10
+Name: Valor Economizado, Length: 64, dtype: float64
+2024-07-31 22:36:59,774 - {'count': 14, 'mean': 48.96642857142857, 'std': 47.53814704766347, 'min': 11.29, '25%': 28.372500000000002, '50%': 32.935, '75%': 53.83, 'max': 200.0}
+2024-07-31 22:36:59,774 - {'count': 64, 'mean': 95.77374999999999, 'std': 197.66658069138094, 'min': 8.0, '25%': 23.39, '50%': 47.455, '75%': 71.85, 'max': 1473.47}
+2024-07-31 22:36:59,775 - data_relevante
+2024-07-31 22:36:59,776 -     Valor Economizado Satisfação
+3              200.00  Relevante
+5               75.00  Relevante
+7               70.20  Relevante
+12              11.60  Relevante
+13              11.29  Relevante
+14              35.43  Relevante
+15              32.28  Relevante
+16              28.71  Relevante
+17              22.56  Relevante
+18              33.59  Relevante
+53              28.26  Relevante
+54              54.49  Relevante
+55              30.27  Relevante
+69              51.85  Relevante
+2024-07-31 22:36:59,872 - Data original
+2024-07-31 22:36:59,872 - 0      0.00
+1      0.00
+2      0.00
+3    200.00
+4     58.03
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:36:59,880 - resultados_semana_atual:: 
+2024-07-31 22:36:59,880 - 1
+2024-07-31 22:36:59,880 - resultados_semana_anterior:: 
+2024-07-31 22:36:59,880 - 1
+2024-07-31 22:37:04,004 - {'count': 14, 'mean': 48.96642857142857, 'std': 47.53814704766347, 'min': 11.29, '25%': 28.372500000000002, '50%': 32.935, '75%': 53.83, 'max': 200.0}
+2024-07-31 22:37:04,004 - {'count': 64, 'mean': 95.77374999999999, 'std': 197.66658069138094, 'min': 8.0, '25%': 23.39, '50%': 47.455, '75%': 71.85, 'max': 1473.47}
+2024-07-31 22:37:04,004 - data_relevante
+2024-07-31 22:37:04,005 -     Valor Economizado Satisfação
+3              200.00  Relevante
+5               75.00  Relevante
+7               70.20  Relevante
+12              11.60  Relevante
+13              11.29  Relevante
+14              35.43  Relevante
+15              32.28  Relevante
+16              28.71  Relevante
+17              22.56  Relevante
+18              33.59  Relevante
+53              28.26  Relevante
+54              54.49  Relevante
+55              30.27  Relevante
+69              51.85  Relevante
+2024-07-31 22:37:04,077 - Data original
+2024-07-31 22:37:04,077 - 0      0.00
+1      0.00
+2      0.00
+3    200.00
+4     58.03
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:37:04,082 - resultados_semana_atual:: 
+2024-07-31 22:37:04,082 - 1
+2024-07-31 22:37:04,082 - resultados_semana_anterior:: 
+2024-07-31 22:37:04,082 - 1
+2024-07-31 22:37:11,210 - {'count': 14, 'mean': 48.96642857142857, 'std': 47.53814704766347, 'min': 11.29, '25%': 28.372500000000002, '50%': 32.935, '75%': 53.83, 'max': 200.0}
+2024-07-31 22:37:11,211 - {'count': 64, 'mean': 95.77374999999999, 'std': 197.66658069138094, 'min': 8.0, '25%': 23.39, '50%': 47.455, '75%': 71.85, 'max': 1473.47}
+2024-07-31 22:37:11,211 - data_relevante
+2024-07-31 22:37:11,212 -     Valor Economizado Satisfação
+3              200.00  Relevante
+5               75.00  Relevante
+7               70.20  Relevante
+12              11.60  Relevante
+13              11.29  Relevante
+14              35.43  Relevante
+15              32.28  Relevante
+16              28.71  Relevante
+17              22.56  Relevante
+18              33.59  Relevante
+53              28.26  Relevante
+54              54.49  Relevante
+55              30.27  Relevante
+69              51.85  Relevante
+2024-07-31 22:37:11,286 - Data original
+2024-07-31 22:37:11,286 - 0      0.00
+1      0.00
+2      0.00
+3    200.00
+4     58.03
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:37:11,290 - resultados_semana_atual:: 
+2024-07-31 22:37:11,291 - 1
+2024-07-31 22:37:11,291 - resultados_semana_anterior:: 
+2024-07-31 22:37:11,291 - 1
+2024-07-31 22:37:17,685 - Data original
+2024-07-31 22:37:17,686 - 0      0.00
+1      0.00
+2      0.00
+3    200.00
+4     58.03
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:37:17,690 - resultados_semana_atual:: 
+2024-07-31 22:37:17,690 - 1
+2024-07-31 22:37:17,690 - resultados_semana_anterior:: 
+2024-07-31 22:37:17,690 - 1
+2024-07-31 22:37:23,274 - resultados_semana_atual:: 
+2024-07-31 22:37:23,275 - 1
+2024-07-31 22:37:23,275 - resultados_semana_anterior:: 
+2024-07-31 22:37:23,275 - 1
+2024-07-31 22:37:39,918 - resultados_semana_atual:: 
+2024-07-31 22:37:39,919 - 1
+2024-07-31 22:37:39,919 - resultados_semana_anterior:: 
+2024-07-31 22:37:39,919 - 1
+2024-07-31 22:37:54,315 - resultados_semana_atual:: 
+2024-07-31 22:37:54,316 - 1
+2024-07-31 22:37:54,316 - resultados_semana_anterior:: 
+2024-07-31 22:37:54,316 - 1
+2024-07-31 22:38:45,323 - resultados_semana_atual:: 
+2024-07-31 22:38:45,325 - 1
+2024-07-31 22:38:45,326 - resultados_semana_anterior:: 
+2024-07-31 22:38:45,326 - 1
+2024-07-31 22:38:56,452 - resultados_semana_atual:: 
+2024-07-31 22:38:56,453 - 1
+2024-07-31 22:38:56,453 - resultados_semana_anterior:: 
+2024-07-31 22:38:56,453 - 1
+2024-07-31 22:39:04,146 - resultados_semana_atual:: 
+2024-07-31 22:39:04,147 - 6
+2024-07-31 22:39:04,147 - resultados_semana_anterior:: 
+2024-07-31 22:39:04,147 - 6
+2024-07-31 22:39:33,010 - resultados_semana_atual:: 
+2024-07-31 22:39:33,011 - 1
+2024-07-31 22:39:33,011 - resultados_semana_anterior:: 
+2024-07-31 22:39:33,011 - 1
+2024-07-31 22:40:02,486 - resultados_semana_atual:: 
+2024-07-31 22:40:02,488 - 1
+2024-07-31 22:40:02,488 - resultados_semana_anterior:: 
+2024-07-31 22:40:02,488 - 1
+2024-07-31 22:40:15,356 - resultados_semana_atual:: 
+2024-07-31 22:40:15,356 - 1
+2024-07-31 22:40:15,356 - resultados_semana_anterior:: 
+2024-07-31 22:40:15,356 - 1
+2024-07-31 22:40:22,250 - resultados_semana_atual:: 
+2024-07-31 22:40:22,251 - 1
+2024-07-31 22:40:22,251 - resultados_semana_anterior:: 
+2024-07-31 22:40:22,251 - 1
+2024-07-31 22:40:30,290 - resultados_semana_atual:: 
+2024-07-31 22:40:30,290 - 1
+2024-07-31 22:40:30,290 - resultados_semana_anterior:: 
+2024-07-31 22:40:30,290 - 1
+2024-07-31 22:41:08,569 - resultados_semana_atual:: 
+2024-07-31 22:41:08,570 - 1
+2024-07-31 22:41:08,570 - resultados_semana_anterior:: 
+2024-07-31 22:41:08,570 - 1
+2024-07-31 22:41:21,564 - resultados_semana_atual:: 
+2024-07-31 22:41:21,565 - 1
+2024-07-31 22:41:21,565 - resultados_semana_anterior:: 
+2024-07-31 22:41:21,565 - 1
+2024-07-31 22:41:38,172 - resultados_semana_atual:: 
+2024-07-31 22:41:38,173 - 1
+2024-07-31 22:41:38,173 - resultados_semana_anterior:: 
+2024-07-31 22:41:38,173 - 1
+2024-07-31 22:41:40,663 - resultados_semana_atual:: 
+2024-07-31 22:41:40,665 - 1
+2024-07-31 22:41:40,665 - resultados_semana_anterior:: 
+2024-07-31 22:41:40,665 - 1
+2024-07-31 22:42:05,293 - resultados_semana_atual:: 
+2024-07-31 22:42:05,294 - 1
+2024-07-31 22:42:05,294 - resultados_semana_anterior:: 
+2024-07-31 22:42:05,294 - 1
+2024-07-31 22:42:25,088 - resultados_semana_atual:: 
+2024-07-31 22:42:25,088 - 4    67
+Name: Novos CFs, dtype: int64
+2024-07-31 22:42:25,089 - resultados_semana_anterior:: 
+2024-07-31 22:42:25,089 - 1
+2024-07-31 22:42:31,200 - resultados_semana_atual:: 
+2024-07-31 22:42:31,201 - 4    67
+Name: Novos CFs, dtype: int64
+2024-07-31 22:42:31,201 - resultados_semana_anterior:: 
+2024-07-31 22:42:31,201 - 3    1
+Name: Novos CFs, dtype: int64
+2024-07-31 22:42:41,821 - resultados_semana_atual:: 
+2024-07-31 22:42:41,822 - 4    67
+Name: Novos CFs, dtype: int64
+2024-07-31 22:42:41,822 - resultados_semana_anterior:: 
+2024-07-31 22:42:41,822 - 3    1
+Name: Novos CFs, dtype: int64
+2024-07-31 22:43:00,628 - resultados_semana_atual:: 
+2024-07-31 22:43:00,628 - 4    67
+Name: Novos CFs, dtype: int64
+2024-07-31 22:43:00,629 - resultados_semana_anterior:: 
+2024-07-31 22:43:00,629 - 3    1
+Name: Novos CFs, dtype: int64
+2024-07-31 22:44:32,825 - resultados_semana_atual:: 
+2024-07-31 22:44:32,826 - 4    67
+Name: Novos CFs, dtype: int64
+2024-07-31 22:44:32,826 - resultados_semana_anterior:: 
+2024-07-31 22:44:32,827 - 3    1
+Name: Novos CFs, dtype: int64
+2024-07-31 22:44:59,588 - resultados_semana_atual:: 
+2024-07-31 22:44:59,589 - 4    67
+Name: Novos CFs, dtype: int64
+2024-07-31 22:44:59,589 - resultados_semana_anterior:: 
+2024-07-31 22:44:59,589 - 3    1
+Name: Novos CFs, dtype: int64
+2024-07-31 22:45:07,331 - resultados_semana_atual:: 
+2024-07-31 22:45:07,332 - 4    67
+Name: Novos CFs, dtype: int64
+2024-07-31 22:45:07,333 - resultados_semana_anterior:: 
+2024-07-31 22:45:07,333 - 3    1
+Name: Novos CFs, dtype: int64
+2024-07-31 22:45:16,199 - resultados_semana_atual:: 
+2024-07-31 22:45:16,201 - 4    67
+Name: Novos CFs, dtype: int64
+2024-07-31 22:45:16,201 - resultados_semana_anterior:: 
+2024-07-31 22:45:16,201 - 3    1
+Name: Novos CFs, dtype: int64
+2024-07-31 22:45:25,983 - resultados_semana_atual:: 
+2024-07-31 22:45:25,984 - 4    67
+Name: Novos CFs, dtype: int64
+2024-07-31 22:45:25,984 - resultados_semana_anterior:: 
+2024-07-31 22:45:25,984 - 3    1
+Name: Novos CFs, dtype: int64
+2024-07-31 22:45:49,332 - resultados_semana_atual:: 
+2024-07-31 22:45:49,334 - 4    67
+Name: Novos CFs, dtype: int64
+2024-07-31 22:45:49,334 - resultados_semana_anterior:: 
+2024-07-31 22:45:49,334 - 3    1
+Name: Novos CFs, dtype: int64
+2024-07-31 22:45:57,556 - resultados_semana_atual:: 
+2024-07-31 22:45:57,557 - 4    67
+Name: Novos CFs, dtype: int64
+2024-07-31 22:45:57,558 - resultados_semana_anterior:: 
+2024-07-31 22:45:57,558 - 3    1
+Name: Novos CFs, dtype: int64
+2024-07-31 22:46:57,440 - resultados_semana_atual:: 
+2024-07-31 22:46:57,441 - 67
+2024-07-31 22:46:57,441 - resultados_semana_anterior:: 
+2024-07-31 22:46:57,441 - 1
+2024-07-31 22:49:19,741 - resultados_semana_atual:: 
+2024-07-31 22:49:19,742 - 67
+2024-07-31 22:49:19,742 - resultados_semana_anterior:: 
+2024-07-31 22:49:19,742 - 1
+2024-07-31 22:49:39,127 - resultados_semana_atual:: 
+2024-07-31 22:49:39,129 - 67
+2024-07-31 22:49:39,129 - resultados_semana_anterior:: 
+2024-07-31 22:49:39,129 - 1

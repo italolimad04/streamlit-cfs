@@ -50,10 +50,6 @@ def carregar_dados_do_google_sheets():
     return pd.DataFrame(data, columns=headers, dtype=str)
 
 data = carregar_dados_do_google_sheets()
-
-print('INÍCIO DA APLICAÇÃO')
-
-
 # data = pd.read_excel(
 #     "Dados/[Urbis]-Resultados_CFs_Q3.xlsx",
 #     dtype=str,
@@ -74,7 +70,7 @@ def calcular_semana_fiscal(data, start_date):
     return delta.days // 7 + 1
 
 # Definir a data de início do terceiro trimestre
-start_date_q3 = datetime.strptime('2024-07-05', '%Y-%m-%d')
+start_date_q3 = datetime.strptime('2024-07-01', '%Y-%m-%d')
 
 # Calcular a semana fiscal para cada registro
 data['Semana'] = data['Data'].apply(lambda x: calcular_semana_fiscal(x, start_date_q3))
@@ -99,48 +95,13 @@ agg_data = agg_data[['Data_Inicio_Semana', 'Semana', 'Novos CFs', 'Total CFs', '
 # Identificar a semana atual e a semana anterior
 data_atual = datetime.today()
 semana_atual = calcular_semana_fiscal(data_atual, start_date_q3)
+
 semana_anterior = semana_atual - 1
 
 # Pegar os resultados para esta semana e a anterior
-resultados_semana_atual = agg_data[agg_data['Semana'] == semana_atual].shape[0]
-resultados_semana_anterior = agg_data[agg_data['Semana'] == semana_anterior].shape[0]
+resultados_semana_atual = agg_data[agg_data['Semana'] == semana_atual]['Novos CFs'].values[0]
 
-# # Dados fornecidos
-# data_per_week = {
-#     'Semana': ['05/07/2024', '12/07/2024', '19/07/2024', '26/07/2024', '02/08/2024', '09/08/2024', '16/08/2024', '23/08/2024', '30/08/2024', '06/09/2024'],
-#     'Novos CFs': [5, 172, 16, 6, 70, 122, 65, 64, 9, 4],
-#     'Total CFs': [5, 177, 191, 197, 267, 389, 454, 518, 527, 531],
-#     'Meta Q3': [400]*10,
-#     'Total Geral': [3650, 3822, 3838, 3844, 3914, 4036, 4101, 4165, 4174, 4178]
-# }
-
-# data_per_week_Q3 = {
-#     'Semana': [
-#         '26/04/2024', '03/05/2024', '10/05/2024', '17/05/2024', '24/05/2024',
-#         '31/05/2024', '07/06/2024', '14/06/2024', '21/06/2024', '28/06/2024'
-#     ],
-#     "Novos CFs": [6, 3, 0, 125, 34, 96, 218, 110, 15, 6, 2],
-#     "Total CFs": [149, 152, 152, 277, 311, 407, 625, 771, 786, 792, 794]
-# }
-
-# # Criar DataFrame
-# data_per_week = pd.DataFrame(data_per_week)
-# # Converter a coluna 'Semana' para datetime
-# data_per_week['Semana'] = pd.to_datetime(data_per_week['Semana'], format='%d/%m/%Y')
-
-# # Criar dataframe do Q3
-
-# data_q2 = pd.DataFrame(data_per_week_Q3)
-# data_q2['Semana'] = pd.to_datetime(data_q2['Semana'], format='%d/%m/%Y')
-# data_q2 = data_q2.sort_values(by='Semana').reset_index(drop=True)
-# data_q2['Semana'] = data_q2.index + 1
-
-
-# data_Q3 = pd.DataFrame(data_per_week)
-# data_Q3['Semana'] = pd.to_datetime(data_Q3['Semana'], format='%d/%m/%Y')
-# data_Q3 = data_Q3.sort_values(by='Semana').reset_index(drop=True)
-# data_Q3['Semana'] = data_Q3.index + 1
-
+resultados_semana_anterior = agg_data.loc[agg_data['Semana'] == semana_anterior]['Novos CFs'].values[0]
 
 ## Tratando dados
 # Corrigir os valores na coluna 'Parceiro' usando .loc para evitar warnings
@@ -368,34 +329,19 @@ for trace in fig5.data:
 
 # Copiar os dados
 data_aux = data.copy()
-
-logger.info('data_aux AQUI ')
-logger.info(data_aux.shape)
-
-logger.info('Dados pós copy')
-logger.info(data_aux['Valor Economizado'].head())
 # Remover pontos (separador de milhares) e substituir vírgulas por pontos (separador decimal)
 data_aux['Valor Economizado'] = data_aux['Valor Economizado'].apply(lambda x: str(x).replace('.', ''))
 data_aux['Valor Economizado'] = data_aux['Valor Economizado'].apply(lambda x: str(x).replace(',', '.'))
 
-logger.info('Remover pontos (separador de milhares) e substituir vírgulas por pontos (separador decimal)')
-logger.info(data_aux['Valor Economizado'].head())
-
 # Converter valores não convertíveis para NaN
 data_aux['Valor Economizado'] = pd.to_numeric(data_aux['Valor Economizado'], errors='coerce')
-logger.info('Converter valores não convertíveis para NaN')
-logger.info(data_aux['Valor Economizado'].head())
 
 # Filtrar valores diferentes de 0.00 (opcional, dependendo da lógica desejada)
 
 # Converter a coluna para float
 data_aux['Valor Economizado'] = data_aux['Valor Economizado'].astype(float)
-logger.info('Converter a coluna para float')
-logger.info(data_aux['Valor Economizado'].head())
 
 data_aux = data_aux[data_aux['Valor Economizado'] != 0.00]
-logger.info('Debug após filtro:')
-logger.info(data_aux['Valor Economizado'].head())
 
 # Verificar se há dados após o processamento
 if data_aux.empty:
@@ -449,28 +395,8 @@ fig7.update_layout(
 )
 
 # Filtrar os dados para cada nível de satisfação
-logger.info('DATA AUX AQUI NO DATA_RELEVANTE')
-logger.info(data_aux['Valor Economizado'])
 data_relevante = data_aux[data_aux['Satisfação'] == 'Relevante']
 data_muito_relevante = data_aux[data_aux['Satisfação'] == 'Muito Relevante']
-
-logger.info('data_relevante')
-logger.info(data_relevante['Valor Economizado'])
-
-logger.info('data_muito_relevante')
-logger.info(data_muito_relevante['Valor Economizado'])
-
-# Calcular estatísticas descritivas
-# def calcular_estatisticas(df, coluna):
-#     logger.info('chamada do método')
-#     logger.info(df.shape)
-#     logger.info(df[coluna].head())
-#     logger.info(df[coluna].describe())
-#     logger.info(df[coluna].info())
-#     estatisticas = df[coluna].describe(percentiles=[.25, .5, .75]).to_dict()
-#     estatisticas['mean'] = df[coluna].mean()
-#     estatisticas['count'] = df[coluna].count()
-#     return estatisticas
 
 estatisticas_relevante = data_relevante['Valor Economizado'].describe(percentiles=[.25, .5, .75]).to_dict()
 estatisticas_relevante['mean'] = data_relevante['Valor Economizado'].mean()
@@ -479,13 +405,6 @@ estatisticas_relevante['count'] = data_relevante['Valor Economizado'].count()
 estatisticas_muito_relevante = data_muito_relevante['Valor Economizado'].describe(percentiles=[.25, .5, .75]).to_dict()
 estatisticas_muito_relevante['mean'] = data_muito_relevante['Valor Economizado'].mean()
 estatisticas_muito_relevante['count'] = data_muito_relevante['Valor Economizado'].count()
-
-logger.info(estatisticas_relevante)
-logger.info(estatisticas_muito_relevante)
-
-
-logger.info('data_relevante')
-logger.info(data_relevante[['Valor Economizado', 'Satisfação']])
 
 # Criar gráficos de violino
 fig_relevante = px.violin(
@@ -541,9 +460,6 @@ ajustar_layout(fig_relevante)
 ajustar_layout(fig_muito_relevante)
 
 data['Valor Economizado'] = data['Valor Economizado'].str.replace(',', '.').astype(float).round(2)
-
-logger.info('Data original')
-logger.info(data['Valor Economizado'].head())
 
 
 def criar_tabela_interativa(df):
@@ -718,10 +634,6 @@ fig_total.add_trace(go.Indicator(
     delta={'position': "bottom", 'increasing': {'color': 'green'}, 'decreasing': {'color': 'red'}}
 ))
 
-logger.info('resultados_semana_atual:: ' )
-logger.info(resultados_semana_atual)
-logger.info('resultados_semana_anterior:: ' )
-logger.info(resultados_semana_anterior)
 # Adicionar total de clientes fidelizados na semana
 fig_total.add_trace(go.Indicator(
     mode="number+delta",
@@ -772,9 +684,6 @@ with tab5:
       st.plotly_chart(fig3, use_container_width=True)
 
 with tab6:
-   print('estatisticas_relevante fig')
-   print(estatisticas_relevante)
-
    col1, col2, col3 = st.columns(3)
    with col1:
     st.plotly_chart(fig_relevante, use_container_width=True)
