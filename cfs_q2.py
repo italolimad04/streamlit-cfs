@@ -457,19 +457,24 @@ logger.info('data_relevante')
 logger.info(data_relevante.head(5))
 
 # Calcular estatísticas descritivas
-def calcular_estatisticas(df, coluna):
-    logger.info('chamada do método')
-    logger.info(df.shape)
-    logger.info(df[coluna].head())
-    logger.info(df[coluna].describe())
-    logger.info(df[coluna].info())
-    estatisticas = df[coluna].describe(percentiles=[.25, .5, .75]).to_dict()
-    estatisticas['mean'] = df[coluna].mean()
-    estatisticas['count'] = df[coluna].count()
-    return estatisticas
+# def calcular_estatisticas(df, coluna):
+#     logger.info('chamada do método')
+#     logger.info(df.shape)
+#     logger.info(df[coluna].head())
+#     logger.info(df[coluna].describe())
+#     logger.info(df[coluna].info())
+#     estatisticas = df[coluna].describe(percentiles=[.25, .5, .75]).to_dict()
+#     estatisticas['mean'] = df[coluna].mean()
+#     estatisticas['count'] = df[coluna].count()
+#     return estatisticas
 
-estatisticas_relevante = calcular_estatisticas(data_relevante, 'Valor Economizado')
-estatisticas_muito_relevante = calcular_estatisticas(data_muito_relevante, 'Valor Economizado')
+estatisticas_relevante = data_relevante.describe(percentiles=[.25, .5, .75]).to_dict()
+estatisticas_relevante['mean'] = data_relevante.mean()
+estatisticas_relevante['count'] = data_relevante.count()
+
+estatisticas_muito_relevante = data_muito_relevante.describe(percentiles=[.25, .5, .75]).to_dict()
+estatisticas_muito_relevante['mean'] = data_muito_relevante.mean()
+estatisticas_muito_relevante['count'] = data_muito_relevante.count()
 
 logger.info('estatisticas_relevante')
 logger.info(estatisticas_muito_relevante)
