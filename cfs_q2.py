@@ -375,25 +375,22 @@ logger.info(data_aux.shape)
 data_aux['Valor Economizado'] = data_aux['Valor Economizado'].astype(str).str.replace('.', '', regex=True)
 data_aux['Valor Economizado'] = data_aux['Valor Economizado'].str.replace(',', '.', regex=True)
 
-logger.info('data_aux AQUI ')
-logger.info(data_aux.shape)
-
-# Exibir os valores após as substituições
-logger.info('Novo debug')
-logger.info(data_aux['Valor Economizado'].head(5))
+logger.info('Remover pontos (separador de milhares) e substituir vírgulas por pontos (separador decimal)')
+logger.info(data_aux['Valor Economizado'].head())
 
 # Converter valores não convertíveis para NaN
 data_aux['Valor Economizado'] = pd.to_numeric(data_aux['Valor Economizado'], errors='coerce')
-logger.info('data_aux AQUI ')
-logger.info(data_aux.shape)
-# Preencher NaNs com 0
-logger.info('data_aux AQUI ')
-logger.info(data_aux.shape)
+logger.info('Converter valores não convertíveis para NaN')
+logger.info(data_aux['Valor Economizado'].head())
+
 # Filtrar valores diferentes de 0.00 (opcional, dependendo da lógica desejada)
 #data_aux = data_aux[data_aux['Valor Economizado'] != 0.00]
 
 # Converter a coluna para float
 data_aux['Valor Economizado'] = data_aux['Valor Economizado'].astype(float)
+logger.info('Converter a coluna para float')
+logger.info(data_aux['Valor Economizado'].head())
+
 
 logger.info('Debug após conversão:')
 logger.info(data_aux['Valor Economizado'])
