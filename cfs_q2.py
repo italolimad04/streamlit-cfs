@@ -387,7 +387,6 @@ data_aux['Valor Economizado'] = pd.to_numeric(data_aux['Valor Economizado'], err
 logger.info('data_aux AQUI ')
 logger.info(data_aux.shape)
 # Preencher NaNs com 0
-data_aux['Valor Economizado'] = data_aux['Valor Economizado'].fillna(0.00)
 logger.info('data_aux AQUI ')
 logger.info(data_aux.shape)
 # Filtrar valores diferentes de 0.00 (opcional, dependendo da lógica desejada)
@@ -459,7 +458,9 @@ logger.info(data_relevante.head(5))
 
 # Calcular estatísticas descritivas
 def calcular_estatisticas(df, coluna):
-    logger.info(df['Valor Economizado'])
+    logger.info('chamada do método')
+    logger.info(df.shape)
+    logger.info(df['Valor Economizado'].head())
     logger.info(df['Valor Economizado'].describe())
     logger.info(df['Valor Economizado'].info())
     estatisticas = df['Valor Economizado'].describe(percentiles=[.25, .5, .75]).to_dict()
