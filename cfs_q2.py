@@ -459,6 +459,8 @@ logger.info(data_relevante.head(5))
 
 # Calcular estatísticas descritivas
 def calcular_estatisticas(df, coluna):
+    logger.info(df[coluna].describe)
+    logger.info(df[coluna].info())
     estatisticas = df[coluna].describe(percentiles=[.25, .5, .75]).to_dict()
     estatisticas['mean'] = df[coluna].mean()
     estatisticas['count'] = df[coluna].count()
