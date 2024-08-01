@@ -468,13 +468,13 @@ logger.info(data_relevante.head(5))
 #     estatisticas['count'] = df[coluna].count()
 #     return estatisticas
 
-estatisticas_relevante = data_relevante.describe(percentiles=[.25, .5, .75]).to_dict()
-estatisticas_relevante['mean'] = data_relevante.mean()
-estatisticas_relevante['count'] = data_relevante.count()
+estatisticas_relevante = data_relevante['Valor Economizado'].describe(percentiles=[.25, .5, .75]).to_dict()
+estatisticas_relevante['mean'] = data_relevante['Valor Economizado'].mean()
+estatisticas_relevante['count'] = data_relevante['Valor Economizado'].count()
 
-estatisticas_muito_relevante = data_muito_relevante.describe(percentiles=[.25, .5, .75]).to_dict()
-estatisticas_muito_relevante['mean'] = data_muito_relevante.mean()
-estatisticas_muito_relevante['count'] = data_muito_relevante.count()
+estatisticas_muito_relevante = data_muito_relevante['Valor Economizado'].describe(percentiles=[.25, .5, .75]).to_dict()
+estatisticas_muito_relevante['mean'] = data_muito_relevante['Valor Economizado'].mean()
+estatisticas_muito_relevante['count'] = data_muito_relevante['Valor Economizado'].count()
 
 logger.info('estatisticas_relevante')
 logger.info(estatisticas_muito_relevante)

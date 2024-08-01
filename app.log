@@ -34,3 +34,79 @@ Name: Valor Economizado, dtype: object
 2024-07-31 21:22:27,989 - {'count': 14, 'mean': 48.96642857142857, 'std': 47.53814704766347, 'min': 11.29, '25%': 28.372500000000002, '50%': 32.935, '75%': 53.83, 'max': 200.0}
 2024-07-31 21:22:27,989 - Estatísticas - Muito Relevante:
 2024-07-31 21:22:27,989 - {'count': 64, 'mean': 95.77374999999999, 'std': 197.66658069138094, 'min': 8.0, '25%': 23.39, '50%': 47.455, '75%': 71.85, 'max': 1473.47}
+2024-07-31 22:11:41,230 - data_aux AQUI 
+2024-07-31 22:11:41,231 - (81, 8)
+2024-07-31 22:11:41,232 - data_aux AQUI 
+2024-07-31 22:11:41,232 - (81, 8)
+2024-07-31 22:11:41,232 - Novo debug
+2024-07-31 22:11:41,232 - 0      0.00
+1      0.00
+2      0.00
+3    200.00
+4     58.03
+Name: Valor Economizado, dtype: object
+2024-07-31 22:11:41,233 - data_aux AQUI 
+2024-07-31 22:11:41,233 - (81, 8)
+2024-07-31 22:11:41,233 - data_aux AQUI 
+2024-07-31 22:11:41,233 - (81, 8)
+2024-07-31 22:11:41,233 - Debug após conversão:
+2024-07-31 22:11:41,233 - (81, 8)
+2024-07-31 22:11:41,376 - data_relevante
+2024-07-31 22:11:41,377 -           Clube                            Usuário       Data  Valor Economizado        Parceiro Satisfação      Canal  Semana
+0   Sócio Vozão                  AUGUSTO MAGALHÃES 2024-07-10                0.0        Centauro  Relevante     E-mail       1
+3   Sócio Vozão       FRANCINANDO DE SOUZA RIBEIRO 2024-07-02              200.0  Magazine Luiza  Relevante      Clube       0
+5   Sócio Vozão  CARLOS AUGUSTO TEIXEIRA MAGALHAES 2024-07-04               75.0        Netshoes  Relevante      Clube       0
+7   Sócio Vozão    ANTONIO CASSIO DE CARVALHO BLUM 2024-07-09               70.2     Mundo Pixar  Relevante      Clube       1
+12  Clínica SiM            Edna Bezerra dos Santos 2024-07-31               11.6        Drogasil  Relevante  Drogarias       4
+2024-07-31 22:11:41,406 - estatisticas_relevante
+2024-07-31 22:11:41,406 - {'Valor Economizado': {'count': 66.0, 'mean': 92.87151515151515, 'std': 195.3037147722051, 'min': 0.0, '25%': 23.240000000000002, '50%': 42.875, '75%': 68.9225, 'max': 1473.47}, 'Semana': {'count': 66.0, 'mean': 3.6363636363636362, 'std': 0.9709054241569273, 'min': 0.0, '25%': 4.0, '50%': 4.0, '75%': 4.0, 'max': 4.0}, 'mean': Valor Economizado    92.871515
+Semana                3.636364
+dtype: float64, 'count': Clube                66
+Usuário              66
+Data                 66
+Valor Economizado    66
+Parceiro             66
+Satisfação           66
+Canal                66
+Semana               66
+dtype: int64}
+2024-07-31 22:11:41,475 - Data original
+2024-07-31 22:11:41,476 - 0      0.00
+1      0.00
+2      0.00
+3    200.00
+4     58.03
+Name: Valor Economizado, dtype: float64
+2024-07-31 22:13:00,284 - data_aux AQUI 
+2024-07-31 22:13:00,286 - (81, 8)
+2024-07-31 22:13:00,287 - data_aux AQUI 
+2024-07-31 22:13:00,287 - (81, 8)
+2024-07-31 22:13:00,287 - Novo debug
+2024-07-31 22:13:00,287 - 0      0.00
+1      0.00
+2      0.00
+3    200.00
+4     58.03
+Name: Valor Economizado, dtype: object
+2024-07-31 22:13:00,288 - data_aux AQUI 
+2024-07-31 22:13:00,288 - (81, 8)
+2024-07-31 22:13:00,288 - data_aux AQUI 
+2024-07-31 22:13:00,288 - (81, 8)
+2024-07-31 22:13:00,288 - Debug após conversão:
+2024-07-31 22:13:00,288 - (81, 8)
+2024-07-31 22:13:00,348 - data_relevante
+2024-07-31 22:13:00,348 -           Clube                            Usuário       Data  Valor Economizado        Parceiro Satisfação      Canal  Semana
+0   Sócio Vozão                  AUGUSTO MAGALHÃES 2024-07-10                0.0        Centauro  Relevante     E-mail       1
+3   Sócio Vozão       FRANCINANDO DE SOUZA RIBEIRO 2024-07-02              200.0  Magazine Luiza  Relevante      Clube       0
+5   Sócio Vozão  CARLOS AUGUSTO TEIXEIRA MAGALHAES 2024-07-04               75.0        Netshoes  Relevante      Clube       0
+7   Sócio Vozão    ANTONIO CASSIO DE CARVALHO BLUM 2024-07-09               70.2     Mundo Pixar  Relevante      Clube       1
+12  Clínica SiM            Edna Bezerra dos Santos 2024-07-31               11.6        Drogasil  Relevante  Drogarias       4
+2024-07-31 22:13:00,363 - estatisticas_relevante
+2024-07-31 22:13:00,363 - {'count': 66, 'mean': 92.87151515151515, 'std': 195.3037147722051, 'min': 0.0, '25%': 23.240000000000002, '50%': 42.875, '75%': 68.9225, 'max': 1473.47}
+2024-07-31 22:13:00,429 - Data original
+2024-07-31 22:13:00,429 - 0      0.00
+1      0.00
+2      0.00
+3    200.00
+4     58.03
+Name: Valor Economizado, dtype: float64
