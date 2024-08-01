@@ -451,8 +451,8 @@ fig7.update_layout(
 )
 
 # Filtrar os dados para cada nível de satisfação
-data_relevante = data_aux[data_aux['Satisfação'] == 'Relevante']
-data_muito_relevante = data_aux[data_aux['Satisfação'] == 'Muito Relevante']
+data_relevante = data_aux.loc[data_aux['Satisfação'] == 'Relevante']
+data_muito_relevante = data_aux.loc[data_aux['Satisfação'] == 'Muito Relevante']
 
 # Calcular estatísticas descritivas
 def calcular_estatisticas(df, coluna):
