@@ -454,6 +454,9 @@ fig7.update_layout(
 data_relevante = data_aux.loc[data_aux['Satisfação'] == 'Relevante']
 data_muito_relevante = data_aux.loc[data_aux['Satisfação'] == 'Muito Relevante']
 
+logger.info('data_relevante')
+logger.info(data_relevante.head(5))
+
 # Calcular estatísticas descritivas
 def calcular_estatisticas(df, coluna):
     estatisticas = df[coluna].describe(percentiles=[.25, .5, .75]).to_dict()
