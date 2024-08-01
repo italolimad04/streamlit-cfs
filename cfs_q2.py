@@ -391,13 +391,13 @@ data_aux['Valor Economizado'] = data_aux['Valor Economizado'].fillna(0.00)
 logger.info('data_aux AQUI ')
 logger.info(data_aux.shape)
 # Filtrar valores diferentes de 0.00 (opcional, dependendo da lógica desejada)
-data_aux = data_aux[data_aux['Valor Economizado'] != 0.00]
+#data_aux = data_aux[data_aux['Valor Economizado'] != 0.00]
 
 # Converter a coluna para float
 data_aux['Valor Economizado'] = data_aux['Valor Economizado'].astype(float)
 
 logger.info('Debug após conversão:')
-logger.info(data_aux.head(5))
+logger.info(data_aux.shape)
 
 # Verificar se há dados após o processamento
 if data_aux.empty:
