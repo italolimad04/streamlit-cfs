@@ -450,8 +450,10 @@ fig7.update_layout(
 )
 
 # Filtrar os dados para cada nível de satisfação
-data_relevante = data_aux.loc[data_aux['Satisfação'] == 'Relevante']
-data_muito_relevante = data_aux.loc[data_aux['Satisfação'] == 'Muito Relevante']
+logger.info('DATA AUX AQUI NO DATA_RELEVANTE')
+logger.info(data_aux['Valor Economizado'])
+data_relevante = data_aux[data_aux['Satisfação'] == 'Relevante']
+data_muito_relevante = data_aux[data_aux['Satisfação'] == 'Muito Relevante']
 
 logger.info('data_relevante')
 logger.info(data_relevante['Valor Economizado'])
