@@ -476,8 +476,12 @@ estatisticas_muito_relevante = data_muito_relevante['Valor Economizado'].describ
 estatisticas_muito_relevante['mean'] = data_muito_relevante['Valor Economizado'].mean()
 estatisticas_muito_relevante['count'] = data_muito_relevante['Valor Economizado'].count()
 
-logger.info('estatisticas_relevante')
+logger.info(estatisticas_relevante)
 logger.info(estatisticas_muito_relevante)
+
+
+logger.info('data_relevante')
+logger.info(data_relevante[['Valor Economizado', 'Satisfação']])
 
 # Criar gráficos de violino
 fig_relevante = px.violin(
@@ -527,8 +531,6 @@ def ajustar_layout(fig):
 
 
 fig_relevante.update_yaxes(range=[0, data_relevante['Valor Economizado'].max() * 1.1])  # Ajustar o eixo y para iniciar em zero
-
-
 fig_muito_relevante.update_yaxes(range=[0, data_muito_relevante['Valor Economizado'].max() * 1.1])
 
 ajustar_layout(fig_relevante)
