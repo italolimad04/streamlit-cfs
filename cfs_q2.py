@@ -459,11 +459,12 @@ logger.info(data_relevante.head(5))
 
 # Calcular estatísticas descritivas
 def calcular_estatisticas(df, coluna):
-    logger.info(df[coluna].describe)
-    logger.info(df[coluna].info())
-    estatisticas = df[coluna].describe(percentiles=[.25, .5, .75]).to_dict()
-    estatisticas['mean'] = df[coluna].mean()
-    estatisticas['count'] = df[coluna].count()
+    logger.info(df['Valor Economizado'])
+    logger.info(df['Valor Economizado'].describe())
+    logger.info(df['Valor Economizado'].info())
+    estatisticas = df['Valor Economizado'].describe(percentiles=[.25, .5, .75]).to_dict()
+    estatisticas['mean'] = df['Valor Economizado'].mean()
+    estatisticas['count'] = df['Valor Economizado'].count()
     return estatisticas
 
 estatisticas_relevante = calcular_estatisticas(data_relevante, 'Valor Economizado')
