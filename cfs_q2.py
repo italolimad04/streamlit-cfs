@@ -515,7 +515,11 @@ fig_muito_relevante.update_yaxes(range=[0, data_muito_relevante['Valor Economiza
 ajustar_layout(fig_relevante)
 ajustar_layout(fig_muito_relevante)
 
-data['Valor Economizado'] = data['Valor Economizado'].replace('-', '0,00').str.replace(',', '.').astype(float).round(2)
+data['Valor Economizado'] = data['Valor Economizado'].str.replace(',', '.').astype(float).round(2)
+
+logger.info('Data original')
+logger.info(data['Valor Economizado'].head())
+
 
 def criar_tabela_interativa(df):
     gb = GridOptionsBuilder.from_dataframe(df)
