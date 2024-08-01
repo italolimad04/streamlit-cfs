@@ -464,8 +464,8 @@ def calcular_estatisticas(df, coluna):
 estatisticas_relevante = calcular_estatisticas(data_relevante, 'Valor Economizado')
 estatisticas_muito_relevante = calcular_estatisticas(data_muito_relevante, 'Valor Economizado')
 
-print('estatisticas_relevante')
-print(estatisticas_muito_relevante)
+logger.info('estatisticas_relevante')
+logger.info(estatisticas_muito_relevante)
 
 # Criar gráficos de violino
 fig_relevante = px.violin(
