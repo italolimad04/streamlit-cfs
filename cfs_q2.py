@@ -387,16 +387,15 @@ logger.info('Converter valores não convertíveis para NaN')
 logger.info(data_aux['Valor Economizado'].head())
 
 # Filtrar valores diferentes de 0.00 (opcional, dependendo da lógica desejada)
-#data_aux = data_aux[data_aux['Valor Economizado'] != 0.00]
 
 # Converter a coluna para float
 data_aux['Valor Economizado'] = data_aux['Valor Economizado'].astype(float)
 logger.info('Converter a coluna para float')
 logger.info(data_aux['Valor Economizado'].head())
 
-
-logger.info('Debug após conversão:')
-logger.info(data_aux['Valor Economizado'])
+data_aux = data_aux[data_aux['Valor Economizado'] != 0.00]
+logger.info('Debug após filtro:')
+logger.info(data_aux['Valor Economizado'].head())
 
 # Verificar se há dados após o processamento
 if data_aux.empty:
