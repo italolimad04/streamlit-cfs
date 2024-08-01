@@ -353,27 +353,33 @@ for trace in fig5.data:
         trace.textposition = 'outside'
 
 
-# Filtrar dados onde 'Valor Economizado' está preenchido e pode ser convertido para float
+# Supondo que data_aux seja seu DataFrame
 data_aux = data.copy()
-data_aux['Valor Economizado'] = data_aux['Valor Economizado'].str.replace('.', '', regex=True)
-print(data_aux['Valor Economizado'].head(5))
 
+# Remover pontos (separador de milhares) e substituir vírgulas por pontos (separador decimal)
+data_aux['Valor Economizado'] = data_aux['Valor Economizado'].astype(str).str.replace('.', '', regex=True)
 data_aux['Valor Economizado'] = data_aux['Valor Economizado'].str.replace(',', '.', regex=True)
+
+# Exibir os valores após as substituições
 print(data_aux['Valor Economizado'].head(5))
 
+# Converter valores não convertíveis para NaN
+data_aux['Valor Economizado'] = pd.to_numeric(data_aux['Valor Economizado'], errors='coerce')
+
+# Preencher NaNs com 0
 data_aux['Valor Economizado'] = data_aux['Valor Economizado'].fillna(0.00)
-data_aux = data_aux[(pd.notna(data_aux['Valor Economizado'])) & (data_aux['Valor Economizado'] != '0.00')]
+
+# Filtrar valores diferentes de 0.00 (opcional, dependendo da lógica desejada)
+data_aux = data_aux[data_aux['Valor Economizado'] != 0.00]
+
+# Exibir os valores após a filtragem e conversão
+print(data_aux['Valor Economizado'])
+
+# Converter a coluna para float
+data_aux['Valor Economizado'] = data_aux['Valor Economizado'].astype(float)
 
 print(data_aux['Valor Economizado'])
 
-data_aux['Valor Economizado'] = data_aux['Valor Economizado'].astype(float)
-
-
-#data_aux.replace(0, np.nan, inplace = True)
-#data_aux.dropna(subset=['Valor Economizado'], inplace=True)
-
-#data_aux['Valor Economizado'] = pd.to_numeric(data_aux['Valor Economizado'], errors='coerce')
-# Criar o scatter plot com valor economizado no eixo y e nível de satisfação no eixo x
 fig6 = px.scatter(
     data_frame=data_aux,
     x='Satisfação',
