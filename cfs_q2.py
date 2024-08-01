@@ -352,15 +352,13 @@ for trace in fig5.data:
     elif trace.name == 'Novos CFs':
         trace.textposition = 'outside'
 
-
-# Supondo que data_aux seja seu DataFrame
 data_aux = data.copy()
-
 # Remover pontos (separador de milhares) e substituir vírgulas por pontos (separador decimal)
 data_aux['Valor Economizado'] = data_aux['Valor Economizado'].astype(str).str.replace('.', '', regex=True)
 data_aux['Valor Economizado'] = data_aux['Valor Economizado'].str.replace(',', '.', regex=True)
 
 # Exibir os valores após as substituições
+print('Novo debug')
 print(data_aux['Valor Economizado'].head(5))
 
 # Converter valores não convertíveis para NaN
@@ -372,13 +370,8 @@ data_aux['Valor Economizado'] = data_aux['Valor Economizado'].fillna(0.00)
 # Filtrar valores diferentes de 0.00 (opcional, dependendo da lógica desejada)
 data_aux = data_aux[data_aux['Valor Economizado'] != 0.00]
 
-# Exibir os valores após a filtragem e conversão
-print(data_aux['Valor Economizado'])
-
 # Converter a coluna para float
 data_aux['Valor Economizado'] = data_aux['Valor Economizado'].astype(float)
-
-print(data_aux['Valor Economizado'])
 
 fig6 = px.scatter(
     data_frame=data_aux,
@@ -441,7 +434,7 @@ def calcular_estatisticas(df, coluna):
 estatisticas_relevante = calcular_estatisticas(data_relevante, 'Valor Economizado')
 estatisticas_muito_relevante = calcular_estatisticas(data_muito_relevante, 'Valor Economizado')
 
-print(estatisticas_relevante)
+print('estatisticas_relevante')
 print(estatisticas_muito_relevante)
 
 # Criar gráficos de violino
@@ -723,6 +716,8 @@ with tab5:
       st.plotly_chart(fig3, use_container_width=True)
 
 with tab6:
+   print('estatisticas_relevante fig')
+   print(estatisticas_relevante)
    col1, col2, col3 = st.columns(3)
    with col1:
     st.plotly_chart(fig_relevante, use_container_width=True)
