@@ -371,6 +371,9 @@ data_aux = data.copy()
 
 logger.info('data_aux AQUI ')
 logger.info(data_aux.shape)
+
+logger.info('Dados pós copy')
+logger.info(data_aux['Valor Economizado'].head())
 # Remover pontos (separador de milhares) e substituir vírgulas por pontos (separador decimal)
 data_aux['Valor Economizado'] = data_aux['Valor Economizado'].astype(str).str.replace('.', '', regex=True)
 data_aux['Valor Economizado'] = data_aux['Valor Economizado'].str.replace(',', '.', regex=True)
