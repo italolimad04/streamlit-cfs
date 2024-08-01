@@ -718,9 +718,10 @@ fig_total.add_trace(go.Indicator(
     delta={'position': "bottom", 'increasing': {'color': 'green'}, 'decreasing': {'color': 'red'}}
 ))
 
-logger.info('resultados_semana_atual:: ', resultados_semana_atual)
-logger.info('resultados_semana_anterior:: ', resultados_semana_anterior)
-
+logger.info('resultados_semana_atual:: ' )
+logger.info(resultados_semana_atual)
+logger.info('resultados_semana_anterior:: ' )
+logger.info(resultados_semana_anterior)
 # Adicionar total de clientes fidelizados na semana
 fig_total.add_trace(go.Indicator(
     mode="number+delta",
