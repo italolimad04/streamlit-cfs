@@ -73,7 +73,7 @@ def calcular_semana_fiscal(data, start_date):
     return delta.days // 7 + 1
 
 # Definir a data de início do terceiro trimestre
-start_date_q3 = datetime.strptime('2024-06-23', '%Y-%m-%d')
+start_date_q3 = datetime.strptime('2024-07-01', '%Y-%m-%d')
 
 # Calcular a semana fiscal para cada registro
 data['Semana'] = data['Data'].apply(lambda x: calcular_semana_fiscal(x, start_date_q3))
@@ -99,12 +99,25 @@ agg_data = agg_data[['Data_Inicio_Semana', 'Semana', 'Novos CFs', 'Total CFs', '
 data_atual = datetime.today()
 semana_atual = calcular_semana_fiscal(data_atual, start_date_q3)
 
+logger.info('semana_atual')
+logger.info(semana_atual)
+
 semana_anterior = semana_atual - 1
+
+logger.info('semana_anterior')
+logger.info(semana_anterior)
 
 # Pegar os resultados para esta semana e a anterior
 resultados_semana_atual = agg_data[agg_data['Semana'] == semana_atual]['Novos CFs'].values[0]
 
 resultados_semana_anterior = agg_data.loc[agg_data['Semana'] == semana_anterior]['Novos CFs'].values[0]
+
+logger.info('resultados_semana_anterior')
+logger.info(resultados_semana_anterior)
+
+
+logger.info('resultados_semana_atual')
+logger.info(resultados_semana_atual)
 
 ## Tratando dados
 # Corrigir os valores na coluna 'Parceiro' usando .loc para evitar warnings
@@ -584,7 +597,6 @@ total_cfs_2024 = total_fidelizados - 2851  # Total de clientes fidelizados em 20
 # Calcular a diferença entre as semanas
 diferenca_semanal = resultados_semana_atual - resultados_semana_anterior
 
-
 # Calcular quantos faltam para a meta
 faltam_para_meta = meta_anual - total_fidelizados
 
@@ -640,7 +652,7 @@ fig_total.add_trace(go.Indicator(
 # Adicionar total de clientes fidelizados na semana
 fig_total.add_trace(go.Indicator(
     mode="number+delta",
-    value=resultados_semana_atual,
+    value=diferenca_semanal,
     title={"text": f"<span style='color:#1B0A63;'>Novos CFs</span><br><span style='font-size:0.9em;color:#19C78A'>em relação à semana anterior</span>"},
     domain={'row': 0, 'column': 4},
     number={"font": {"size": 70, "color": "#1B0A63"}}
