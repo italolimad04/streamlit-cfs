@@ -94,6 +94,8 @@ agg_data = agg_data[['Data_Inicio_Semana', 'Semana', 'Novos CFs', 'Total CFs', '
 data_atual = datetime.today()
 semana_atual = calcular_semana_fiscal(data_atual, start_date_q3)
 
+logger.info(f'Data_Inicio_Semana: {agg_data['Data_Inicio_Semana']}')
+
 logger.info(f'Semana Atual: {semana_atual}')
 
 semana_anterior = semana_atual - 1
