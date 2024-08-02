@@ -621,6 +621,9 @@ def criar_comparacao_q2_Q3(df_q2, df_Q3):
 
 # Quantidade geral de clientes fidelizados
 total_fidelizados = 4178 + data_estaticos.shape[0]
+logger.info('total_fidelizados')
+logger.info(total_fidelizados)
+
 meta_anual = 5000
 total_cfs_q3 = data_estaticos.shape[0]
 total_cfs_2024 = total_fidelizados - 2851  # Total de clientes fidelizados em 2024
