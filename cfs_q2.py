@@ -587,7 +587,7 @@ faltam_para_meta = meta_anual - total_fidelizados
 
 # Calcular porcentagens
 porcentagem_meta_anual = (total_fidelizados / meta_anual) * 100
-porcentagem_meta_q3 = (total_cfs_q3 / meta_anual) * 100
+porcentagem_meta_q3 = (total_cfs_q3 / meta_cfs) * 100
 porcentagem_meta_2024 = (total_cfs_2024 / meta_anual) * 100
 restante_meta_anual = 100 - porcentagem_meta_anual
 
@@ -638,7 +638,6 @@ fig_total.add_trace(go.Indicator(
 fig_total.add_trace(go.Indicator(
     mode="number+delta",
     value=resultados_semana_atual,
-    delta={'reference': resultados_semana_anterior, 'relative': True, 'valueformat': '.0%', 'position': "bottom", 'increasing': {'color': 'green'}, 'decreasing': {'color': 'red'}},
     title={"text": f"<span style='color:#1B0A63;'>Novos CFs</span><br><span style='font-size:0.9em;color:#19C78A'>em relação à semana anterior</span>"},
     domain={'row': 0, 'column': 4},
     number={"font": {"size": 70, "color": "#1B0A63"}}
