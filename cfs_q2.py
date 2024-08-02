@@ -52,23 +52,16 @@ def carregar_dados_do_google_sheets():
     headers = data.pop(0)  # Remove o cabeçalho da lista de dados
     return pd.DataFrame(data, columns=headers, dtype=str)
 
+# Carregar os dados
 data = carregar_dados_do_google_sheets()
-# data = pd.read_excel(
-#     "Dados/[Urbis]-Resultados_CFs_Q3.xlsx",
-#     dtype=str,
-# )
 
-# Função para calcular a semana fiscal
-def calcular_semana_fiscal(data, start_date):
-    delta = data - start_date
-    return delta.days // 7 + 1
-
-# Converter a coluna 'Data' para datetime
-
+# Conversões e cálculos
 data['Data'] = pd.to_datetime(data['Data'], errors='coerce')
 
 # Função para calcular a semana fiscal
 def calcular_semana_fiscal(data, start_date):
+    logger.info(data)
+    logger.info(start_date)
     delta = data - start_date
     return delta.days // 7 + 1
 
@@ -99,25 +92,25 @@ agg_data = agg_data[['Data_Inicio_Semana', 'Semana', 'Novos CFs', 'Total CFs', '
 data_atual = datetime.today()
 semana_atual = calcular_semana_fiscal(data_atual, start_date_q3)
 
-logger.info('semana_atual')
-logger.info(semana_atual)
+logger.info(f'Semana Atual: {semana_atual}')
 
 semana_anterior = semana_atual - 1
 
-logger.info('semana_anterior')
-logger.info(semana_anterior)
+logger.info(f'Semana Anterior: {semana_anterior}')
 
-# Pegar os resultados para esta semana e a anterior
-resultados_semana_atual = agg_data[agg_data['Semana'] == semana_atual]['Novos CFs'].values[0]
+# Pegar os resultados para esta semana e a anterior com verificações de erro
+try:
+    resultados_semana_atual = agg_data[agg_data['Semana'] == semana_atual]['Novos CFs'].values[0]
+except IndexError:
+    resultados_semana_atual = 0  # Definir um valor padrão ou tomar outra ação
 
-resultados_semana_anterior = agg_data.loc[agg_data['Semana'] == semana_anterior]['Novos CFs'].values[0]
+try:
+    resultados_semana_anterior = agg_data[agg_data['Semana'] == semana_anterior]['Novos CFs'].values[0]
+except IndexError:
+    resultados_semana_anterior = 0  # Definir um valor padrão ou tomar outra ação
 
-logger.info('resultados_semana_anterior')
-logger.info(resultados_semana_anterior)
-
-
-logger.info('resultados_semana_atual')
-logger.info(resultados_semana_atual)
+logger.info(f'Resultados Semana Anterior: {resultados_semana_anterior}')
+logger.info(f'Resultados Semana Atual: {resultados_semana_atual}')
 
 ## Tratando dados
 # Corrigir os valores na coluna 'Parceiro' usando .loc para evitar warnings
