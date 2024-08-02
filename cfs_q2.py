@@ -85,23 +85,18 @@ def calcular_semana_fiscal(data, start_date):
 start_date_q3 = datetime.strptime('2024-06-27', '%Y-%m-%d')
 
 # Calcular a semana fiscal para cada registro
-data['Semana'] = data['Data'].apply(lambda x: calcular_semana_fiscal(x, start_date_q3)).astype(int)
+data['Semana'] = data['Data'].apply(lambda x: calcular_semana_fiscal(x, start_date_q3))
 
-# Verificar a data de hoje e a data máxima nos dados
-data_atual = datetime.today()
-data_max = data['Data'].max()
-logger.info(f'Data máxima nos dados: {data_max}')
-
-# Adicionar registros para semanas até a data atual
-if data_max < data_atual:
-    additional_weeks = pd.date_range(start=data_max + timedelta(days=7), end=data_atual, freq='7D')
-    additional_data = pd.DataFrame({'Data': additional_weeks, 'Semana': additional_weeks.map(lambda x: calcular_semana_fiscal(x, start_date_q3))})
-    data = pd.concat([data, additional_data], ignore_index=True)
-
-# Agrupar os dados por semana, incluindo semanas sem dados
+# Criar DataFrame para todas as semanas
 all_weeks = pd.DataFrame({'Semana': range(1, int(data['Semana'].max()) + 1)})
+
+# Agrupar os dados por semana e mesclar com todas as semanas
 agg_data = data.groupby('Semana').size().reset_index(name='Novos CFs')
 agg_data = all_weeks.merge(agg_data, on='Semana', how='left').fillna(0)
+
+# Garantir que as colunas sejam inteiros
+agg_data['Semana'] = agg_data['Semana'].astype(int)
+agg_data['Novos CFs'] = agg_data['Novos CFs'].astype(int)
 
 # Adicionar colunas adicionais
 agg_data['Total CFs'] = agg_data['Novos CFs'].cumsum()
