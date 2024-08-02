@@ -37,7 +37,6 @@ load_dotenv()
 #Configuração do Google Cloud - Sheets API
 
 def carregar_dados_do_google_sheets():
-    #key_sheet = os.getenv('SHEET_KEY')
     scopes = [
         "https://www.googleapis.com/auth/spreadsheets.readonly",
         "https://www.googleapis.com/auth/drive.readonly"
@@ -46,7 +45,6 @@ def carregar_dados_do_google_sheets():
     creds_dict = json.loads(creds_json)
     credentials = Credentials.from_service_account_info(creds_dict, scopes=scopes)
     client = gs.authorize(credentials)
-    #spreadsheet_name = '[Urbis] - Resultados CFs Q3'
     sheet = client.open_by_key(st.secrets["SHEET_KEY"]).sheet1
     data = sheet.get_all_values()  # Tenta obter todos os valores como strings
     headers = data.pop(0)  # Remove o cabeçalho da lista de dados
@@ -64,7 +62,6 @@ def calcular_semana_fiscal(data, start_date):
     logger.info(f'start_date: {start_date}')
     delta = data - start_date
     logger.info(f'delta.days: {delta.days}')
-
     return delta.days // 7 + 1
 
 # Definir a data de início do terceiro trimestre
@@ -72,6 +69,17 @@ start_date_q3 = datetime.strptime('2024-06-27', '%Y-%m-%d')
 
 # Calcular a semana fiscal para cada registro
 data['Semana'] = data['Data'].apply(lambda x: calcular_semana_fiscal(x, start_date_q3))
+
+# Verificar a data de hoje e a data máxima nos dados
+data_atual = datetime.today()
+data_max = data['Data'].max()
+logger.info(f'Data máxima nos dados: {data_max}')
+
+# Adicionar registros para semanas até a data atual
+if data_max < data_atual:
+    additional_weeks = pd.date_range(start=data_max + timedelta(days=7), end=data_atual, freq='7D')
+    additional_data = pd.DataFrame({'Data': additional_weeks, 'Semana': additional_weeks.map(lambda x: calcular_semana_fiscal(x, start_date_q3))})
+    data = pd.concat([data, additional_data], ignore_index=True)
 
 # Agrupar os dados por semana
 agg_data = data.groupby('Semana').size().reset_index(name='Novos CFs')
@@ -91,15 +99,12 @@ agg_data['Data_Inicio_Semana'] = pd.to_datetime(agg_data['Data_Inicio_Semana'], 
 agg_data = agg_data[['Data_Inicio_Semana', 'Semana', 'Novos CFs', 'Total CFs', 'Meta Q3', 'Total_Geral']]
 
 # Identificar a semana atual e a semana anterior
-data_atual = datetime.today()
 semana_atual = calcular_semana_fiscal(data_atual, start_date_q3)
 
 logger.info(agg_data['Data_Inicio_Semana'].head())
-
 logger.info(f'Semana Atual: {semana_atual}')
 
 semana_anterior = semana_atual - 1
-
 logger.info(f'Semana Anterior: {semana_anterior}')
 
 # Pegar os resultados para esta semana e a anterior com verificações de erro
