@@ -87,7 +87,17 @@ start_date_q3 = datetime.strptime('2024-06-27', '%Y-%m-%d')
 # Calcular a semana fiscal para cada registro
 data['Semana'] = data['Data'].apply(lambda x: calcular_semana_fiscal(x, start_date_q3))
 
-# Criar DataFrame para todas as semanas
+# Verificar a data de hoje e a data máxima nos dados
+data_atual = datetime.today()
+data_max = data['Data'].max()
+logger.info(f'Data máxima nos dados: {data_max}')
+
+# Adicionar registros para semanas até a data atual
+if data_max < data_atual:
+    additional_weeks = pd.date_range(start=data_max + timedelta(days=7), end=data_atual, freq='7D')
+    additional_data = pd.DataFrame({'Data': additional_weeks, 'Semana': additional_weeks.map(lambda x: calcular_semana_fiscal(x, start_date_q3))})
+    data = pd.concat([data, additional_data], ignore_index=True)
+
 all_weeks = pd.DataFrame({'Semana': range(1, int(data['Semana'].max()) + 1)})
 
 # Agrupar os dados por semana e mesclar com todas as semanas
