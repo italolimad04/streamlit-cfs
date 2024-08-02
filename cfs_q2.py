@@ -60,9 +60,11 @@ data['Data'] = pd.to_datetime(data['Data'], errors='coerce')
 
 # Função para calcular a semana fiscal
 def calcular_semana_fiscal(data, start_date):
-    logger.info(data)
-    logger.info(start_date)
+    logger.info(f'Data: {data}')
+    logger.info(f'start_date: {start_date}')
     delta = data - start_date
+    logger.info(f'delta.days: {delta.days}')
+
     return delta.days // 7 + 1
 
 # Definir a data de início do terceiro trimestre
