@@ -76,6 +76,9 @@ data = carregar_dados_do_google_sheets()
 # Conversões e cálculos
 data['Data'] = pd.to_datetime(data['Data'], errors='coerce')
 
+logger.info(data.shape)
+
+logger.info(data['Data'].tail())
 # Função para calcular a semana fiscal
 def calcular_semana_fiscal(data, start_date):
     delta = data - start_date
