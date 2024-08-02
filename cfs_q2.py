@@ -85,7 +85,7 @@ def calcular_semana_fiscal(data, start_date):
 start_date_q3 = datetime.strptime('2024-06-27', '%Y-%m-%d')
 
 # Calcular a semana fiscal para cada registro
-data['Semana'] = data['Data'].apply(lambda x: calcular_semana_fiscal(x, start_date_q3))
+data['Semana'] = data['Data'].apply(lambda x: calcular_semana_fiscal(x, start_date_q3)).astype(int)
 
 # Verificar a data de hoje e a data máxima nos dados
 data_atual = datetime.today()
@@ -99,7 +99,7 @@ if data_max < data_atual:
     data = pd.concat([data, additional_data], ignore_index=True)
 
 # Agrupar os dados por semana, incluindo semanas sem dados
-all_weeks = pd.DataFrame({'Semana': range(1, data['Semana'].max() + 1)})
+all_weeks = pd.DataFrame({'Semana': range(1, int(data['Semana'].max()) + 1)})
 agg_data = data.groupby('Semana').size().reset_index(name='Novos CFs')
 agg_data = all_weeks.merge(agg_data, on='Semana', how='left').fillna(0)
 
