@@ -38,7 +38,10 @@ load_dotenv()
 
 def carregar_dados_do_google_sheets():
     #key_sheet = os.getenv('SHEET_KEY')
-    scopes = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+    scopes = [
+        "https://www.googleapis.com/auth/spreadsheets.readonly",
+        "https://www.googleapis.com/auth/drive.readonly"
+    ]
     creds_json = st.secrets["GOOGLE_SHEETS_CREDENTIALS"]
     creds_dict = json.loads(creds_json)
     credentials = Credentials.from_service_account_info(creds_dict, scopes=scopes)
