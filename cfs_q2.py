@@ -650,7 +650,7 @@ fig_total.add_trace(go.Indicator(
     value=total_fidelizados,
     title={"text": f"<span style='color:#1B0A63;'>Clientes Fidelizados</span><br><span style='font-size:0.9em;color:#19C78A'>{porcentagem_meta_anual:.2f}% da meta anual</span>"},
     domain={'row': 0, 'column': 0},
-    number={"font": {"size": 70, "color": "#1B0A63"}},
+    number={"font": {"size": 70, "color": "#1B0A63"}, "valueformat": "d"},
     delta={'position': "bottom", 'increasing': {'color': 'green'}, 'decreasing': {'color': 'red'}}
 ))
 
