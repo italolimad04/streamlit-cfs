@@ -87,7 +87,7 @@ def calcular_semana_fiscal(data, start_date):
     return delta.days // 7 + 1
 
 # Definir a data de início do terceiro trimestre
-start_date_q3 = datetime.strptime('2024-06-27', '%Y-%m-%d')
+start_date_q3 = datetime.strptime('2024-07-03', '%Y-%m-%d')
 
 # Calcular a semana fiscal para cada registro
 data['Semana'] = data['Data'].apply(lambda x: calcular_semana_fiscal(x, start_date_q3))
