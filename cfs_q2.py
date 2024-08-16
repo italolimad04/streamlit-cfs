@@ -13,6 +13,7 @@ from google.oauth2.service_account import Credentials
 import os
 import json
 from dotenv import load_dotenv
+from pytz import timezone
 
 import logging
 
@@ -81,25 +82,32 @@ data['Data'] = pd.to_datetime(data['Data'], errors='coerce')
 logger.info(data.shape)
 
 logger.info(data['Data'].tail())
+# Definir o timezone local e UTC
+local_tz = timezone('America/Sao_Paulo')  # Ajuste conforme necessário
+utc_tz = timezone('UTC')
+
 # Função para calcular a semana fiscal
 def calcular_semana_fiscal(data, start_date):
     delta = data - start_date
     return delta.days // 7 + 1
 
 # Definir a data de início do terceiro trimestre
-start_date_q3 = datetime.strptime('2024-07-01', '%Y-%m-%d')
+start_date_q3 = datetime(2024, 6, 29, tzinfo=local_tz)
+
+# Converter as datas para o timezone local e então para UTC
+data['Data'] = pd.to_datetime(data['Data']).dt.tz_localize(local_tz).dt.tz_convert(utc_tz)
 
 # Calcular a semana fiscal para cada registro
 data['Semana'] = data['Data'].apply(lambda x: calcular_semana_fiscal(x, start_date_q3))
 
-# Verificar a data de hoje e a data máxima nos dados
-data_atual = datetime.today()
+# Verificar a data de hoje no timezone local e convertê-la para UTC
+data_atual = datetime.now(local_tz).astimezone(utc_tz)
 data_max = data['Data'].max()
 logger.info(f'Data máxima nos dados: {data_max}')
 
 # Adicionar registros para semanas até a data atual
 if data_max < data_atual:
-    additional_weeks = pd.date_range(start=data_max + timedelta(days=7), end=data_atual, freq='7D')
+    additional_weeks = pd.date_range(start=data_max + timedelta(days=7), end=data_atual, freq='7D', tz=utc_tz)
     additional_data = pd.DataFrame({'Data': additional_weeks, 'Semana': additional_weeks.map(lambda x: calcular_semana_fiscal(x, start_date_q3))})
     data = pd.concat([data, additional_data], ignore_index=True)
 
@@ -135,7 +143,6 @@ logger.info(f'Semana Atual: {semana_atual}')
 
 semana_anterior = semana_atual - 1
 logger.info(f'Semana Anterior: {semana_anterior}')
-
 # Pegar os resultados para esta semana e a anterior com verificações de erro
 try:
     resultados_semana_atual = agg_data[agg_data['Semana'] == semana_atual]['Novos CFs'].values[0]
@@ -318,6 +325,13 @@ fig4.update_layout(
 
 # Criar a visualização
 fig5 = go.Figure()
+
+logger.info('Semanas')
+logger.info(agg_data['Semana'])
+
+logger.info("agg_data['Total CFs']")
+logger.info(agg_data['Total CFs'])
+
 
 # Adicionar trace para Total Q3
 fig5.add_trace(go.Scatter(
