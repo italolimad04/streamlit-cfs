@@ -151,7 +151,6 @@ logger.info(f'Semana Anterior: {semana_anterior}')
 try:
     resultados_semana_atual = agg_data[agg_data['Semana'] == semana_atual]['Novos CFs'].values[0]
 except IndexError:
-    print('entro aqui?')
     resultados_semana_atual = 0  # Definir um valor padrão ou tomar outra ação
 
 try:
@@ -649,10 +648,9 @@ total_cfs_q3 = data_estaticos.shape[0]
 total_cfs_2024 = total_fidelizados - 2851  # Total de clientes fidelizados em 2024
 
 # Calcular a diferença entre as semanas
-diferenca_semanal = resultados_semana_atual
+diferenca_semanal = resultados_semana_atual - resultados_semana_anterior
 
-logger.info('resultados_semana_atual')
-logger.info(resultados_semana_atual)
+logger.info(resultados_semana_atual, resultados_semana_anterior, diferenca_semanal)
 
 # Calcular quantos faltam para a meta
 faltam_para_meta = meta_anual - total_fidelizados
@@ -709,8 +707,8 @@ fig_total.add_trace(go.Indicator(
 # Adicionar total de clientes fidelizados na semana
 fig_total.add_trace(go.Indicator(
     mode="number+delta",
-    value=resultados_semana_atual,
-    title={"text": f"<span style='color:#1B0A63;'>Novos CFs</span><br><span style='font-size:0.9em;color:#19C78A'>em relação à última semana</span>"},
+    value=diferenca_semanal,
+    title={"text": f"<span style='color:#1B0A63;'>Novos CFs</span><br><span style='font-size:0.9em;color:#19C78A'>em relação à semana anterior</span>"},
     domain={'row': 0, 'column': 4},
     number={"font": {"size": 70, "color": "#1B0A63"}}
 ))
