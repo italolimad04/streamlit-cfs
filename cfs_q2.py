@@ -710,7 +710,7 @@ fig_total.add_trace(go.Indicator(
 fig_total.add_trace(go.Indicator(
     mode="number+delta",
     value=resultados_semana_anterior,
-    title={"text": f"<span style='color:#1B0A63;'>Novos CFs</span><br><span style='font-size:0.9em;color:#19C78A'>em relação à semana anterior</span>"},
+    title={"text": f"<span style='color:#1B0A63;'>Novos CFs</span><br><span style='font-size:0.9em;color:#19C78A'>em relação à última apresentação</span>"},
     domain={'row': 0, 'column': 4},
     number={"font": {"size": 70, "color": "#1B0A63"}}
 ))
