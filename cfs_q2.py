@@ -650,9 +650,9 @@ total_cfs_2024 = total_fidelizados - 2851  # Total de clientes fidelizados em 20
 # Calcular a diferença entre as semanas
 diferenca_semanal = resultados_semana_atual - resultados_semana_anterior
 
+logger.info(diferenca_semanal)
 logger.info(resultados_semana_atual)
-logger.info(resultados_semana_atual)
-logger.info(resultados_semana_atual)
+logger.info(resultados_semana_anterior)
 
 # Calcular quantos faltam para a meta
 faltam_para_meta = meta_anual - total_fidelizados
