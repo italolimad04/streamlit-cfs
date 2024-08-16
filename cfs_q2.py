@@ -87,7 +87,7 @@ def calcular_semana_fiscal(data, start_date):
     return delta.days // 7 + 1
 
 # Definir a data de início do terceiro trimestre
-start_date_q3 = datetime.strptime('2024-07-07', '%Y-%m-%d')
+start_date_q3 = datetime.strptime('2024-07-01', '%Y-%m-%d')
 
 # Calcular a semana fiscal para cada registro
 data['Semana'] = data['Data'].apply(lambda x: calcular_semana_fiscal(x, start_date_q3))
@@ -115,7 +115,7 @@ agg_data['Novos CFs'] = agg_data['Novos CFs'].astype(int)
 
 # Adicionar colunas adicionais
 agg_data['Total CFs'] = agg_data['Novos CFs'].cumsum()
-agg_data['Meta Q3'] = 400
+agg_data['Meta Q3'] = 822
 agg_data['Total_Geral'] = agg_data['Total CFs'] + 4178  # Ajuste conforme necessário
 
 # Adicionar coluna 'Data_Inicio_Semana'
@@ -162,7 +162,7 @@ data['Parceiro'] = data['Parceiro'].str.strip().str.title()
 
 # Calcular o número total de CFs
 total_cfs = data.shape[0]
-meta_cfs = 400
+meta_cfs = 822
 
 # Criar a visualização
 fig = go.Figure(data=[
@@ -218,7 +218,7 @@ fig2.update_layout(
         title='Clientes Fidelizados',
         titlefont=dict(size=20, color='black', family='Roboto'),
         tickfont=dict(size=18, color='black', family='Roboto'),
-        dtick=10
+        dtick=20
     ),
     bargap=0.1,  # Diminuir o espaçamento entre as barras
     paper_bgcolor='white'
