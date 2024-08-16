@@ -86,13 +86,14 @@ logger.info(data['Data'].tail())
 local_tz = timezone('America/Sao_Paulo')  # Ajuste conforme necessário
 utc_tz = timezone('UTC')
 
+
 # Função para calcular a semana fiscal
 def calcular_semana_fiscal(data, start_date):
     delta = data - start_date
     return delta.days // 7 + 1
 
 # Definir a data de início do terceiro trimestre
-start_date_q3 = datetime(2024, 6, 29, tzinfo=local_tz)
+start_date_q3 = datetime(2024, 6, 28, tzinfo=local_tz)
 
 # Converter as datas para o timezone local e então para UTC
 data['Data'] = pd.to_datetime(data['Data']).dt.tz_localize(local_tz).dt.tz_convert(utc_tz)
@@ -102,6 +103,9 @@ data['Semana'] = data['Data'].apply(lambda x: calcular_semana_fiscal(x, start_da
 
 # Verificar a data de hoje no timezone local e convertê-la para UTC
 data_atual = datetime.now(local_tz).astimezone(utc_tz)
+
+logger.info(f"Timezone atual em produção: {data_atual}")
+
 data_max = data['Data'].max()
 logger.info(f'Data máxima nos dados: {data_max}')
 
@@ -147,6 +151,7 @@ logger.info(f'Semana Anterior: {semana_anterior}')
 try:
     resultados_semana_atual = agg_data[agg_data['Semana'] == semana_atual]['Novos CFs'].values[0]
 except IndexError:
+    print('entro aqui?')
     resultados_semana_atual = 0  # Definir um valor padrão ou tomar outra ação
 
 try:
@@ -644,7 +649,10 @@ total_cfs_q3 = data_estaticos.shape[0]
 total_cfs_2024 = total_fidelizados - 2851  # Total de clientes fidelizados em 2024
 
 # Calcular a diferença entre as semanas
-diferenca_semanal = resultados_semana_atual - resultados_semana_anterior
+diferenca_semanal = resultados_semana_atual
+
+logger.info('resultados_semana_atual')
+logger.info(resultados_semana_atual)
 
 # Calcular quantos faltam para a meta
 faltam_para_meta = meta_anual - total_fidelizados
@@ -701,8 +709,8 @@ fig_total.add_trace(go.Indicator(
 # Adicionar total de clientes fidelizados na semana
 fig_total.add_trace(go.Indicator(
     mode="number+delta",
-    value=diferenca_semanal,
-    title={"text": f"<span style='color:#1B0A63;'>Novos CFs</span><br><span style='font-size:0.9em;color:#19C78A'>em relação à semana anterior</span>"},
+    value=resultados_semana_atual,
+    title={"text": f"<span style='color:#1B0A63;'>Novos CFs</span><br><span style='font-size:0.9em;color:#19C78A'>em relação à última semana</span>"},
     domain={'row': 0, 'column': 4},
     number={"font": {"size": 70, "color": "#1B0A63"}}
 ))
