@@ -14,6 +14,8 @@ import os
 import json
 from dotenv import load_dotenv
 from pytz import timezone
+import requests
+import time
 
 import logging
 
@@ -35,7 +37,7 @@ st.set_page_config(layout="wide")
 st.title("Painel de Clientes Fidelizados no Q3")
 
 load_dotenv()
-#Configuração do Google Cloud - Sheets API
+
 
 def carregar_dados_do_google_sheets():
     scopes = [
@@ -54,27 +56,67 @@ def carregar_dados_do_google_sheets():
 # Carregar os dados
 data = carregar_dados_do_google_sheets()
 
-data_estaticos = data.copy()
+# load_dotenv()
+# token = os.getenv('TOKEN_ADMIN')
+# headers = {
+#     'Authorization': f'Bearer {token}',
+#     'Content-Type': 'application/json'
+# }
+
+TTL = 500
+def invalidate_cache():
+  fetch_data.clear()
+
+firstDayOfQuarter = '2024-07-01'
+lastDayOfQuarter = '2024-10-01'
+
+@st.cache_data(ttl=TTL) 
+def fetch_data():
+    response = requests.get(url=f"https://new-api.urbis.cc/communication/fidelized-clients-by-quarter?initialDate={firstDayOfQuarter}&finalDate={lastDayOfQuarter}").json()
+    fidelizedClientsData = response['data']['fidelizedClientsData']
+
+    df_fidelized_clients_by_survey = pd.DataFrame(data=fidelizedClientsData)
+
+    df_fidelized_clients_by_survey['Valor Economizado'] = pd.to_numeric(df_fidelized_clients_by_survey['Valor Economizado'], errors='coerce')
+
+    return df_fidelized_clients_by_survey, time.time()
+
+df_fidelized_clients_by_survey, last_updated = fetch_data()
+
+def carregar_dados_do_google_sheets():
+    scopes = [
+        "https://www.googleapis.com/auth/spreadsheets.readonly",
+        "https://www.googleapis.com/auth/drive.readonly"
+    ]
+    creds_json = st.secrets["GOOGLE_SHEETS_CREDENTIALS"]
+    creds_dict = json.loads(creds_json)
+    credentials = Credentials.from_service_account_info(creds_dict, scopes=scopes)
+    client = gs.authorize(credentials)
+    sheet = client.open_by_key(st.secrets["SHEET_KEY"]).sheet1
+    data = sheet.get_all_values()  # Tenta obter todos os valores como strings
+    headers = data.pop(0)  # Remove o cabeçalho da lista de dados
+    return pd.DataFrame(data, columns=headers, dtype=str)
+
+# Carregar os dados
+data = carregar_dados_do_google_sheets()
+
+data = pd.concat([data, df_fidelized_clients_by_survey])
+
+# Adequando valor dos dados no dataframe consolidado
+data['Canal'].loc[data['Canal'] == 'email'] = 'E-mail'
+data['Parceiro'].loc[data['Parceiro'] == 'Farmácias Pague Menos'] = 'Pague Menos'
+data['Clube'].loc[data['Clube'] == 'Clínica SiM+'] = 'Clínica SiM'
+data['Clube'].loc[data['Clube'] == 'Club de Vantagens | Sócio Vozão'] = 'Sócio Vozão'
+data['Clube'].loc[data['Clube'] == 'MOV Fibra'] = 'Mov Telecom'
+data['Clube'].loc[data['Clube'] == 'Clube O Povo'] = 'O Povo'
+data['Satisfação'].loc[data['Satisfação'] == 'Muito relevante'] = 'Muito Relevante'
 
 # Conversões e cálculos
 data['Data'] = pd.to_datetime(data['Data'], errors='coerce')
 
-def carregar_dados_do_google_sheets():
-    scopes = [
-        "https://www.googleapis.com/auth/spreadsheets.readonly",
-        "https://www.googleapis.com/auth/drive.readonly"
-    ]
-    creds_json = st.secrets["GOOGLE_SHEETS_CREDENTIALS"]
-    creds_dict = json.loads(creds_json)
-    credentials = Credentials.from_service_account_info(creds_dict, scopes=scopes)
-    client = gs.authorize(credentials)
-    sheet = client.open_by_key(st.secrets["SHEET_KEY"]).sheet1
-    data = sheet.get_all_values()  # Tenta obter todos os valores como strings
-    headers = data.pop(0)  # Remove o cabeçalho da lista de dados
-    return pd.DataFrame(data, columns=headers, dtype=str)
+print(data['Satisfação'].value_counts())
 
-# Carregar os dados
-data = carregar_dados_do_google_sheets()
+data_estaticos = data.copy()
 
 # Conversões e cálculos
 data['Data'] = pd.to_datetime(data['Data'], errors='coerce')
@@ -229,7 +271,7 @@ fig2.update_layout(
         title='Clientes Fidelizados',
         titlefont=dict(size=20, color='black', family='Roboto'),
         tickfont=dict(size=18, color='black', family='Roboto'),
-        dtick=20
+        dtick=50
     ),
     bargap=0.1,  # Diminuir o espaçamento entre as barras
     paper_bgcolor='white'
@@ -460,8 +502,8 @@ fig7.update_layout(
 )
 
 # Filtrar os dados para cada nível de satisfação
-data_relevante = data_aux[data_aux['Satisfação'] == 'Relevante']
-data_muito_relevante = data_aux[data_aux['Satisfação'] == 'Muito Relevante']
+data_relevante = data_aux[data_aux['Satisfação'].isin(['Relevante'])]
+data_muito_relevante = data_aux[data_aux['Satisfação'].isin (['Muito Relevante', 'Muito relevante'])]
 
 estatisticas_relevante = data_relevante['Valor Economizado'].describe(percentiles=[.25, .5, .75]).to_dict()
 estatisticas_relevante['mean'] = data_relevante['Valor Economizado'].mean()
@@ -710,7 +752,7 @@ fig_total.add_trace(go.Indicator(
 fig_total.add_trace(go.Indicator(
     mode="number+delta",
     value=resultados_semana_anterior,
-    title={"text": f"<span style='color:#1B0A63;'>Novos CFs</span><br><span style='font-size:0.9em;color:#19C78A'>em relação à última apresentação</span>"},
+    title={"text": f"<span style='color:#1B0A63;'>Novos CFs</span><br><span style='font-size:0.9em;color:#19C78A'>na última semana</span>"},
     domain={'row': 0, 'column': 4},
     number={"font": {"size": 70, "color": "#1B0A63"}}
 ))
