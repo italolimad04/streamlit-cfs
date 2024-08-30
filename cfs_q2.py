@@ -70,7 +70,7 @@ def invalidate_cache():
 firstDayOfQuarter = '2024-07-01'
 lastDayOfQuarter = '2024-10-01'
 
-@st.cache_data(ttl=TTL) 
+#@st.cache_data(ttl=TTL) 
 def fetch_data():
     response = requests.get(url=f"https://new-api.urbis.cc/communication/fidelized-clients-by-quarter?initialDate={firstDayOfQuarter}&finalDate={lastDayOfQuarter}").json()
     fidelizedClientsData = response['data']['fidelizedClientsData']
