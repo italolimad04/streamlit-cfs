@@ -78,6 +78,11 @@ def fetch_data():
 
     df_fidelized_clients_by_survey['Valor Economizado'] = pd.to_numeric(df_fidelized_clients_by_survey['Valor Economizado'], errors='coerce')
 
+    df_fidelized_clients_by_survey['df_fidelized_clients_by_survey'] = pd.to_datetime(data['Data'], errors='coerce')
+
+    print(df_fidelized_clients_by_survey['Data'].head(10))
+
+
     return df_fidelized_clients_by_survey, time.time()
 
 df_fidelized_clients_by_survey, last_updated = fetch_data()
@@ -99,7 +104,13 @@ def carregar_dados_do_google_sheets():
 # Carregar os dados
 data = carregar_dados_do_google_sheets()
 
+data['Data'] = pd.to_datetime(data['Data'], errors='coerce')
+
 data = pd.concat([data, df_fidelized_clients_by_survey])
+
+print('Data data:::: ')
+print(data['Data'].head(10))
+
 
 # Adequando valor dos dados no dataframe consolidado
 data['Canal'].loc[data['Canal'] == 'email'] = 'E-mail'
@@ -111,7 +122,6 @@ data['Clube'].loc[data['Clube'] == 'Clube O Povo'] = 'O Povo'
 data['Satisfação'].loc[data['Satisfação'] == 'Muito relevante'] = 'Muito Relevante'
 
 # Conversões e cálculos
-data['Data'] = pd.to_datetime(data['Data'], errors='coerce')
 
 print(data['Satisfação'].value_counts())
 
