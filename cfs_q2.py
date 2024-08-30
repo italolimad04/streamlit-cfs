@@ -12,10 +12,10 @@ import gspread as gs
 from google.oauth2.service_account import Credentials
 import os
 import json
-#from dotenv import load_dotenv
+from dotenv import load_dotenv
 from pytz import timezone
 import requests
-#import time
+import time
 
 # import logging
 
@@ -36,8 +36,7 @@ st.set_page_config(layout="wide")
 
 st.title("Painel de Clientes Fidelizados no Q3")
 
-#load_dotenv()
-
+load_dotenv()
 
 def carregar_dados_do_google_sheets():
     scopes = [
@@ -63,14 +62,14 @@ data = carregar_dados_do_google_sheets()
 #     'Content-Type': 'application/json'
 # }
 
-# TTL = 500
-# def invalidate_cache():
-#   fetch_data.clear()
+TTL = 500
+def invalidate_cache():
+  fetch_data.clear()
 
 firstDayOfQuarter = '2024-07-01'
 lastDayOfQuarter = '2024-10-01'
 
-#@st.cache_data(ttl=TTL) 
+@st.cache_data(ttl=TTL) 
 def fetch_data():
     response = requests.get(url=f"https://new-api.urbis.cc/communication/fidelized-clients-by-quarter?initialDate={firstDayOfQuarter}&finalDate={lastDayOfQuarter}").json()
     fidelizedClientsData = response['data']['fidelizedClientsData']
@@ -79,9 +78,9 @@ def fetch_data():
 
     df_fidelized_clients_by_survey['Valor Economizado'] = pd.to_numeric(df_fidelized_clients_by_survey['Valor Economizado'], errors='coerce')
 
-    return df_fidelized_clients_by_survey
+    return df_fidelized_clients_by_survey, time.time()
 
-df_fidelized_clients_by_survey = fetch_data()
+df_fidelized_clients_by_survey, last_updated = fetch_data()
 
 def carregar_dados_do_google_sheets():
     scopes = [
@@ -117,9 +116,6 @@ data['Data'] = pd.to_datetime(data['Data'], errors='coerce')
 print(data['Satisfação'].value_counts())
 
 data_estaticos = data.copy()
-
-# Conversões e cálculos
-data['Data'] = pd.to_datetime(data['Data'], errors='coerce')
 
 # logger.info(data.shape)
 
