@@ -10,6 +10,4 @@ google-auth
 pandas
 numpy
 python-dotenv
-logging
 pytz
-time

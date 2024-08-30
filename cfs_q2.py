@@ -12,31 +12,31 @@ import gspread as gs
 from google.oauth2.service_account import Credentials
 import os
 import json
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 from pytz import timezone
 import requests
-import time
+#import time
 
-import logging
+# import logging
 
-# Configurar o logger
-logging.basicConfig(
-    format='%(asctime)s - %(message)s',
-    level=logging.INFO,
-    handlers=[
-        logging.FileHandler("app.log"),
-        logging.StreamHandler()
-    ]
-)
+# # Configurar o logger
+# logging.basicConfig(
+#     format='%(asctime)s - %(message)s',
+#     level=logging.INFO,
+#     handlers=[
+#         logging.FileHandler("app.log"),
+#         logging.StreamHandler()
+#     ]
+# )
 
-logger = logging.getLogger(__name__)
+# logger = logging.getLogger(__name__)
 
 # Opções
 st.set_page_config(layout="wide")
 
 st.title("Painel de Clientes Fidelizados no Q3")
 
-load_dotenv()
+#load_dotenv()
 
 
 def carregar_dados_do_google_sheets():
@@ -63,9 +63,9 @@ data = carregar_dados_do_google_sheets()
 #     'Content-Type': 'application/json'
 # }
 
-TTL = 500
-def invalidate_cache():
-  fetch_data.clear()
+# TTL = 500
+# def invalidate_cache():
+#   fetch_data.clear()
 
 firstDayOfQuarter = '2024-07-01'
 lastDayOfQuarter = '2024-10-01'
@@ -79,9 +79,9 @@ def fetch_data():
 
     df_fidelized_clients_by_survey['Valor Economizado'] = pd.to_numeric(df_fidelized_clients_by_survey['Valor Economizado'], errors='coerce')
 
-    return df_fidelized_clients_by_survey, time.time()
+    return df_fidelized_clients_by_survey
 
-df_fidelized_clients_by_survey, last_updated = fetch_data()
+df_fidelized_clients_by_survey = fetch_data()
 
 def carregar_dados_do_google_sheets():
     scopes = [
@@ -121,9 +121,9 @@ data_estaticos = data.copy()
 # Conversões e cálculos
 data['Data'] = pd.to_datetime(data['Data'], errors='coerce')
 
-logger.info(data.shape)
+# logger.info(data.shape)
 
-logger.info(data['Data'].tail())
+# logger.info(data['Data'].tail())
 # Definir o timezone local e UTC
 local_tz = timezone('America/Sao_Paulo')  # Ajuste conforme necessário
 utc_tz = timezone('UTC')
@@ -146,10 +146,10 @@ data['Semana'] = data['Data'].apply(lambda x: calcular_semana_fiscal(x, start_da
 # Verificar a data de hoje no timezone local e convertê-la para UTC
 data_atual = datetime.now(local_tz).astimezone(utc_tz)
 
-logger.info(f"Timezone atual em produção: {data_atual}")
+# logger.info(f"Timezone atual em produção: {data_atual}")
 
 data_max = data['Data'].max()
-logger.info(f'Data máxima nos dados: {data_max}')
+# logger.info(f'Data máxima nos dados: {data_max}')
 
 # Adicionar registros para semanas até a data atual
 if data_max < data_atual:
@@ -184,11 +184,11 @@ agg_data = agg_data[['Data_Inicio_Semana', 'Semana', 'Novos CFs', 'Total CFs', '
 # Identificar a semana atual e a semana anterior
 semana_atual = calcular_semana_fiscal(data_atual, start_date_q3)
 
-logger.info(agg_data['Semana'].head())
-logger.info(f'Semana Atual: {semana_atual}')
+# logger.info(agg_data['Semana'].head())
+# logger.info(f'Semana Atual: {semana_atual}')
 
 semana_anterior = semana_atual - 1
-logger.info(f'Semana Anterior: {semana_anterior}')
+# logger.info(f'Semana Anterior: {semana_anterior}')
 # Pegar os resultados para esta semana e a anterior com verificações de erro
 try:
     resultados_semana_atual = agg_data[agg_data['Semana'] == semana_atual]['Novos CFs'].values[0]
@@ -200,8 +200,8 @@ try:
 except IndexError:
     resultados_semana_anterior = 0  # Definir um valor padrão ou tomar outra ação
 
-logger.info(f'Resultados Semana Anterior: {resultados_semana_anterior}')
-logger.info(f'Resultados Semana Atual: {resultados_semana_atual}')
+# logger.info(f'Resultados Semana Anterior: {resultados_semana_anterior}')
+# logger.info(f'Resultados Semana Atual: {resultados_semana_atual}')
 
 ## Tratando dados
 # Corrigir os valores na coluna 'Parceiro' usando .loc para evitar warnings
@@ -372,11 +372,11 @@ fig4.update_layout(
 # Criar a visualização
 fig5 = go.Figure()
 
-logger.info('Semanas')
-logger.info(agg_data['Semana'])
+# logger.info('Semanas')
+# logger.info(agg_data['Semana'])
 
-logger.info("agg_data['Total CFs']")
-logger.info(agg_data['Total CFs'])
+# logger.info("agg_data['Total CFs']")
+# logger.info(agg_data['Total CFs'])
 
 
 # Adicionar trace para Total Q3
@@ -681,9 +681,9 @@ def criar_comparacao_q2_Q3(df_q2, df_Q3):
 
 # Quantidade geral de clientes fidelizados
 total_fidelizados = data_estaticos.shape[0] + 4178
-logger.info(data_estaticos.shape[0])
-logger.info('total_fidelizados')
-logger.info(total_fidelizados)
+# logger.info(data_estaticos.shape[0])
+# logger.info('total_fidelizados')
+# logger.info(total_fidelizados)
 
 meta_anual = 5000
 total_cfs_q3 = data_estaticos.shape[0]
@@ -692,9 +692,9 @@ total_cfs_2024 = total_fidelizados - 2851  # Total de clientes fidelizados em 20
 # Calcular a diferença entre as semanas
 diferenca_semanal = resultados_semana_atual - resultados_semana_anterior
 
-logger.info(diferenca_semanal)
-logger.info(resultados_semana_atual)
-logger.info(resultados_semana_anterior)
+# logger.info(diferenca_semanal)
+# logger.info(resultados_semana_atual)
+# logger.info(resultados_semana_anterior)
 
 # Calcular quantos faltam para a meta
 faltam_para_meta = meta_anual - total_fidelizados
