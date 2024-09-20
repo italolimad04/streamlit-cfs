@@ -704,7 +704,8 @@ diferenca_semanal = resultados_semana_atual - resultados_semana_anterior
 
 # Calcular quantos faltam para a meta
 faltam_para_meta = meta_anual - total_fidelizados
-
+if faltam_para_meta < 0:
+    faltam_para_meta = 0
 # Calcular porcentagens
 porcentagem_meta_anual = (total_fidelizados / meta_anual) * 100
 porcentagem_meta_q3 = (total_cfs_q3 / meta_cfs) * 100
