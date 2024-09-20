@@ -778,6 +778,9 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(
 )
 
 with tab1:
+    print('total_cfs_q3: ', total_cfs_q3)
+    if(total_cfs_q3 >= 822):
+       st.balloons()
     st.plotly_chart(fig_total, use_container_width=True)
 
 with tab2:
