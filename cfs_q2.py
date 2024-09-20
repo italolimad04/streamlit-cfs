@@ -710,6 +710,8 @@ porcentagem_meta_anual = (total_fidelizados / meta_anual) * 100
 porcentagem_meta_q3 = (total_cfs_q3 / meta_cfs) * 100
 porcentagem_meta_2024 = (total_cfs_2024 / meta_anual) * 100
 restante_meta_anual = 100 - porcentagem_meta_anual
+if restante_meta_anual < 0:
+    restante_meta_anual = 0
 
 # Criar painel informativo
 fig_total = go.Figure()
