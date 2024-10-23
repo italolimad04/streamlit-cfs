@@ -1,4 +1,5 @@
 import pandas as pd
+pd.options.mode.chained_assignment = None  
 import requests as reqs
 import numpy as np
 import streamlit as st
@@ -34,26 +35,26 @@ import time
 # Opções
 st.set_page_config(layout="wide")
 
-st.title("Painel de Clientes Fidelizados no Q3")
+st.title("Painel de Clientes Fidelizados no Q4")
 
 load_dotenv()
 
-def carregar_dados_do_google_sheets():
-    scopes = [
-        "https://www.googleapis.com/auth/spreadsheets.readonly",
-        "https://www.googleapis.com/auth/drive.readonly"
-    ]
-    creds_json = st.secrets["GOOGLE_SHEETS_CREDENTIALS"]
-    creds_dict = json.loads(creds_json)
-    credentials = Credentials.from_service_account_info(creds_dict, scopes=scopes)
-    client = gs.authorize(credentials)
-    sheet = client.open_by_key(st.secrets["SHEET_KEY"]).sheet1
-    data = sheet.get_all_values()  # Tenta obter todos os valores como strings
-    headers = data.pop(0)  # Remove o cabeçalho da lista de dados
-    return pd.DataFrame(data, columns=headers, dtype=str)
+# def carregar_dados_do_google_sheets():
+#     scopes = [
+#         "https://www.googleapis.com/auth/spreadsheets.readonly",
+#         "https://www.googleapis.com/auth/drive.readonly"
+#     ]
+#     creds_json = st.secrets["GOOGLE_SHEETS_CREDENTIALS"]
+#     creds_dict = json.loads(creds_json)
+#     credentials = Credentials.from_service_account_info(creds_dict, scopes=scopes)
+#     client = gs.authorize(credentials)
+#     sheet = client.open_by_key(st.secrets["SHEET_KEY"]).sheet1
+#     data = sheet.get_all_values()  # Tenta obter todos os valores como strings
+#     headers = data.pop(0)  # Remove o cabeçalho da lista de dados
+#     return pd.DataFrame(data, columns=headers, dtype=str)
 
-# Carregar os dados
-data = carregar_dados_do_google_sheets()
+# # Carregar os dados
+# data = carregar_dados_do_google_sheets()
 
 # load_dotenv()
 # token = os.getenv('TOKEN_ADMIN')
@@ -66,54 +67,47 @@ TTL = 500
 def invalidate_cache():
   fetch_data.clear()
 
-firstDayOfQuarter = '2024-07-01'
-lastDayOfQuarter = '2024-10-01'
+firstDayOfQuarter = '2024-10-01'
+lastDayOfQuarter = '2024-12-31'
 
 @st.cache_data(ttl=TTL) 
 def fetch_data():
     response = requests.get(url=f"https://new-api.urbis.cc/communication/fidelized-clients-by-quarter?initialDate={firstDayOfQuarter}&finalDate={lastDayOfQuarter}").json()
     fidelizedClientsData = response['data']['fidelizedClientsData']
 
+
     df_fidelized_clients_by_survey = pd.DataFrame(data=fidelizedClientsData)
 
+    df_fidelized_clients_by_survey['Valor Economizado'] = df_fidelized_clients_by_survey['Valor Economizado'].str.replace('.', '', regex=False).str.replace(',', '.', regex=False)
+
+    # Converter para float e tratar valores inválidos como NaN
     df_fidelized_clients_by_survey['Valor Economizado'] = pd.to_numeric(df_fidelized_clients_by_survey['Valor Economizado'], errors='coerce')
 
-    df_fidelized_clients_by_survey['df_fidelized_clients_by_survey'] = pd.to_datetime(data['Data'], errors='coerce')
+    # Preencher NaN com 0
+    df_fidelized_clients_by_survey['Valor Economizado'] = df_fidelized_clients_by_survey['Valor Economizado'].fillna(0)
 
-    print(df_fidelized_clients_by_survey['Data'].head(10))
+    # Arredondar para duas casas decimais
+    df_fidelized_clients_by_survey['Valor Economizado'] = df_fidelized_clients_by_survey['Valor Economizado'].round(2)
 
+    print(df_fidelized_clients_by_survey['Valor Economizado'])
 
     return df_fidelized_clients_by_survey, time.time()
 
 df_fidelized_clients_by_survey, last_updated = fetch_data()
 
-def carregar_dados_do_google_sheets():
-    scopes = [
-        "https://www.googleapis.com/auth/spreadsheets.readonly",
-        "https://www.googleapis.com/auth/drive.readonly"
-    ]
-    creds_json = st.secrets["GOOGLE_SHEETS_CREDENTIALS"]
-    creds_dict = json.loads(creds_json)
-    credentials = Credentials.from_service_account_info(creds_dict, scopes=scopes)
-    client = gs.authorize(credentials)
-    sheet = client.open_by_key(st.secrets["SHEET_KEY"]).sheet1
-    data = sheet.get_all_values()  # Tenta obter todos os valores como strings
-    headers = data.pop(0)  # Remove o cabeçalho da lista de dados
-    return pd.DataFrame(data, columns=headers, dtype=str)
 
-# Carregar os dados
-data = carregar_dados_do_google_sheets()
+data = pd.DataFrame()
+data = pd.concat([data, df_fidelized_clients_by_survey])
 
 data['Data'] = pd.to_datetime(data['Data'], errors='coerce')
 
-data = pd.concat([data, df_fidelized_clients_by_survey])
-
-print('Data data:::: ')
-print(data['Data'].head(10))
-
+print(data.columns)
 
 # Adequando valor dos dados no dataframe consolidado
-data['Canal'].loc[data['Canal'] == 'email'] = 'E-mail'
+data['Canal'].loc[data['Canal'] == 'email'] = 'Drogarias'
+data.loc[data['Pesquisa'].str.contains('Muito relevante', case=True) | data['Pesquisa'].str.contains('Relevante', case=True), 'Canal'] = 'E-mail Individual'
+data['Canal'].loc[data['Canal'] == 'club'] = 'Clube'
+
 data['Parceiro'].loc[data['Parceiro'] == 'Farmácias Pague Menos'] = 'Pague Menos'
 data['Clube'].loc[data['Clube'] == 'Clínica SiM+'] = 'Clínica SiM'
 data['Clube'].loc[data['Clube'] == 'Club de Vantagens | Sócio Vozão'] = 'Sócio Vozão'
@@ -121,46 +115,23 @@ data['Clube'].loc[data['Clube'] == 'MOV Fibra'] = 'Mov Telecom'
 data['Clube'].loc[data['Clube'] == 'Clube O Povo'] = 'O Povo'
 data['Satisfação'].loc[data['Satisfação'] == 'Muito relevante'] = 'Muito Relevante'
 
-# Conversões e cálculos
-
-print(data['Satisfação'].value_counts())
-
-data_estaticos = data.copy()
-
-# logger.info(data.shape)
-
-# logger.info(data['Data'].tail())
-# Definir o timezone local e UTC
 local_tz = timezone('America/Sao_Paulo')  # Ajuste conforme necessário
 utc_tz = timezone('UTC')
-
 
 # Função para calcular a semana fiscal
 def calcular_semana_fiscal(data, start_date):
     delta = data - start_date
     return delta.days // 7 + 1
 
-# Definir a data de início do terceiro trimestre
-start_date_q3 = datetime(2024, 6, 28, tzinfo=local_tz)
-
-# Converter as datas para o timezone local e então para UTC
+start_date_quarter = datetime(2024, 10, 3, tzinfo=local_tz)
 data['Data'] = pd.to_datetime(data['Data']).dt.tz_localize(local_tz).dt.tz_convert(utc_tz)
-
-# Calcular a semana fiscal para cada registro
-data['Semana'] = data['Data'].apply(lambda x: calcular_semana_fiscal(x, start_date_q3))
-
-# Verificar a data de hoje no timezone local e convertê-la para UTC
+data['Semana'] = data['Data'].apply(lambda x: calcular_semana_fiscal(x, start_date_quarter))
 data_atual = datetime.now(local_tz).astimezone(utc_tz)
-
-# logger.info(f"Timezone atual em produção: {data_atual}")
-
 data_max = data['Data'].max()
-# logger.info(f'Data máxima nos dados: {data_max}')
 
-# Adicionar registros para semanas até a data atual
 if data_max < data_atual:
     additional_weeks = pd.date_range(start=data_max + timedelta(days=7), end=data_atual, freq='7D', tz=utc_tz)
-    additional_data = pd.DataFrame({'Data': additional_weeks, 'Semana': additional_weeks.map(lambda x: calcular_semana_fiscal(x, start_date_q3))})
+    additional_data = pd.DataFrame({'Data': additional_weeks, 'Semana': additional_weeks.map(lambda x: calcular_semana_fiscal(x, start_date_quarter))})
     data = pd.concat([data, additional_data], ignore_index=True)
 
 all_weeks = pd.DataFrame({'Semana': range(1, int(data['Semana'].max()) + 1)})
@@ -175,20 +146,20 @@ agg_data['Novos CFs'] = agg_data['Novos CFs'].astype(int)
 
 # Adicionar colunas adicionais
 agg_data['Total CFs'] = agg_data['Novos CFs'].cumsum()
-agg_data['Meta Q3'] = 822
+agg_data['Meta Trimestre'] = 822
 agg_data['Total_Geral'] = agg_data['Total CFs'] + 4178  # Ajuste conforme necessário
 
 # Adicionar coluna 'Data_Inicio_Semana'
-agg_data['Data_Inicio_Semana'] = agg_data['Semana'].apply(lambda x: start_date_q3 + timedelta(weeks=x-1))
+agg_data['Data_Inicio_Semana'] = agg_data['Semana'].apply(lambda x: start_date_quarter + timedelta(weeks=x-1))
 
 # Verificar e converter 'Data_Inicio_Semana' para datetime
 agg_data['Data_Inicio_Semana'] = pd.to_datetime(agg_data['Data_Inicio_Semana'], errors='coerce')
 
 # Reorganizar as colunas
-agg_data = agg_data[['Data_Inicio_Semana', 'Semana', 'Novos CFs', 'Total CFs', 'Meta Q3', 'Total_Geral']]
+agg_data = agg_data[['Data_Inicio_Semana', 'Semana', 'Novos CFs', 'Total CFs', 'Meta Trimestre', 'Total_Geral']]
 
 # Identificar a semana atual e a semana anterior
-semana_atual = calcular_semana_fiscal(data_atual, start_date_q3)
+semana_atual = calcular_semana_fiscal(data_atual, start_date_quarter)
 
 # logger.info(agg_data['Semana'].head())
 # logger.info(f'Semana Atual: {semana_atual}')
@@ -221,17 +192,17 @@ data['Parceiro'] = data['Parceiro'].str.strip().str.title()
 
 # Calcular o número total de CFs
 total_cfs = data.shape[0]
-meta_cfs = 822
+meta_cfs = 1
 
 # Criar a visualização
 fig = go.Figure(data=[
     go.Bar(name='<b>Total CFs<b>', x=['Clientes Fidelizados'], y=[total_cfs], marker_color='#FFA726', text=[f'<b>{total_cfs}'], textposition='auto', textfont=dict(size=20, color='black', family='Roboto')),
-    go.Bar(name='<b>Meta<b>', x=['Clientes Fidelizados'], y=[meta_cfs], marker_color='#42A5F5', text=[f'<b>{meta_cfs}'], textposition='auto', textfont=dict(size=20, color='black', family='Roboto'))
+    # go.Bar(name='<b>Meta<b>', x=['Clientes Fidelizados'], y=[meta_cfs], marker_color='#42A5F5', text=[f'<b>{meta_cfs}'], textposition='auto', textfont=dict(size=20, color='black', family='Roboto'))
 ])
 
 # Atualizar layout do gráfico
 fig.update_layout(
-    title={'text': 'Resultado Obtido vs Meta', 'x': 0.5, 'xanchor': 'center', 'font': {'size': 24, 'color': 'black', 'family': 'Roboto'}},
+    title={'text': 'Resultado Obtido', 'x': 0.5, 'xanchor': 'center', 'font': {'size': 24, 'color': 'black', 'family': 'Roboto'}},
     barmode='group',
     width=800,
     height=600,
@@ -385,31 +356,31 @@ fig5 = go.Figure()
 # logger.info(agg_data['Total CFs'])
 
 
-# Adicionar trace para Total Q3
+# Adicionar trace para Total Trimestre
 fig5.add_trace(go.Scatter(
     x=agg_data['Semana'], y=agg_data['Total CFs'], mode='lines+markers+text',
-    name='Total Q3', text=agg_data['Total CFs'], textposition='top center',
+    name='Total Trimestre', text=agg_data['Total CFs'], textposition='top center',
     line=dict(color='blue', width=2),
     marker=dict(size=10, symbol='diamond', color='blue'),
-    offsetgroup=1
+    legendgroup=1
 ))
 
 # Adicionar trace para Novos CFs
 fig5.add_trace(go.Bar(
     x=agg_data['Semana'], y=agg_data['Novos CFs'], name='Novos CFs', text=agg_data['Novos CFs'],
     textposition='outside', marker_color='orange',
-    offsetgroup=2
+    legendgroup=2
 ))
 
-# Adicionar trace para Meta Q3
+# Adicionar trace para Meta Trimestre
 fig5.add_trace(go.Scatter(
-    x=agg_data['Semana'], y=agg_data['Meta Q3'], mode='lines',
-    name='Meta Q3', line=dict(color='red', dash='dash'), marker=dict(size=0)
+    x=agg_data['Semana'], y=agg_data['Meta Trimestre'], mode='lines',
+    name='Meta Trimestre', line=dict(color='red', dash='dash'), marker=dict(size=0)
 ))
 
 # Atualizar layout do gráfico
 fig5.update_layout(
-    title='Novos CFs e Total Q3',
+    title='Novos CFs Vs Total',
     xaxis_title='Semana',
     yaxis_title='Número de CFs',
     barmode='group',
@@ -435,30 +406,34 @@ fig5.update_layout(
 
 # Ajustar a posição do texto nos traces individuais
 for trace in fig5.data:
-    if trace.name == 'Total Q3':
+    if trace.name == 'Total Trimestre':
         trace.textposition = 'top center'
     elif trace.name == 'Novos CFs':
         trace.textposition = 'outside'
 
 # Copiar os dados
 data_aux = data.copy()
-# Remover pontos (separador de milhares) e substituir vírgulas por pontos (separador decimal)
-data_aux['Valor Economizado'] = data_aux['Valor Economizado'].apply(lambda x: str(x).replace('.', ''))
-data_aux['Valor Economizado'] = data_aux['Valor Economizado'].apply(lambda x: str(x).replace(',', '.'))
 
-# Converter valores não convertíveis para NaN
-data_aux['Valor Economizado'] = pd.to_numeric(data_aux['Valor Economizado'], errors='coerce')
+# Remover pontos (separador de milhares) e substituir vírgulas por pontos (separador decimal)
+# data_aux['Valor Economizado'] = data_aux['Valor Economizado'].apply(lambda x: str(x).replace('.', ''))
+# data_aux['Valor Economizado'] = data_aux['Valor Economizado'].apply(lambda x: str(x).replace(',', '.'))
+
+# # Converter valores não convertíveis para NaN
+# data_aux['Valor Economizado'] = pd.to_numeric(data_aux['Valor Economizado'], errors='coerce')
 
 # Filtrar valores diferentes de 0.00 (opcional, dependendo da lógica desejada)
 
 # Converter a coluna para float
-data_aux['Valor Economizado'] = data_aux['Valor Economizado'].astype(float)
+#data_aux['Valor Economizado'] = data_aux['Valor Economizado'].astype(float)
 
 data_aux = data_aux[data_aux['Valor Economizado'] != 0.00]
 
 # Verificar se há dados após o processamento
-if data_aux.empty:
-    logger.warning("Nenhum dado disponível após o processamento.")
+#if data_aux.empty:
+    #logger.warning("Nenhum dado disponível após o processamento.")
+
+print('data_aux: ', data_aux.tail())
+print('data_aux: ', data_aux['Valor Economizado'])
 
 fig6 = px.scatter(
     data_frame=data_aux,
@@ -506,6 +481,9 @@ fig7.update_layout(
     legend_title='Nível de Satisfação',
     margin=dict(l=40, r=40, t=60, b=40)
 )
+
+print("satisfação")
+print(data_aux.columns)
 
 # Filtrar os dados para cada nível de satisfação
 data_relevante = data_aux[data_aux['Satisfação'].isin(['Relevante'])]
@@ -572,7 +550,7 @@ fig_muito_relevante.update_yaxes(range=[0, data_muito_relevante['Valor Economiza
 ajustar_layout(fig_relevante)
 ajustar_layout(fig_muito_relevante)
 
-data['Valor Economizado'] = data['Valor Economizado'].str.replace(',', '.').astype(float).round(2)
+#data['Valor Economizado'] = data['Valor Economizado'].str.replace(',', '.').astype(float).round(2)
 
 
 def criar_tabela_interativa(df):
@@ -639,7 +617,7 @@ def criar_histograma(df):
     
     return fig
 
-#Função para criar o gráfico de comparação entre Q2 e Q3
+#Função para criar o gráfico de comparação entre Q2 e Trimestre
 def criar_comparacao_q2_Q3(df_q2, df_Q3):
     fig = go.Figure()
 
@@ -658,7 +636,7 @@ def criar_comparacao_q2_Q3(df_q2, df_Q3):
         x=df_Q3['Semana'],
         y=df_Q3['Total CFs'],
         mode='lines+markers+text',
-        name='  CFs Q3',
+        name='  CFs Trimestre',
         line=dict(color='red'),
         marker=dict(color='red'),
         text=df_Q3['Novos CFs'],
@@ -666,7 +644,7 @@ def criar_comparacao_q2_Q3(df_q2, df_Q3):
     ))
 
     fig.update_layout(
-        title='CFs q2 X Q3 por Semana',
+        title='CFs q2 X Trimestre por Semana',
         xaxis_title='Semana',
         yaxis_title='Número de CFs',
         height=600,
@@ -686,38 +664,29 @@ def criar_comparacao_q2_Q3(df_q2, df_Q3):
 
 
 # Quantidade geral de clientes fidelizados
-total_fidelizados = data_estaticos.shape[0] + 4178
-# logger.info(data_estaticos.shape[0])
-# logger.info('total_fidelizados')
-# logger.info(total_fidelizados)
+total_fidelizados = data.shape[0] + 5031 # Ajustar este número 
 
 meta_anual = 5000
-total_cfs_q3 = data_estaticos.shape[0]
-total_cfs_2024 = total_fidelizados - 2851  # Total de clientes fidelizados em 2024
+total_cfs_quarter = data.shape[0]
+total_cfs_2024 = total_fidelizados - 2851  # Total de clientes fidelizados em 2023
 
 # Calcular a diferença entre as semanas
 diferenca_semanal = resultados_semana_atual - resultados_semana_anterior
 
-# logger.info(diferenca_semanal)
-# logger.info(resultados_semana_atual)
-# logger.info(resultados_semana_anterior)
 
-# Calcular quantos faltam para a meta
 faltam_para_meta = meta_anual - total_fidelizados
 if faltam_para_meta < 0:
     faltam_para_meta = 0
 # Calcular porcentagens
 porcentagem_meta_anual = (total_fidelizados / meta_anual) * 100
-porcentagem_meta_q3 = (total_cfs_q3 / meta_cfs) * 100
+porcentagem_meta_quarter = (total_cfs_quarter / meta_cfs) * 100
 porcentagem_meta_2024 = (total_cfs_2024 / meta_anual) * 100
 restante_meta_anual = 100 - porcentagem_meta_anual
 if restante_meta_anual < 0:
     restante_meta_anual = 0
 
-# Criar painel informativo
 fig_total = go.Figure()
 
-# Adicionar total fidelizados
 fig_total.add_trace(go.Indicator(
     mode="number+delta",
     value=total_fidelizados,
@@ -727,21 +696,20 @@ fig_total.add_trace(go.Indicator(
     delta={'position': "bottom", 'increasing': {'color': 'green'}, 'decreasing': {'color': 'red'}}
 ))
 
-# Adicionar faltam para meta
 fig_total.add_trace(go.Indicator(
     mode="number+delta",
     value=faltam_para_meta,
-    title={"text": f"<span style='color:#1B0A63;'>Faltam para a Meta Anual</span><br><span style='font-size:0.9em;color:#19C78A'>{restante_meta_anual:.2f}% da meta em aberto</span>"},
+    title={"text": f"<span style='color:#1B0A63;'>Restam para a Meta Anual"},
     domain={'row': 0, 'column': 1},
     number={"font": {"size": 70, "color": "#1B0A63"}},
     delta={'position': "bottom", 'increasing': {'color': 'green'}, 'decreasing': {'color': 'red'}}
 ))
 
-# Adicionar total CFs Q3
+# Adicionar total CFs Trimestre
 fig_total.add_trace(go.Indicator(
     mode="number+delta",
-    value=total_cfs_q3,
-    title={"text": f"<span style='color:#1B0A63;'>Total CFs no Q3</span><br><span style='font-size:0.9em;color:#19C78A'>{porcentagem_meta_q3:.2f}% da meta do trimestre</span>"},
+    value=total_cfs_quarter,
+    title={"text": f"<span style='color:#1B0A63;'>Total CFs no Q4"},
     domain={'row': 0, 'column': 2},
     number={"font": {"size": 70, "color": "#1B0A63"}},
     delta={'position': "bottom", 'increasing': {'color': 'green'}, 'decreasing': {'color': 'red'}}
@@ -777,13 +745,13 @@ fig_total.update_layout(
 
 # Tabs
 tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(
-    ["Resumo", "Resultados Q3", "CFs por Clube", "CFs por Parceiros", "CFs por Canal", "Valores Economizados", "Tabela Interativa"]
+    ["Resumo", "Resultados Q4", "CFs por Clube", "CFs por Parceiros", "CFs por Canal", "Valores Economizados", "Tabela Interativa"]
 )
 
 with tab1:
-    print('total_cfs_q3: ', total_cfs_q3)
-    if(total_cfs_q3 >= 822):
-       st.balloons()
+    print('total_cfs_quarter: ', total_cfs_quarter)
+    #if(total_cfs_quarter >= 822):
+       #st.balloons()
     st.plotly_chart(fig_total, use_container_width=True)
 
 with tab2:
@@ -837,6 +805,6 @@ with tab7:
     criar_tabela_interativa(data)
 
 
-#     st.header("Comparação de CFs entre Q2 e Q3")
+#     st.header("Comparação de CFs entre Q2 e Trimestre")
 #     comparacao_fig = criar_comparacao_q2_Q3(data_q2, data_Q3)
 #     st.plotly_chart(comparacao_fig, use_container_width=True)
