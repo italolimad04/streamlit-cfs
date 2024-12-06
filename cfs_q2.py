@@ -108,6 +108,8 @@ data['Canal'].loc[data['Canal'] == 'email'] = 'Drogarias'
 data.loc[data['Pesquisa'].str.contains('Muito relevante', case=True) | data['Pesquisa'].str.contains('Relevante', case=True), 'Canal'] = 'E-mail Individual'
 data['Canal'].loc[data['Canal'] == 'club'] = 'Clube'
 
+print(data['Canal'].value_counts())
+
 data['Parceiro'].loc[data['Parceiro'] == 'Farmácias Pague Menos'] = 'Pague Menos'
 data['Clube'].loc[data['Clube'] == 'Clínica SiM+'] = 'Clínica SiM'
 data['Clube'].loc[data['Clube'] == 'Club de Vantagens | Sócio Vozão'] = 'Sócio Vozão'
@@ -123,7 +125,7 @@ def calcular_semana_fiscal(data, start_date):
     delta = data - start_date
     return delta.days // 7 + 1
 
-start_date_quarter = datetime(2024, 10, 3, tzinfo=local_tz)
+start_date_quarter = datetime(2024, 10, 5, tzinfo=local_tz)
 data['Data'] = pd.to_datetime(data['Data']).dt.tz_localize(local_tz).dt.tz_convert(utc_tz)
 data['Semana'] = data['Data'].apply(lambda x: calcular_semana_fiscal(x, start_date_quarter))
 data_atual = datetime.now(local_tz).astimezone(utc_tz)
