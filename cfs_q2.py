@@ -288,61 +288,55 @@ fig3.update_layout(
 # Calcular a contagem de CFs por Clube
 clube_counts = data['Clube'].value_counts()
 
-# Manter os 5 principais clubes e agrupar os restantes em "Outros"
-top_clubes = clube_counts.nlargest(4)
-outros_clubes = clube_counts.iloc[4:].sum()
-top_clubes['Outros'] = outros_clubes
+top_clubes = clube_counts.nlargest(6)
 
-# Definir cores específicas para os principais clubes
 colors = {
-    'Clínica SiM': '#8b45dc',
-    'Sócio Vozão': '#222',
-    'Mov': '#EDFF00',
-    'O Povo': '#F3951A',
-    'Outros': 'grey'
+    'Clínica SiM': '#6A0DAD',  # Roxo vibrante
+    'Sócio Vozão': '#333333',  # Preto suave
+    'Mov Telecom': '#FFD700',  # Amarelo dourado
+    'O Povo': '#FF4500',       # Laranja vibrante
+    'Clube Odontoart': '#1E90FF',  # Azul forte
+    'Tigrão de Vantagens': '#FF6347'  # Vermelho suave
 }
 
-# Para os outros clubes, usaremos uma paleta de cores suave
-default_colors = ['#636EFA', '#EF553B', '#00CC96', '#FFA15A']
-
 # Garantir que todas as cores estejam na mesma lista
-final_colors = [colors.get(label, default_colors[i % len(default_colors)]) for i, label in enumerate(top_clubes.index)]
+final_colors = [colors.get(label, '#B0C4DE') for label in top_clubes.index]
 
 # Criar a visualização de pizza para CFs por Clube
 fig4 = go.Figure(data=[
     go.Pie(
-        labels=[f'<b>{val}</b>' for val in top_clubes.index],
-        values=top_clubes.values, 
-        textinfo='label+percent', 
+        labels=top_clubes.index,
+        values=top_clubes.values,
+        textinfo='label+percent',
         insidetextorientation='radial',
-        text=[f'<b>{val}</b>' for val in top_clubes.values],
         hoverinfo='label+value+percent',
         marker=dict(
             colors=final_colors,
-            line=dict(color='#FFFFFF', width=2)
+            line=dict(color='#FFFFFF', width=1)
         )
     )
 ])
 
 fig4.update_layout(
     title={
-        'text': 'CFs por Clube', 
-        'x': 0.5, 
-        'xanchor': 'center', 
+        'text': 'CFs por Clube',
+        'x': 0.5,
+        'xanchor': 'center',
         'font': {
-            'size': 24, 
-            'color': 'black', 
+            'size': 24,
+            'color': 'black',
             'family': 'Roboto'
         }
     },
-    font=dict(size=16, color='black', family='Roboto'),
+    font=dict(size=12, color='black', family='Roboto'),
     paper_bgcolor='white',
+    margin=dict(t=100, b=100, l=50, r=50),  # Ajustando as margens
     showlegend=True,
     legend=dict(
-        font=dict(size=16),
+        font=dict(size=14),
         orientation="h",
         yanchor="bottom",
-        y=-0.3,
+        y=-0.4,  # Diminuindo para dar espaço ao gráfico
         xanchor="center",
         x=0.5
     )
