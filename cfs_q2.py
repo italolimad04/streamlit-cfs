@@ -745,40 +745,99 @@ fig_total.update_layout(
         'mode': "number+delta+gauge"}]}}
 )
 
+def criar_grafico_trimestral(total_cfs_quarter):
+    # Extrair os trimestres e os valores
+    trimestres = list(total_cfs_quarter.keys())
+    resultados = list(total_cfs_quarter.values())
+    meta_trimestre = 722  # Meta para cada trimestre
+
+    # Criar a figura
+    fig = go.Figure()
+
+    # Adicionar barras para os resultados trimestrais
+    fig.add_trace(go.Bar(
+        x=trimestres,
+        y=resultados,
+        name="Resultados",
+        marker_color="#3AB78B",
+        text=resultados,
+        textposition="outside"
+    ))
+
+    # Adicionar linha de meta
+    fig.add_trace(go.Scatter(
+        x=trimestres,
+        y=[meta_trimestre] * len(trimestres),
+        mode="lines",
+        name="Média",
+        line=dict(color="red", dash="dash", width=2),
+        hovertemplate="Meta: %{y}<extra></extra>"
+    ))
+
+    # Configurar layout
+    fig.update_layout(
+        title="Comparação de Resultados por Trimestre - 2024",
+        xaxis_title="Trimestre",
+        yaxis_title="Número de Clientes Fidelizados",
+        template="plotly_white",
+        barmode="group",
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="center",
+            x=0.5
+        )
+    )
+
+    return fig
+
+# Exemplo de uso na aba tab2
+total_cfs_quarter = {
+    "Q1": 796,
+    "Q2": 531,
+    "Q3": 853,
+    "Q4": 709
+}
+
 # Tabs
-tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(
-    ["Resumo", "Resultados Q4", "CFs por Clube", "CFs por Parceiros", "CFs por Canal", "Valores Economizados", "Tabela Interativa"]
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs(
+    ["Resumo", "CFs por Trimestre", "Resultados Q4", "CFs por Clube", "CFs por Parceiros", "CFs por Canal", "Valores Economizados", "Tabela Interativa"]
 )
 
 with tab1:
     print('total_cfs_quarter: ', total_cfs_quarter)
-    #if(total_cfs_quarter >= 822):
-       #st.balloons()
+    st.balloons()
     st.plotly_chart(fig_total, use_container_width=True)
 
 with tab2:
+    #st.balloons()
+    fig_total = criar_grafico_trimestral(total_cfs_quarter)
+    st.plotly_chart(fig_total, use_container_width=True)
+
+with tab3:
     col1, col2 = st.columns(2)
     with col1:
         st.plotly_chart(fig, use_container_width=True)
     with col2:
         st.plotly_chart(fig5, use_container_width=True)
 
-with tab3:
+with tab4:
     col1, col2 = st.columns(2)
     with col1:
       st.plotly_chart(fig4, use_container_width=True)
 
-with tab4:
+with tab5:
     col1, col2 = st.columns(2)
     with col1:
       st.plotly_chart(fig2, use_container_width=True)
 
-with tab5:
+with tab6:
     col1, col2 = st.columns(2)
     with col1:
       st.plotly_chart(fig3, use_container_width=True)
 
-with tab6:
+with tab7:
    col1, col2, col3 = st.columns(3)
    with col1:
     st.plotly_chart(fig_relevante, use_container_width=True)
@@ -803,7 +862,7 @@ with tab6:
    with col3:
     st.plotly_chart(criar_histograma(data), use_container_width=True) 
 
-with tab7:
+with tab8:
     criar_tabela_interativa(data)
 
 
