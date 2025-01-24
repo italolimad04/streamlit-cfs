@@ -663,7 +663,6 @@ def criar_comparacao_q2_Q3(df_q2, df_Q3):
 
 # Definindo Valores
 total_cfs_fim_2024=5749
-meta_trimes
 
 meta_anual = 20000
 meta_dentro_do_ano= 20000 - total_cfs_fim_2024
