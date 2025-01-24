@@ -663,7 +663,7 @@ def criar_comparacao_q2_Q3(df_q2, df_Q3):
 
 # Definindo Valores
 total_cfs_fim_2024=5749
-
+meta_trimes
 
 meta_anual = 20000
 meta_dentro_do_ano= 20000 - total_cfs_fim_2024
@@ -714,7 +714,7 @@ fig_total.add_trace(go.Indicator(
 fig_total.add_trace(go.Indicator(
     mode="number+delta",
     value=total_cfs_quarter,
-    title={"text": f"<span style='color:#1B0A63;'>Total CFs no Q1 2025 <br><span style='font-size:0.9em;color:#19C78A'>Meta: {total_cfs_quarter:.0f} novos CFs no Q1 25</span>"},
+    title={"text": f"<span style='color:#1B0A63;'>Total CFs no Q1 2025 <br><span style='font-size:0.9em;color:#19C78A'>Meta: {meta_cfs_tri:.0f} novos CFs no Q1 25</span>"},
     domain={'row': 0, 'column': 2},
     number={"font": {"size": 70, "color": "#1B0A63"}},
     delta={'position': "bottom", 'increasing': {'color': 'green'}, 'decreasing': {'color': 'red'}}
