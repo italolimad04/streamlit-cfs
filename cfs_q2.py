@@ -216,11 +216,11 @@ fig.update_layout(
         font=dict(size=20)
     ),
     xaxis=dict(
-        titlefont=dict(size=20, color='black', family='Roboto'),
+        # titlefont=dict(size=20, color='black', family='Roboto'),
         tickfont=dict(size=16, color='black', family='Roboto')
     ),
     yaxis=dict(
-        titlefont=dict(size=20, color='black', family='Roboto'),
+        # titlefont=dict(size=20, color='black', family='Roboto'),
         tickfont=dict(size=16, color='black', family='Roboto')
     ),
     paper_bgcolor='white'
@@ -245,12 +245,12 @@ fig2.update_layout(
     xaxis=dict(
         tickangle=-45,
         title='Parceiro',
-        titlefont=dict(size=20, color='black', family='Roboto'),
+        # titlefont=dict(size=20, color='black', family='Roboto'),
         tickfont=dict(size=18, color='black', family='Roboto')
     ),
     yaxis=dict(
         title='Clientes Fidelizados',
-        titlefont=dict(size=20, color='black', family='Roboto'),
+        # titlefont=dict(size=20, color='black', family='Roboto'),
         tickfont=dict(size=18, color='black', family='Roboto'),
         dtick=50
     ),
@@ -276,12 +276,12 @@ fig3.update_layout(
     ),
     xaxis=dict(
         title='Canal de Pesquisa',
-        titlefont=dict(size=20, color='black', family='Roboto'),
+        # titlefont=dict(size=20, color='black', family='Roboto'),
         tickfont=dict(size=16, color='black', family='Roboto')
     ),
     yaxis=dict(
         title='Clientes Fidelizados',
-        titlefont=dict(size=20, color='black', family='Roboto'),
+        # titlefont=dict(size=20, color='black', family='Roboto'),
         tickfont=dict(size=16, color='black', family='Roboto')
     ),
     paper_bgcolor='white'
