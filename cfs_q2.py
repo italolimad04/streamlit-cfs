@@ -75,7 +75,6 @@ def fetch_data():
     response = requests.get(url=f"https://new-api.urbis.cc/communication/fidelized-clients-by-quarter?initialDate={firstDayOfQuarter}&finalDate={lastDayOfQuarter}").json()
     fidelizedClientsData = response['data']['fidelizedClientsData']
 
-    print('fidelizedClientsData: ', fidelizedClientsData)
 
 
     df_fidelized_clients_by_survey = pd.DataFrame(data=fidelizedClientsData)
@@ -91,7 +90,6 @@ def fetch_data():
     # Arredondar para duas casas decimais
     df_fidelized_clients_by_survey['Valor Economizado'] = df_fidelized_clients_by_survey['Valor Economizado'].round(2)
 
-    print(df_fidelized_clients_by_survey['Valor Economizado'])
 
     return df_fidelized_clients_by_survey, time.time()
 
@@ -103,14 +101,12 @@ data = pd.concat([data, df_fidelized_clients_by_survey])
 
 data['Data'] = pd.to_datetime(data['Data'], errors='coerce')
 
-print(data.columns)
 
 # Adequando valor dos dados no dataframe consolidado
 data['Canal'].loc[data['Canal'] == 'email'] = 'Drogarias'
 data.loc[data['Pesquisa'].str.contains('Muito relevante', case=True) | data['Pesquisa'].str.contains('Relevante', case=True), 'Canal'] = 'E-mail Individual'
 data['Canal'].loc[data['Canal'] == 'club'] = 'Clube'
 
-print(data['Canal'].value_counts())
 
 data['Parceiro'].loc[data['Parceiro'] == 'Farmácias Pague Menos'] = 'Pague Menos'
 data['Clube'].loc[data['Clube'] == 'Clínica SiM+'] = 'Clínica SiM'
@@ -127,11 +123,13 @@ def calcular_semana_fiscal(data, start_date):
     delta = data - start_date
     return delta.days // 7 + 1
 
-start_date_quarter = datetime(2025, 1, 1, tzinfo=local_tz)
+start_date_quarter = datetime(2024, 12, 27, tzinfo=local_tz)
 data['Data'] = pd.to_datetime(data['Data']).dt.tz_localize(local_tz).dt.tz_convert(utc_tz)
 data['Semana'] = data['Data'].apply(lambda x: calcular_semana_fiscal(x, start_date_quarter))
 data_atual = datetime.now(local_tz).astimezone(utc_tz)
 data_max = data['Data'].max()
+
+print('data_max: ', data_max)
 
 if data_max < data_atual:
     additional_weeks = pd.date_range(start=data_max + timedelta(days=7), end=data_atual, freq='7D', tz=utc_tz)
@@ -139,6 +137,7 @@ if data_max < data_atual:
     data = pd.concat([data, additional_data], ignore_index=True)
 
 all_weeks = pd.DataFrame({'Semana': range(1, int(data['Semana'].max()) + 1)})
+
 
 # Agrupar os dados por semana e mesclar com todas as semanas
 agg_data = data.groupby('Semana').size().reset_index(name='Novos CFs')
@@ -155,6 +154,8 @@ agg_data['Total_Geral'] = agg_data['Total CFs'] + 5749  # Ajuste conforme necess
 
 # Adicionar coluna 'Data_Inicio_Semana'
 agg_data['Data_Inicio_Semana'] = agg_data['Semana'].apply(lambda x: start_date_quarter + timedelta(weeks=x-1))
+
+print(agg_data)
 
 # Verificar e converter 'Data_Inicio_Semana' para datetime
 agg_data['Data_Inicio_Semana'] = pd.to_datetime(agg_data['Data_Inicio_Semana'], errors='coerce')
@@ -430,8 +431,6 @@ data_aux = data_aux[data_aux['Valor Economizado'] != 0.00]
 #if data_aux.empty:
     #logger.warning("Nenhum dado disponível após o processamento.")
 
-print('data_aux: ', data_aux.tail())
-print('data_aux: ', data_aux['Valor Economizado'])
 
 fig6 = px.scatter(
     data_frame=data_aux,
@@ -480,8 +479,6 @@ fig7.update_layout(
     margin=dict(l=40, r=40, t=60, b=40)
 )
 
-print("satisfação")
-print(data_aux.columns)
 
 # Filtrar os dados para cada nível de satisfação
 data_relevante = data_aux[data_aux['Satisfação'].isin(['Relevante'])]
@@ -809,7 +806,6 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs(
 )
 
 with tab1:
-    print('total_cfs_quarter: ', total_cfs_quarter)
     #st.balloons()
     st.plotly_chart(fig_total, use_container_width=True)
 
