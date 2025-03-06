@@ -253,7 +253,7 @@ fig2.update_layout(
         title='Clientes Fidelizados',
         # titlefont=dict(size=20, color='black', family='Roboto'),
         tickfont=dict(size=18, color='black', family='Roboto'),
-        dtick=50
+        dtick=25
     ),
     bargap=0.1,  # Diminuir o espaçamento entre as barras
     paper_bgcolor='white'
