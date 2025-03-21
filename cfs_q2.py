@@ -101,9 +101,12 @@ data = pd.concat([data, df_fidelized_clients_by_survey])
 
 data['Data'] = pd.to_datetime(data['Data'], errors='coerce')
 
-
+print('data.columns: ', data['Pesquisa'])
 # Adequando valor dos dados no dataframe consolidado
-data['Canal'].loc[data['Canal'] == 'email'] = 'Drogarias'
+data['Canal'].loc[(data['Canal'] == 'email') & (data['Pesquisa'] != 'campanha-voucher-$400-part2---2025-clube-unimed-jp')& (data['Pesquisa'] != 'campanha-voucher-$400-part2---2025-clube-unimed-jp')] = 'Drogarias'
+
+data['Canal'].loc[((data['Pesquisa'] == 'campanha-voucher-$400---2025-clube-unimed-jp') | (data['Pesquisa'] == 'campanha-voucher-$400-part2---2025-clube-unimed-jp'))] = 'Ação Unimed'
+
 data.loc[data['Pesquisa'].str.contains('Muito relevante', case=True) | data['Pesquisa'].str.contains('Relevante', case=True), 'Canal'] = 'E-mail Individual'
 data['Canal'].loc[data['Canal'] == 'club'] = 'Clube'
 
@@ -237,25 +240,25 @@ fig2 = go.Figure(data=[
 
 fig2.update_layout(
     title={'text': 'CFs por Parceiro', 'x': 0.5, 'xanchor': 'center', 'font': {'size': 24, 'color': 'black', 'family': 'Roboto'}},
-    height=600,
-    font=dict(size=22, color='black', family='Roboto'),
+    height=750,
+    font=dict(size=25, color='black', family='Roboto'),
     plot_bgcolor='white',
     legend=dict(
-        font=dict(size=20)
+        font=dict(size=15)
     ),
     xaxis=dict(
         tickangle=-45,
         title='Parceiro',
         # titlefont=dict(size=20, color='black', family='Roboto'),
-        tickfont=dict(size=18, color='black', family='Roboto')
+        tickfont=dict(size=15, color='black', family='Roboto')
     ),
     yaxis=dict(
         title='Clientes Fidelizados',
         # titlefont=dict(size=20, color='black', family='Roboto'),
-        tickfont=dict(size=18, color='black', family='Roboto'),
-        dtick=25
+        tickfont=dict(size=25, color='black', family='Roboto'),
+        dtick=100
     ),
-    bargap=0.1,  # Diminuir o espaçamento entre as barras
+    bargap=0.05,  # Diminuir o espaçamento entre as barras
     paper_bgcolor='white'
 )
 
