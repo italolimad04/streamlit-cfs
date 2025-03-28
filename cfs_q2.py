@@ -103,9 +103,9 @@ data['Data'] = pd.to_datetime(data['Data'], errors='coerce')
 
 print('data.columns: ', data['Pesquisa'])
 # Adequando valor dos dados no dataframe consolidado
-data['Canal'].loc[(data['Canal'] == 'email') & (data['Pesquisa'] != 'campanha-voucher-$400-part2---2025-clube-unimed-jp')& (data['Pesquisa'] != 'campanha-voucher-$400-part2---2025-clube-unimed-jp')] = 'Drogarias'
+data['Canal'].loc[(data['Canal'] == 'email') & (data['Pesquisa'] != 'campanha-voucher-$400-part2---2025-clube-unimed-jp')& (data['Pesquisa'] != 'campanha-voucher-$400-part2---2025-clube-unimed-jp') & (data['Pesquisa'] != 'limone-')] = 'Drogarias'
 
-data['Canal'].loc[((data['Pesquisa'] == 'campanha-voucher-$400---2025-clube-unimed-jp') | (data['Pesquisa'] == 'campanha-voucher-$400-part2---2025-clube-unimed-jp'))] = 'Ação Unimed'
+data['Canal'].loc[((data['Pesquisa'] == 'campanha-voucher-$400---2025-clube-unimed-jp') | (data['Pesquisa'] == 'campanha-voucher-$400-part2---2025-clube-unimed-jp') | (data['Pesquisa'] == 'limone-'))] = 'Ação Unimed'
 
 data.loc[data['Pesquisa'].str.contains('Muito relevante', case=True) | data['Pesquisa'].str.contains('Relevante', case=True), 'Canal'] = 'E-mail Individual'
 data['Canal'].loc[data['Canal'] == 'club'] = 'Clube'
