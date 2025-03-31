@@ -68,7 +68,7 @@ def invalidate_cache():
   fetch_data.clear()
 
 firstDayOfQuarter = '2025-01-01'
-lastDayOfQuarter = '2025-03-30'
+lastDayOfQuarter = '2025-03-31'
 
 @st.cache_data(ttl=TTL) 
 def fetch_data():
