@@ -35,7 +35,7 @@ import time
 # Opções
 st.set_page_config(layout="wide")
 
-st.title("Painel de Clientes Fidelizados no Q2 2025")
+st.title("Painel de Clientes Fidelizados no Q3 2025")
 
 load_dotenv()
 
@@ -67,8 +67,8 @@ TTL = 500
 def invalidate_cache():
   fetch_data.clear()
 
-firstDayOfQuarter = '2025-04-01'
-lastDayOfQuarter = '2025-06-30'
+firstDayOfQuarter = '2025-07-01'
+lastDayOfQuarter = '2025-09-30'
 
 @st.cache_data(ttl=TTL) 
 def fetch_data():
@@ -128,7 +128,7 @@ def calcular_semana_fiscal(data, start_date):
     delta = data - start_date
     return delta.days // 7 + 1
 
-start_date_quarter = datetime(2025, 4, 4, tzinfo=local_tz)
+start_date_quarter = datetime(2025, 7, 1, tzinfo=local_tz)
 data['Data'] = pd.to_datetime(data['Data']).dt.tz_localize(local_tz).dt.tz_convert(utc_tz)
 data['Semana'] = data['Data'].apply(lambda x: calcular_semana_fiscal(x, start_date_quarter))
 data_atual = datetime.now(local_tz).astimezone(utc_tz)
@@ -155,7 +155,7 @@ agg_data['Novos CFs'] = agg_data['Novos CFs'].astype(int)
 # Adicionar colunas adicionais
 agg_data['Total CFs'] = agg_data['Novos CFs'].cumsum()
 agg_data['Meta Trimestre'] = 1500
-agg_data['Total_Geral'] = agg_data['Total CFs'] + 6729  # Ajuste conforme necessário (CFs acumulado)
+agg_data['Total_Geral'] = agg_data['Total CFs'] + 7792  # Ajuste conforme necessário (CFs acumulado)
 
 # Adicionar coluna 'Data_Inicio_Semana'
 agg_data['Data_Inicio_Semana'] = agg_data['Semana'].apply(lambda x: start_date_quarter + timedelta(weeks=x-1))
@@ -617,7 +617,7 @@ def criar_histograma(df):
     
     return fig
 
-#Função para criar o gráfico de comparação entre Q2 e Trimestre
+#Função para criar o gráfico de comparação entre Q3 e Trimestre
 def criar_comparacao_q2_Q3(df_q2, df_Q3):
     fig = go.Figure()
 
@@ -625,7 +625,7 @@ def criar_comparacao_q2_Q3(df_q2, df_Q3):
         x=df_q2['Semana'],
         y=df_q2['Total CFs'],
         mode='lines+markers+text',
-        name='CFs Q2',
+        name='CFs Q3',
         line=dict(color='#19C78A'),
         marker=dict(color='#19C78A'),
         text=df_q2['Novos CFs'],
@@ -644,7 +644,7 @@ def criar_comparacao_q2_Q3(df_q2, df_Q3):
     ))
 
     fig.update_layout(
-        title='CFs q2 X Trimestre por Semana',
+        title='CFs Q3 X Trimestre por Semana',
         xaxis_title='Semana',
         yaxis_title='Número de CFs',
         height=600,
@@ -666,12 +666,13 @@ def criar_comparacao_q2_Q3(df_q2, df_Q3):
 # Definindo Valores
 total_cfs_fim_2024=5749
 total_cfs_q1_2025=980
+total_cfs_q2_2025=1063
 
 meta_anual = 20000
 meta_dentro_do_ano= 20000 - total_cfs_fim_2024
 total_cfs_quarter = data.shape[0]
 
-total_fidelizados = data.shape[0] + total_cfs_q1_2025 + total_cfs_fim_2024 # Ajustar este número 
+total_fidelizados = data.shape[0] + total_cfs_q1_2025 + total_cfs_q2_2025 + total_cfs_fim_2024 # Ajustar este número 
 total_cfs_2025 = (total_fidelizados - total_cfs_fim_2024)  # Total de clientes fidelizados em 2023
 
 # Calcular a diferença entre as semanas
@@ -716,7 +717,7 @@ fig_total.add_trace(go.Indicator(
 fig_total.add_trace(go.Indicator(
     mode="number+delta",
     value=total_cfs_quarter,
-    title={"text": f"<span style='color:#1B0A63;'>Total CFs no Q2 2025 <br><span style='font-size:0.9em;color:#19C78A'>Meta: {meta_cfs_tri:.0f} novos CFs no Q2 25</span>"},
+    title={"text": f"<span style='color:#1B0A63;'>Total CFs no Q3 2025 <br><span style='font-size:0.9em;color:#19C78A'>Meta: {meta_cfs_tri:.0f} novos CFs no Q3 25</span>"},
     domain={'row': 0, 'column': 2},
     number={"font": {"size": 70, "color": "#1B0A63"}},
     delta={'position': "bottom", 'increasing': {'color': 'green'}, 'decreasing': {'color': 'red'}}
@@ -800,16 +801,17 @@ def criar_grafico_trimestral(total_cfs_quarter):
 # Exemplo de uso na aba tab2
 total_cfs_quarter = {
     "Q1 24": 796,
-    "Q2 24": 531,
+    "Q3 24": 531,
     "Q3 24": 853,
     "Q4 24": 718,
     "Q1 25": 980,
-    "Q2 25": total_cfs_quarter
+    "Q2 25": 1063,
+    "Q3 25": total_cfs_quarter
 }
 
 # Tabs
 tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs(
-    ["Resumo",  "Resultados por Trimestre", "Resultados Q2 25", "CFs por Clube", "CFs por Parceiros", "CFs por Canal", "Valores Economizados", "Tabela Interativa"]
+    ["Resumo",  "Resultados por Trimestre", "Resultados Q3 25", "CFs por Clube", "CFs por Parceiros", "CFs por Canal", "Valores Economizados", "Tabela Interativa"]
 )
 
 with tab1:
@@ -871,6 +873,6 @@ with tab8:
     criar_tabela_interativa(data)
 
 
-#     st.header("Comparação de CFs entre Q2 e Trimestre")
+#     st.header("Comparação de CFs entre Q3 e Trimestre")
 #     comparacao_fig = criar_comparacao_q2_Q3(data_q2, data_Q3)
 #     st.plotly_chart(comparacao_fig, use_container_width=True)
