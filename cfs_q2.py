@@ -5,6 +5,7 @@ import numpy as np
 import streamlit as st
 import plotly.express as px
 import matplotlib.pyplot as plt
+
 #import seaborn as sns
 import plotly.graph_objects as go
 from st_aggrid import AgGrid, GridOptionsBuilder, AgGridTheme, DataReturnMode, GridUpdateMode
@@ -79,16 +80,27 @@ def fetch_data():
 
     df_fidelized_clients_by_survey = pd.DataFrame(data=fidelizedClientsData)
 
-    df_fidelized_clients_by_survey['Valor Economizado'] = df_fidelized_clients_by_survey['Valor Economizado'].str.replace('.', '', regex=False).str.replace(',', '.', regex=False)
+    def normalizar_valor(valor):
+        if isinstance(valor, str) and ',' in valor:
+            # Formato brasileiro
+            return float(valor.replace('.', '').replace(',', '.'))
+        try:
+            return float(valor)
+        except:
+            return 0
+        
+    df_fidelized_clients_by_survey['Valor Economizado'] = df_fidelized_clients_by_survey['Valor Economizado'].apply(normalizar_valor).round(2)
 
-    # Converter para float e tratar valores inválidos como NaN
-    df_fidelized_clients_by_survey['Valor Economizado'] = pd.to_numeric(df_fidelized_clients_by_survey['Valor Economizado'], errors='coerce')
+    # df_fidelized_clients_by_survey['Valor Economizado'] = df_fidelized_clients_by_survey['Valor Economizado'].str.replace('.', '', regex=False).str.replace(',', '.', regex=False)
 
-    # Preencher NaN com 0
-    df_fidelized_clients_by_survey['Valor Economizado'] = df_fidelized_clients_by_survey['Valor Economizado'].fillna(0)
+    # # Converter para float e tratar valores inválidos como NaN
+    # df_fidelized_clients_by_survey['Valor Economizado'] = pd.to_numeric(df_fidelized_clients_by_survey['Valor Economizado'], errors='coerce')
 
-    # Arredondar para duas casas decimais
-    df_fidelized_clients_by_survey['Valor Economizado'] = df_fidelized_clients_by_survey['Valor Economizado'].round(2)
+    # # Preencher NaN com 0
+    # df_fidelized_clients_by_survey['Valor Economizado'] = df_fidelized_clients_by_survey['Valor Economizado'].fillna(0)
+
+    # # Arredondar para duas casas decimais
+    # df_fidelized_clients_by_survey['Valor Economizado'] = df_fidelized_clients_by_survey['Valor Economizado'].round(2)
 
 
     return df_fidelized_clients_by_survey, time.time()
@@ -99,11 +111,7 @@ df_fidelized_clients_by_survey, last_updated = fetch_data()
 data = pd.DataFrame()
 data = pd.concat([data, df_fidelized_clients_by_survey])
 
-print('data.shape: ', data.shape)
-
 data['Data'] = pd.to_datetime(data['Data'], errors='coerce')
-
-print('data.columns: ', data['Pesquisa'])
 # Adequando valor dos dados no dataframe consolidado
 data['Canal'].loc[(data['Canal'] == 'email') & (data['Pesquisa'] != 'campanha-voucher-$400-part2---2025-clube-unimed-jp')& (data['Pesquisa'] != 'campanha-voucher-$400-part2---2025-clube-unimed-jp') & (data['Pesquisa'] != 'limone-')] = 'Drogarias'
 
@@ -134,8 +142,6 @@ data['Semana'] = data['Data'].apply(lambda x: calcular_semana_fiscal(x, start_da
 data_atual = datetime.now(local_tz).astimezone(utc_tz)
 data_max = data['Data'].max()
 
-print('data_max: ', data_max)
-
 if data_max < data_atual:
     additional_weeks = pd.date_range(start=data_max + timedelta(days=7), end=data_atual, freq='7D', tz=utc_tz)
     additional_data = pd.DataFrame({'Data': additional_weeks, 'Semana': additional_weeks.map(lambda x: calcular_semana_fiscal(x, start_date_quarter))})
@@ -159,8 +165,6 @@ agg_data['Total_Geral'] = agg_data['Total CFs'] + 7792  # Ajuste conforme necess
 
 # Adicionar coluna 'Data_Inicio_Semana'
 agg_data['Data_Inicio_Semana'] = agg_data['Semana'].apply(lambda x: start_date_quarter + timedelta(weeks=x-1))
-
-print(agg_data)
 
 # Verificar e converter 'Data_Inicio_Semana' para datetime
 agg_data['Data_Inicio_Semana'] = pd.to_datetime(agg_data['Data_Inicio_Semana'], errors='coerce')
@@ -234,14 +238,14 @@ fig.update_layout(
 
 
 # Criar a visualização para Número de Clientes por Parceiro
-parceiro_counts = data['Parceiro'].value_counts()
+parceiro_counts = data['Parceiro'].value_counts().nlargest(20)
 
 fig2 = go.Figure(data=[
     go.Bar(name='<b>Clientes por Parceiro</b>', x=parceiro_counts.index, y=parceiro_counts.values, marker_color='#19C78A', text=parceiro_counts.values, textposition='auto', textfont=dict(size=20, color='black', family='Roboto'))
 ])
 
 fig2.update_layout(
-    title={'text': 'CFs por Parceiro', 'x': 0.5, 'xanchor': 'center', 'font': {'size': 24, 'color': 'black', 'family': 'Roboto'}},
+    title={'text': 'CFs por Parceiro - Top 20', 'x': 0.6, 'xanchor': 'center', 'font': {'size': 24, 'color': 'black', 'family': 'Roboto'}},
     height=750,
     font=dict(size=25, color='black', family='Roboto'),
     plot_bgcolor='white',
@@ -296,7 +300,7 @@ fig3.update_layout(
 # Calcular a contagem de CFs por Clube
 clube_counts = data['Clube'].value_counts()
 
-top_clubes = clube_counts.nlargest(6)
+top_clubes = clube_counts.nlargest(5)
 
 colors = {
     'Clínica SiM': '#6A0DAD',  # Roxo vibrante
@@ -308,7 +312,7 @@ colors = {
 }
 
 # Garantir que todas as cores estejam na mesma lista
-final_colors = [colors.get(label, '#B0C4DE') for label in top_clubes.index]
+final_colors = px.colors.qualitative.Plotly[:len(top_clubes)]
 
 # Criar a visualização de pizza para CFs por Clube
 fig4 = go.Figure(data=[
@@ -327,11 +331,11 @@ fig4 = go.Figure(data=[
 
 fig4.update_layout(
     title={
-        'text': 'CFs por Clube',
-        'x': 0.5,
+        'text': 'CFs por Clube - Top 5',
+        'x': 0.58,
         'xanchor': 'center',
         'font': {
-            'size': 24,
+            'size': 20,
             'color': 'black',
             'family': 'Roboto'
         }
@@ -487,7 +491,9 @@ fig7.update_layout(
 
 # Filtrar os dados para cada nível de satisfação
 data_relevante = data_aux[data_aux['Satisfação'].isin(['Relevante'])]
-data_muito_relevante = data_aux[data_aux['Satisfação'].isin (['Muito Relevante', 'Muito relevante'])]
+data_muito_relevante = data_aux[data_aux['Satisfação'].isin (['Muito Relevante', 'Muito relevante', 'Muito_relevante'])]
+
+print(data_muito_relevante['Valor Economizado'].value_counts())
 
 estatisticas_relevante = data_relevante['Valor Economizado'].describe(percentiles=[.25, .5, .75]).to_dict()
 estatisticas_relevante['mean'] = data_relevante['Valor Economizado'].mean()
@@ -698,37 +704,39 @@ fig_total = go.Figure()
 fig_total.add_trace(go.Indicator(
     mode="number+delta",
     value=total_fidelizados,
-    title={"text": f"<span style='color:#1B0A63;'>Clientes Fidelizados</span> <br><span style='font-size:0.9em;color:#19C78A'>Meta: {meta_anual:.0f} CFs acumulados ao final de 2025</span>"},
+    title={"text": f"<span style='color:#1B0A63;'>Clientes Fidelizados</span> <br><span style='font-size:0.9em;color:#19C78A'>Meta: {meta_anual:.0f} CFs acumulados em 2025</span>"},
     domain={'row': 0, 'column': 0},
     number={"font": {"size": 70, "color": "#1B0A63"}, "valueformat": "d"},
     delta={'position': "bottom", 'increasing': {'color': 'green'}, 'decreasing': {'color': 'red'}}
 ))
+
+
+
+# Adicionar total CFs Trimestre
+fig_total.add_trace(go.Indicator(
+    mode="number+delta",
+    value=total_cfs_quarter,
+    title={"text": f"<span style='color:#1B0A63;'>Total CFs no Q3 2025 <br><span style='font-size:0.9em;color:#19C78A'>{comparacao_trimestre_anterior:.2f}% vs. Q2</span>"},
+    domain={'row': 0, 'column': 2},
+    number={"font": {"size": 70, "color": "#1B0A63"}},
+    delta={'position': "bottom", 'increasing': {'color': 'green'}, 'decreasing': {'color': 'red'}}
+))
+
+fig_total.add_trace(go.Indicator(
+    mode="number+delta",
+    value=total_cfs_2025,
+    title={"text": f"<span style='color:#1B0A63;'>Total CFs em 2025</span><br> <span style='font-size:0.9em;color:#19C78A'>Meta Q3: {meta_cfs_tri:.0f} novos CFs</span>"},
+    domain={'row': 0, 'column': 3},
+    number={"font": {"size": 70, "color": "#1B0A63"}},
+    delta={'position': "bottom", 'increasing': {'color': 'green'}, 'decreasing': {'color': 'red'}}
+))
+
 
 fig_total.add_trace(go.Indicator(
     mode="number+delta",
     value=faltam_para_meta,
     title={"text": f"<span style='color:#1B0A63;'>Restam para a Meta Anual <br><span style='font-size:0.9em;color:#19C78A'>Meta: {meta_dentro_do_ano:.0f} novos CFs em 2025</span>"},
     domain={'row': 0, 'column': 1},
-    number={"font": {"size": 70, "color": "#1B0A63"}},
-    delta={'position': "bottom", 'increasing': {'color': 'green'}, 'decreasing': {'color': 'red'}}
-))
-
-# Adicionar total CFs Trimestre
-fig_total.add_trace(go.Indicator(
-    mode="number+delta",
-    value=total_cfs_quarter,
-    title={"text": f"<span style='color:#1B0A63;'>Total CFs no Q3 2025 <br><span style='font-size:0.9em;color:#19C78A'>Meta: {meta_cfs_tri:.0f} novos CFs no Q3 25</span>"},
-    domain={'row': 0, 'column': 2},
-    number={"font": {"size": 70, "color": "#1B0A63"}},
-    delta={'position': "bottom", 'increasing': {'color': 'green'}, 'decreasing': {'color': 'red'}}
-))
-
-# Adicionar total de clientes fidelizados em 2024
-fig_total.add_trace(go.Indicator(
-    mode="number+delta",
-    value=total_cfs_2025,
-    title={"text": f"<span style='color:#1B0A63;'>Total CFs em 2025</span><br> <span style='font-size:0.9em;color:#19C78A'>{comparacao_trimestre_anterior:.2f}% vs. Q1</span>"},
-    domain={'row': 0, 'column': 3},
     number={"font": {"size": 70, "color": "#1B0A63"}},
     delta={'position': "bottom", 'increasing': {'color': 'green'}, 'decreasing': {'color': 'red'}}
 ))
@@ -766,8 +774,12 @@ def criar_grafico_trimestral(total_cfs_quarter):
         y=resultados,
         name="Resultados",
         marker_color="#3AB78B",
-        text=resultados,
-        textposition="outside"
+        text=[f"<b>{v}</b>" for v in resultados],
+        textposition="inside",
+        insidetextfont=dict(
+            size=16,
+            color="black"
+        )
     ))
 
     # Adicionar linha de meta
@@ -790,7 +802,7 @@ def criar_grafico_trimestral(total_cfs_quarter):
         legend=dict(
             orientation="h",
             yanchor="bottom",
-            y=1.02,
+            y=1.03,
             xanchor="center",
             x=0.5
         )
