@@ -137,7 +137,7 @@ def calcular_semana_fiscal(data, start_date):
     delta = data - start_date
     return delta.days // 7 + 1
 
-start_date_quarter = datetime(2025, 7, 1, tzinfo=local_tz)
+start_date_quarter = datetime(2025, 7, 4, tzinfo=local_tz)
 data['Data'] = pd.to_datetime(data['Data']).dt.tz_localize(local_tz).dt.tz_convert(utc_tz)
 data['Semana'] = data['Data'].apply(lambda x: calcular_semana_fiscal(x, start_date_quarter))
 data_atual = datetime.now(local_tz).astimezone(utc_tz)
