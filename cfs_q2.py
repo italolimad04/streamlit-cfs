@@ -127,6 +127,7 @@ data['Clube'].loc[data['Clube'] == 'Club de Vantagens | Sócio Vozão'] = 'Sóci
 data['Clube'].loc[data['Clube'] == 'MOV Fibra'] = 'Mov Telecom'
 data['Clube'].loc[data['Clube'] == 'Clube O Povo'] = 'O Povo'
 data['Satisfação'].loc[data['Satisfação'] == 'Muito relevante'] = 'Muito Relevante'
+data['Satisfação'].loc[data['Satisfação'] == 'Muito_relevante'] = 'Muito Relevante'
 
 local_tz = timezone('America/Sao_Paulo')  # Ajuste conforme necessário
 utc_tz = timezone('UTC')
