@@ -718,7 +718,7 @@ fig_total.add_trace(go.Indicator(
 fig_total.add_trace(go.Indicator(
     mode="number+delta",
     value=total_cfs_quarter,
-    title={"text": f"<span style='color:#1B0A63;'>Total CFs no Q3 2025 <br><span style='font-size:0.9em;color:#19C78A'>{percentual_meta:.2f}% vs. Q2</span>"},
+    title={"text": f"<span style='color:#1B0A63;'>Total CFs no Q3 2025 <br><span style='font-size:0.9em;color:#19C78A'>{percentual_meta:.2f}% da meta</span>"},
     domain={'row': 0, 'column': 2},
     number={"font": {"size": 70, "color": "#1B0A63"}},
     delta={'position': "bottom", 'increasing': {'color': 'green'}, 'decreasing': {'color': 'red'}}
