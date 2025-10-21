@@ -36,7 +36,7 @@ import time
 # Opções
 st.set_page_config(layout="wide")
 
-st.title("Painel de Clientes Fidelizados no Q3 2025")
+st.title("Painel de Clientes Fidelizados no Q4 2025")
 
 load_dotenv()
 
@@ -68,8 +68,8 @@ TTL = 500
 def invalidate_cache():
   fetch_data.clear()
 
-firstDayOfQuarter = '2025-07-01'
-lastDayOfQuarter = '2025-10-01'
+firstDayOfQuarter = '2025-10-01'
+lastDayOfQuarter = '2026-01-01'
 
 @st.cache_data(ttl=TTL) 
 def fetch_data():
@@ -137,7 +137,7 @@ def calcular_semana_fiscal(data, start_date):
     delta = data - start_date
     return delta.days // 7 + 1
 
-start_date_quarter = datetime(2025, 7, 4, tzinfo=local_tz)
+start_date_quarter = datetime(2025, 10, 3, tzinfo=local_tz)
 data['Data'] = pd.to_datetime(data['Data']).dt.tz_localize(local_tz).dt.tz_convert(utc_tz)
 data['Semana'] = data['Data'].apply(lambda x: calcular_semana_fiscal(x, start_date_quarter))
 data_atual = datetime.now(local_tz).astimezone(utc_tz)
@@ -161,8 +161,8 @@ agg_data['Novos CFs'] = agg_data['Novos CFs'].astype(int)
 
 # Adicionar colunas adicionais
 agg_data['Total CFs'] = agg_data['Novos CFs'].cumsum()
-agg_data['Meta Trimestre'] = 1500
-agg_data['Total_Geral'] = agg_data['Total CFs'] + 7792  # Ajuste conforme necessário (CFs acumulado)
+agg_data['Meta Trimestre'] = 2300
+agg_data['Total_Geral'] = agg_data['Total CFs'] + 9712  # Ajuste conforme necessário (CFs acumulado)
 
 # Adicionar coluna 'Data_Inicio_Semana'
 agg_data['Data_Inicio_Semana'] = agg_data['Semana'].apply(lambda x: start_date_quarter + timedelta(weeks=x-1))
@@ -207,7 +207,7 @@ data['Parceiro'] = data['Parceiro'].str.strip().str.title()
 
 # Calcular o número total de CFs
 total_cfs = data.shape[0]
-meta_cfs_tri = 1500
+meta_cfs_tri = 2300
 
 # Criar a visualização
 fig = go.Figure(data=[
@@ -632,7 +632,7 @@ def criar_comparacao_q2_Q3(df_q2, df_Q3):
         x=df_q2['Semana'],
         y=df_q2['Total CFs'],
         mode='lines+markers+text',
-        name='CFs Q3',
+        name='CFs Q4',
         line=dict(color='#19C78A'),
         marker=dict(color='#19C78A'),
         text=df_q2['Novos CFs'],
@@ -651,7 +651,7 @@ def criar_comparacao_q2_Q3(df_q2, df_Q3):
     ))
 
     fig.update_layout(
-        title='CFs Q3 X Trimestre por Semana',
+        title='CFs Q4 X Trimestre por Semana',
         xaxis_title='Semana',
         yaxis_title='Número de CFs',
         height=600,
@@ -674,12 +674,13 @@ def criar_comparacao_q2_Q3(df_q2, df_Q3):
 total_cfs_fim_2024=5749
 total_cfs_q1_2025=980
 total_cfs_q2_2025=1063
+total_cfs_q3_2025=1920
 
 meta_anual = 20000
 meta_dentro_do_ano= 20000 - total_cfs_fim_2024
 total_cfs_quarter = data.shape[0]
 
-total_fidelizados = data.shape[0] + total_cfs_q1_2025 + total_cfs_q2_2025 + total_cfs_fim_2024 # Ajustar este número 
+total_fidelizados = data.shape[0] + total_cfs_q1_2025 + total_cfs_q2_2025 + total_cfs_q3_2025 + total_cfs_fim_2024 # Ajustar este número 
 total_cfs_2025 = (total_fidelizados - total_cfs_fim_2024)  # Total de clientes fidelizados em 2023
 
 # Calcular a diferença entre as semanas
@@ -718,7 +719,7 @@ fig_total.add_trace(go.Indicator(
 fig_total.add_trace(go.Indicator(
     mode="number+delta",
     value=total_cfs_quarter,
-    title={"text": f"<span style='color:#1B0A63;'>Total CFs no Q3 2025 <br><span style='font-size:0.9em;color:#19C78A'>{percentual_meta:.2f}% da meta</span>"},
+    title={"text": f"<span style='color:#1B0A63;'>Total CFs no Q4 2025 <br><span style='font-size:0.9em;color:#19C78A'>{percentual_meta:.2f}% da meta</span>"},
     domain={'row': 0, 'column': 2},
     number={"font": {"size": 70, "color": "#1B0A63"}},
     delta={'position': "bottom", 'increasing': {'color': 'green'}, 'decreasing': {'color': 'red'}}
@@ -727,7 +728,7 @@ fig_total.add_trace(go.Indicator(
 fig_total.add_trace(go.Indicator(
     mode="number+delta",
     value=total_cfs_2025,
-    title={"text": f"<span style='color:#1B0A63;'>Total CFs em 2025</span><br> <span style='font-size:0.9em;color:#19C78A'>Meta Q3: {meta_cfs_tri:.0f} novos CFs</span>"},
+    title={"text": f"<span style='color:#1B0A63;'>Total CFs em 2025</span><br> <span style='font-size:0.9em;color:#19C78A'>Meta Q4: {meta_cfs_tri:.0f} novos CFs</span>"},
     domain={'row': 0, 'column': 3},
     number={"font": {"size": 70, "color": "#1B0A63"}},
     delta={'position': "bottom", 'increasing': {'color': 'green'}, 'decreasing': {'color': 'red'}}
@@ -815,17 +816,18 @@ def criar_grafico_trimestral(total_cfs_quarter):
 # Exemplo de uso na aba tab2
 total_cfs_quarter = {
     "Q1 24": 796,
-    "Q3 24": 531,
+    "Q2 24": 531,
     "Q3 24": 853,
     "Q4 24": 718,
     "Q1 25": 980,
     "Q2 25": 1063,
-    "Q3 25": total_cfs_quarter
+    "Q3 25": 1920,
+    "Q4 25": total_cfs_quarter
 }
 
 # Tabs
 tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs(
-    ["Resumo",  "Resultados por Trimestre", "Resultados Q3 25", "CFs por Clube", "CFs por Parceiros", "CFs por Canal", "Valores Economizados", "Tabela Interativa"]
+    ["Resumo",  "Resultados por Trimestre", "Resultados Q4 25", "CFs por Clube", "CFs por Parceiros", "CFs por Canal", "Valores Economizados", "Tabela Interativa"]
 )
 
 with tab1:
