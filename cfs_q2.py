@@ -73,6 +73,8 @@ lastDayOfQuarter = '2026-01-01'
 
 @st.cache_data(ttl=TTL) 
 def fetch_data():
+    print('firstDayOfQuarter: ', firstDayOfQuarter)
+    print('lastDayOfQuarter: ', lastDayOfQuarter)
     response = requests.get(url=f"https://new-api.urbis.cc/communication/fidelized-clients-by-quarter?initialDate={firstDayOfQuarter}&finalDate={lastDayOfQuarter}").json()
     fidelizedClientsData = response['data']['fidelizedClientsData']
 
@@ -679,6 +681,7 @@ total_cfs_q3_2025=1920
 meta_anual = 20000
 meta_dentro_do_ano= 20000 - total_cfs_fim_2024
 total_cfs_quarter = data.shape[0]
+print("Total CFs Quarter:", total_cfs_quarter)
 
 total_fidelizados = data.shape[0] + total_cfs_q1_2025 + total_cfs_q2_2025 + total_cfs_q3_2025 + total_cfs_fim_2024 # Ajustar este número 
 total_cfs_2025 = (total_fidelizados - total_cfs_fim_2024)  # Total de clientes fidelizados em 2023
