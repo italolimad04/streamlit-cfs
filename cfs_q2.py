@@ -395,7 +395,6 @@ fig4.update_layout(
     ),
     yaxis=dict(
         title='Clube',
-        titlefont=dict(size=16),
         tickfont=dict(size=13),
         automargin=True
     ),
