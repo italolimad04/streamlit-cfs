@@ -300,62 +300,115 @@ fig3.update_layout(
     paper_bgcolor='white'
 )
 
-# Calcular a contagem de CFs por Clube
+# # Calcular a contagem de CFs por Clube
+# clube_counts = data['Clube'].value_counts()
+
+# top_clubes = clube_counts.nlargest(5)
+
+# colors = {
+#     'Clínica SiM': '#6A0DAD',  # Roxo vibrante
+#     'Sócio Vozão': '#333333',  # Preto suave
+#     'Mov Telecom': '#FFD700',  # Amarelo dourado
+#     'O Povo': '#FF4500',       # Laranja vibrante
+#     'Clube Odontoart': '#1E90FF',  # Azul forte
+#     'Tigrão de Vantagens': '#FF6347'  # Vermelho suave
+# }
+
+# # Garantir que todas as cores estejam na mesma lista
+# final_colors = px.colors.qualitative.Plotly[:len(top_clubes)]
+
+# # Criar a visualização de pizza para CFs por Clube
+# fig4 = go.Figure(data=[
+#     go.Pie(
+#         labels=top_clubes.index,
+#         values=top_clubes.values,
+#         textinfo='label+percent',
+#         insidetextorientation='radial',
+#         hoverinfo='label+value+percent',
+#         marker=dict(
+#             colors=final_colors,
+#             line=dict(color='#FFFFFF', width=1)
+#         )
+#     )
+# ])
+
+# fig4.update_layout(
+#     title={
+#         'text': 'CFs por Clube - Top 5',
+#         'x': 0.58,
+#         'xanchor': 'center',
+#         'font': {
+#             'size': 20,
+#             'color': 'black',
+#             'family': 'Roboto'
+#         }
+#     },
+#     font=dict(size=12, color='black', family='Roboto'),
+#     paper_bgcolor='white',
+#     margin=dict(t=100, b=100, l=50, r=50),  # Ajustando as margens
+#     showlegend=True,
+#     legend=dict(
+#         font=dict(size=14),
+#         orientation="h",
+#         yanchor="bottom",
+#         y=-0.4,  # Diminuindo para dar espaço ao gráfico
+#         xanchor="center",
+#         x=0.5
+#     )
+# )
+
+
+# Calcular quantidade de CFs por Clube
 clube_counts = data['Clube'].value_counts()
 
-top_clubes = clube_counts.nlargest(5)
+# Exibir top 20 (ou ajuste conforme necessário)
+top_n = 20
+top_clubes = clube_counts.nlargest(top_n)
 
-colors = {
-    'Clínica SiM': '#6A0DAD',  # Roxo vibrante
-    'Sócio Vozão': '#333333',  # Preto suave
-    'Mov Telecom': '#FFD700',  # Amarelo dourado
-    'O Povo': '#FF4500',       # Laranja vibrante
-    'Clube Odontoart': '#1E90FF',  # Azul forte
-    'Tigrão de Vantagens': '#FF6347'  # Vermelho suave
-}
+# Gráfico de Barras Horizontais
+fig4 = go.Figure()
 
-# Garantir que todas as cores estejam na mesma lista
-final_colors = px.colors.qualitative.Plotly[:len(top_clubes)]
-
-# Criar a visualização de pizza para CFs por Clube
-fig4 = go.Figure(data=[
-    go.Pie(
-        labels=top_clubes.index,
-        values=top_clubes.values,
-        textinfo='label+percent',
-        insidetextorientation='radial',
-        hoverinfo='label+value+percent',
-        marker=dict(
-            colors=final_colors,
-            line=dict(color='#FFFFFF', width=1)
-        )
-    )
-])
+fig4.add_trace(go.Bar(
+    x=top_clubes.values,
+    y=top_clubes.index,
+    orientation='h',
+    text=top_clubes.values,
+    textposition='auto',
+    marker=dict(
+        color=px.colors.qualitative.Plotly,
+        line=dict(color='white', width=1)
+    ),
+    hovertemplate='<b>%{y}</b><br>CFs: %{x}<extra></extra>'
+))
 
 fig4.update_layout(
-    title={
-        'text': 'CFs por Clube - Top 5',
-        'x': 0.58,
-        'xanchor': 'center',
-        'font': {
-            'size': 20,
-            'color': 'black',
-            'family': 'Roboto'
-        }
-    },
-    font=dict(size=12, color='black', family='Roboto'),
+    title=dict(
+        text=f'CFs por Clube - Top {top_n}',
+        x=0.5,
+        xanchor='center',
+        font=dict(size=22, family='Roboto', color='black')
+    ),
+    xaxis=dict(
+        title='Quantidade de CFs',
+        titlefont=dict(size=16),
+        tickfont=dict(size=14),
+        gridcolor='rgba(200,200,200,0.3)'
+    ),
+    yaxis=dict(
+        title='Clube',
+        titlefont=dict(size=16),
+        tickfont=dict(size=13),
+        automargin=True
+    ),
+    font=dict(size=13, family='Roboto'),
+    height=800,
     paper_bgcolor='white',
-    margin=dict(t=100, b=100, l=50, r=50),  # Ajustando as margens
-    showlegend=True,
-    legend=dict(
-        font=dict(size=14),
-        orientation="h",
-        yanchor="bottom",
-        y=-0.4,  # Diminuindo para dar espaço ao gráfico
-        xanchor="center",
-        x=0.5
-    )
+    plot_bgcolor='white',
+    margin=dict(t=80, b=40, l=160, r=40),
 )
+
+# Reverte a ordem para barras maiores ficarem no topo
+fig4.update_yaxes(autorange="reversed")
 
 # Criar a visualização
 fig5 = go.Figure()
