@@ -390,7 +390,6 @@ fig4.update_layout(
     ),
     xaxis=dict(
         title='Quantidade de CFs',
-        titlefont=dict(size=16),
         tickfont=dict(size=14),
         gridcolor='rgba(200,200,200,0.3)'
     ),
