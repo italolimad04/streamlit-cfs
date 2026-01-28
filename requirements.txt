@@ -11,3 +11,4 @@ pandas
 numpy
 python-dotenv
 pytz
+altair==4.2.2
