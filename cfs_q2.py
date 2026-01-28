@@ -29,10 +29,26 @@ utc_tz = timezone("UTC")
 
 TTL = 500
 
+# =========================
+# DATA FETCH
+# =========================
+@st.cache_data(ttl=TTL)
+def fetch_data(first_day: str, last_day: str) -> Tuple[pd.DataFrame, float]:
+    response = requests.get(
+        url=(
+            "https://new-api.urbis.cc/communication/fidelized-clients-by-quarter"
+            f"?initialDate={first_day}&finalDate={last_day}"
+        )
+    ).json()
+
+    fidelizedClientsData = response["data"]["fidelizedClientsData"]
+    df = pd.DataFrame(data=fidelizedClientsData)
+    df = clean_data(df)
+    return df, time.time()
+
 
 def invalidate_cache():
     fetch_data.clear()
-
 
 # =========================
 # CONSTANTES (MANTER PADRÃO ATUAL)
@@ -45,8 +61,8 @@ total_cfs_q3_2025 = 1920
 total_cfs_q4_2025 = 2416
 total_cfs_fim_2025 = 12128
 
-meta_anual = 20000
-meta_dentro_do_ano = 20000 - total_cfs_fim_2025
+meta_anual = 50000
+meta_dentro_do_ano = 50000 - total_cfs_fim_2025
 
 
 # =========================
@@ -253,23 +269,6 @@ with st.sidebar:
 firstDayOfRange = str(initialDate)
 lastDayOfRange = str(finalDate)
 
-# =========================
-# DATA FETCH
-# =========================
-@st.cache_data(ttl=TTL)
-def fetch_data(first_day: str, last_day: str) -> Tuple[pd.DataFrame, float]:
-    response = requests.get(
-        url=(
-            "https://new-api.urbis.cc/communication/fidelized-clients-by-quarter"
-            f"?initialDate={first_day}&finalDate={last_day}"
-        )
-    ).json()
-
-    fidelizedClientsData = response["data"]["fidelizedClientsData"]
-    df = pd.DataFrame(data=fidelizedClientsData)
-    df = clean_data(df)
-    return df, time.time()
-
 
 df_fidelized_clients_by_survey, last_updated = fetch_data(firstDayOfRange, lastDayOfRange)
 
@@ -388,7 +387,7 @@ agg_data["Semana"] = agg_data["Semana"].astype(int)
 agg_data["Novos CFs"] = agg_data["Novos CFs"].astype(int)
 agg_data["Total CFs"] = agg_data["Novos CFs"].cumsum()
 
-meta_cfs_tri = 2300
+meta_cfs_tri = 5000
 agg_data["Meta Trimestre"] = meta_cfs_tri
 
 agg_data["Data_Inicio_Semana"] = agg_data["Semana"].apply(
@@ -434,7 +433,7 @@ fig_total = go.Figure()
 fig_total.add_trace(go.Indicator(
     mode="number+delta",
     value=total_fidelizados,
-    title={"text": f"<span style='color:#1B0A63;'>Clientes Fidelizados</span> <br><span style='font-size:0.9em;color:#19C78A'>Meta: {meta_anual:.0f} CFs</span>"},
+    title={"text": f"<span style='color:#1B0A63;'>Clientes Fidelizados</span> <br><span style='font-size:0.9em;color:#19C78A'>Meta 2026: {meta_anual:.0f} CFs</span>"},
     domain={'row': 0, 'column': 0},
     number={"font": {"size": 70, "color": "#1B0A63"}, "valueformat": "d"},
     delta={'position': "bottom", 'increasing': {'color': 'green'}, 'decreasing': {'color': 'red'}}
@@ -443,7 +442,7 @@ fig_total.add_trace(go.Indicator(
 fig_total.add_trace(go.Indicator(
     mode="number+delta",
     value=faltam_para_meta,
-    title={"text": f"<span style='color:#1B0A63;'>Restam para a Meta Anual</span> <br><span style='font-size:0.9em;color:#19C78A'>Meta dentro do ano: {meta_dentro_do_ano:.0f}</span>"},
+    title={"text": f"<span style='color:#1B0A63;'>Restam para a Meta Anual</span> "},
     domain={'row': 0, 'column': 1},
     number={"font": {"size": 70, "color": "#1B0A63"}},
     delta={'position': "bottom", 'increasing': {'color': 'green'}, 'decreasing': {'color': 'red'}}
@@ -452,7 +451,7 @@ fig_total.add_trace(go.Indicator(
 fig_total.add_trace(go.Indicator(
     mode="number+delta",
     value=total_cfs_quarter_current,
-    title={"text": f"<span style='color:#1B0A63;'>Total CFs no Trimestre Atual ({focus_label})</span> <br><span style='font-size:0.9em;color:#19C78A'>{percentual_meta_tri:.2f}% da meta do tri</span>"},
+    title={"text": f"<span style='color:#1B0A63;'>Total CFs no Trimestre Atual ({focus_label})</span> <br><span style='font-size:0.9em;color:#19C78A'>Meta: 5000. {percentual_meta_tri:.2f}% atingido </span>"},
     domain={'row': 0, 'column': 2},
     number={"font": {"size": 70, "color": "#1B0A63"}},
     delta={'position': "bottom", 'increasing': {'color': 'green'}, 'decreasing': {'color': 'red'}}
@@ -461,7 +460,7 @@ fig_total.add_trace(go.Indicator(
 fig_total.add_trace(go.Indicator(
     mode="number+delta",
     value=total_cfs_2026,
-    title={"text": f"<span style='color:#1B0A63;'>Total CFs em 2026</span><br><span style='font-size:0.9em;color:#19C78A'>Baseline fixo (fim 2025)</span>"},
+    title={"text": f"<span style='color:#1B0A63;'>Total CFs em 2026</span>"},
     domain={'row': 0, 'column': 3},
     number={"font": {"size": 70, "color": "#1B0A63"}},
     delta={'position': "bottom", 'increasing': {'color': 'green'}, 'decreasing': {'color': 'red'}}
@@ -470,7 +469,7 @@ fig_total.add_trace(go.Indicator(
 fig_total.add_trace(go.Indicator(
     mode="number",
     value=int(resultados_semana_anterior),
-    title={"text": "<span style='color:#1B0A63;'>Novos CFs (Semana anterior)</span>"},
+    title={"text": "<span style='color:#1B0A63;'>Novos CFs (última semana)</span>"},
     domain={'row': 0, 'column': 4},
     number={"font": {"size": 70, "color": "#1B0A63"}}
 ))
