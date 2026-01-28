@@ -255,7 +255,7 @@ with st.sidebar:
     initialDate = st.date_input("Data inicial", value=default_start)
     finalDate = st.date_input("Data final", value=default_end)
 
-    st.divider()
+    st.markdown("---")
     st.subheader("Trimestre em foco (automático)")
     st.caption("Sempre usa o **trimestre atual** com base no horário local.")
 
@@ -782,7 +782,7 @@ with tab2:
 
 with tab3:
     render_export_focus_csv(data_focus_quarter, key_suffix="tab3")
-    st.divider()
+    st.markdown("---")
     col1, col2 = st.columns(2)
     with col1:
         st.plotly_chart(fig, use_container_width=True)
@@ -791,22 +791,22 @@ with tab3:
 
 with tab4:
     render_export_focus_csv(data_focus_quarter, key_suffix="tab4")
-    st.divider()
+    st.markdown("---")
     st.plotly_chart(fig4, use_container_width=True)
 
 with tab5:
     render_export_focus_csv(data_focus_quarter, key_suffix="tab5")
-    st.divider()
+    st.markdown("---")
     st.plotly_chart(fig2, use_container_width=True)
 
 with tab6:
     render_export_focus_csv(data_focus_quarter, key_suffix="tab6")
-    st.divider()
+    st.markdown("---")
     st.plotly_chart(fig3, use_container_width=True)
 
 with tab8:
     render_export_focus_csv(data_focus_quarter, key_suffix="tab8")
-    st.divider()
+    st.markdown("---")
     criar_tabela_interativa(
         data_focus_quarter,
         export_file_name=f"clientes_fidelizados_filtrado_{focus_label.replace(' ', '_')}.csv",
