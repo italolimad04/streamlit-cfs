@@ -673,6 +673,185 @@ for trace in fig5.data:
     elif trace.name == "Novos CFs":
         trace.textposition = "outside"
 
+def criar_histograma(df):
+    bins = [0, 20, 50, 150, 400, float('inf')]
+    labels = ['Até 20 reais', 'Entre 20 e 50 reais', 'Entre 50 e 150 reais', 'Entre 150 e 400 reais', 'Mais de 400 reais']
+    df['Faixa de Valor'] = pd.cut(df['Valor Economizado'], bins=bins, labels=labels, include_lowest=True)
+
+    hist_data = df['Faixa de Valor'].value_counts().reset_index()
+    hist_data.columns = ['Faixa de Valor', 'Contagem']
+    hist_data = hist_data.sort_values(by='Contagem', ascending=False)
+
+    fig = px.bar(
+        hist_data,
+        x='Faixa de Valor',
+        y='Contagem',
+        title='Valores Economizados por Faixa',
+        labels={'Faixa de Valor': 'Faixa de Valor Economizado (R$)', 'Contagem': 'Quantidade'},
+        text='Contagem',
+        template='plotly_white'
+    )
+    
+    fig.update_layout(
+        height=600,
+        font=dict(size=14, family='Roboto', color='black'),
+        xaxis=dict(
+            title=dict(text='<b>Faixa de Valor Economizado (R$)</b>', font=dict(size=18, family='Roboto', color='black')),
+            tickfont=dict(size=14, family='Roboto', color='black')
+        ),
+        yaxis=dict(
+            title=dict(text='<b>Contagem</b>', font=dict(size=18, family='Roboto', color='black')),
+            tickfont=dict(size=14, family='Roboto', color='black')
+        )
+    )
+    
+    fig.update_traces(
+        textposition='outside',
+        texttemplate='<b>%{text}</b>',
+        textfont=dict(size=18, family='Roboto', color='black')
+    )
+    
+    return fig
+
+# Copiar os dados
+data_aux = data_focus_quarter.copy()
+
+# Remover pontos (separador de milhares) e substituir vírgulas por pontos (separador decimal)
+# data_aux['Valor Economizado'] = data_aux['Valor Economizado'].apply(lambda x: str(x).replace('.', ''))
+# data_aux['Valor Economizado'] = data_aux['Valor Economizado'].apply(lambda x: str(x).replace(',', '.'))
+
+# # Converter valores não convertíveis para NaN
+# data_aux['Valor Economizado'] = pd.to_numeric(data_aux['Valor Economizado'], errors='coerce')
+
+# Filtrar valores diferentes de 0.00 (opcional, dependendo da lógica desejada)
+
+# Converter a coluna para float
+#data_aux['Valor Economizado'] = data_aux['Valor Economizado'].astype(float)
+
+data_aux = data_aux[data_aux['Valor Economizado'] != 0.00]
+
+# Verificar se há dados após o processamento
+#if data_aux.empty:
+    #logger.warning("Nenhum dado disponível após o processamento.")
+
+
+fig6 = px.scatter(
+    data_frame=data_aux,
+    x='Satisfação',
+    y='Valor Economizado',
+    color='Satisfação',
+    title='Distribuição dos Valores Economizados e Nível de Satisfação',
+    labels={
+        'Valor Economizado': 'Valor Economizado (R$)',
+        'Satisfação': 'Nível de Satisfação'
+    },
+    template='plotly_white'
+)
+
+# Atualizar layout do gráfico
+fig6.update_layout(
+    height=600,
+    xaxis_title='Nível de Satisfação',
+    yaxis_title='Valor Economizado (R$)',
+    legend_title='Nível de Satisfação',
+    margin=dict(l=40, r=40, t=60, b=40)
+)
+
+# Criar o gráfico de violino para a distribuição dos valores economizados por nível de satisfação
+fig7 = px.violin(
+    data_frame=data_aux,
+    y='Valor Economizado',
+    x='Satisfação',
+    color='Satisfação',
+    box=True,  # Adicionar box plot dentro do gráfico de violino
+    points="all",  # Mostrar todos os pontos
+    title='Distribuição dos Valores Economizados por Nível de Satisfação',
+    labels={
+        'Valor Economizado': 'Valor Economizado (R$)',
+        'Satisfação': 'Nível de Satisfação'
+    },
+    template='plotly_white'
+)
+
+# Atualizar layout do gráfico
+fig7.update_layout(
+    height=600,
+    xaxis_title='Nível de Satisfação',
+    yaxis_title='Valor Economizado (R$)',
+    legend_title='Nível de Satisfação',
+    margin=dict(l=40, r=40, t=60, b=40)
+)
+
+
+# Filtrar os dados para cada nível de satisfação
+data_relevante = data_aux[data_aux['Satisfação'].isin(['Relevante'])]
+data_muito_relevante = data_aux[data_aux['Satisfação'].isin (['Muito Relevante', 'Muito relevante', 'Muito_relevante'])]
+
+print(data_muito_relevante['Valor Economizado'].value_counts())
+
+estatisticas_relevante = data_relevante['Valor Economizado'].describe(percentiles=[.25, .5, .75]).to_dict()
+estatisticas_relevante['mean'] = data_relevante['Valor Economizado'].mean()
+estatisticas_relevante['count'] = data_relevante['Valor Economizado'].count()
+
+estatisticas_muito_relevante = data_muito_relevante['Valor Economizado'].describe(percentiles=[.25, .5, .75]).to_dict()
+estatisticas_muito_relevante['mean'] = data_muito_relevante['Valor Economizado'].mean()
+estatisticas_muito_relevante['count'] = data_muito_relevante['Valor Economizado'].count()
+
+# Criar gráficos de violino
+fig_relevante = px.violin(
+    data_frame=data_relevante,
+    y='Valor Economizado',
+    x='Satisfação',
+    color='Satisfação',
+    box=True,
+    points="all",
+    title='Valores Economizados X Relevância',
+    labels={
+        'Valor Economizado': 'Valor Economizado (R$)',
+        'Satisfação': 'Nível de Satisfação'
+    },
+    template='plotly_white'
+)
+
+fig_muito_relevante = px.violin(
+    data_frame=data_muito_relevante,
+    y='Valor Economizado',
+    x='Satisfação',
+    color='Satisfação',
+    box=True,
+    points="all",
+    title='Valores Economizados X Relevância',
+    labels={
+        'Valor Economizado': 'Valor Economizado (R$)',
+        'Satisfação': 'Nível de Satisfação'
+    },
+    template='plotly_white',
+    color_discrete_map={'Muito Relevante': '#19C78A'}
+)
+
+# Ajustar layout e fontes dos gráficos
+def ajustar_layout(fig):
+    fig.update_layout(
+        height=600,
+        width=800,
+        xaxis_title_font=dict(size=18, family='Roboto'),
+        yaxis_title_font=dict(size=18, family='Roboto'),
+        title_font=dict(size=22, family='Roboto'),
+        legend_font=dict(size=16, family='Roboto'),
+        margin=dict(l=40, r=40, t=60, b=40)
+    )
+    fig.update_yaxes(rangemode="tozero")  # Ajustar o eixo y para iniciar em zero
+    fig.update_traces(marker=dict(size=10), selector=dict(type='violin'))
+
+
+fig_relevante.update_yaxes(range=[0, data_relevante['Valor Economizado'].max() * 1.1])  # Ajustar o eixo y para iniciar em zero
+fig_muito_relevante.update_yaxes(range=[0, data_muito_relevante['Valor Economizado'].max() * 1.1])
+
+ajustar_layout(fig_relevante)
+ajustar_layout(fig_muito_relevante)
+
+#data['Valor Economizado'] = data['Valor Economizado'].str.replace(',', '.').astype(float).round(2)
+
 # =========================
 # FUNÇÕES (tabela interativa + export CSV)
 # =========================
@@ -822,6 +1001,31 @@ with tab6:
     render_export_focus_csv(data_focus_quarter, key_suffix="tab6")
     st.markdown("---")
     st.plotly_chart(fig3, use_container_width=True)
+
+with tab7:
+   col1, col2, col3 = st.columns(3)
+   with col1:
+    st.plotly_chart(fig_relevante, use_container_width=True)
+    st.subheader('Estatísticas - Relevante')
+    st.write(f"Quantidade de respostas: {estatisticas_relevante['count']}")
+    st.write(f"Valor Mínimo: R$ {estatisticas_relevante['min']:.2f}")
+    st.write(f"Quartil 1: R$ {estatisticas_relevante['25%']:.2f}")
+    st.write(f"Mediana: R$ {estatisticas_relevante['50%']:.2f}")
+    st.write(f"Quartil 3: R$ {estatisticas_relevante['75%']:.2f}")
+    st.write(f"Valor Máximo: R$ {estatisticas_relevante['max']:.2f}")
+    st.write(f"Média: R$ {estatisticas_relevante['mean']:.2f}")
+   with col2:
+    st.plotly_chart(fig_muito_relevante, use_container_width=True)
+    st.subheader('Estatísticas - Muito Relevante')
+    st.write(f"Quantidade de respostas: {estatisticas_muito_relevante['count']}")
+    st.write(f"Valor Mínimo: R$ {estatisticas_muito_relevante['min']:.2f}")
+    st.write(f"Quartil 1: R$ {estatisticas_muito_relevante['25%']:.2f}")
+    st.write(f"Mediana: R$ {estatisticas_muito_relevante['50%']:.2f}")
+    st.write(f"Quartil 3: R$ {estatisticas_muito_relevante['75%']:.2f}")
+    st.write(f"Valor Máximo: R$ {estatisticas_muito_relevante['max']:.2f}")
+    st.write(f"Média: R$ {estatisticas_muito_relevante['mean']:.2f}")    
+   with col3:
+    st.plotly_chart(criar_histograma(data_focus_quarter), use_container_width=True) 
 
 with tab8:
     render_export_focus_csv(data_focus_quarter, key_suffix="tab8")
