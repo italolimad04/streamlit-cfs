@@ -569,36 +569,55 @@ fig3.update_layout(
 )
 
 # fig4 (Clube top 20) — trimestre atual
-clube_counts = data_focus_quarter["Clube"].value_counts() if "Clube" in data_focus_quarter.columns else pd.Series(dtype=int)
+clube_counts = (
+    data_focus_quarter["Clube"].value_counts()
+    if "Clube" in data_focus_quarter.columns
+    else pd.Series(dtype=int)
+)
+
 top_n = 20
 top_clubes = clube_counts.nlargest(top_n)
+
+# --- detecta outlier pra não "amassar" barras
+vals = top_clubes.values.astype(float)
+max_v = float(vals.max()) if len(vals) else 0.0
+p90 = float(np.percentile(vals, 90)) if len(vals) >= 2 else max_v
+usar_log = (p90 > 0) and (max_v / p90 >= 4)  # ajuste fino: 4x o p90
 
 fig4 = go.Figure()
 fig4.add_trace(go.Bar(
     x=top_clubes.values,
     y=top_clubes.index,
-    orientation='h',
+    orientation="h",
     text=top_clubes.values,
-    textposition='auto',
-    marker=dict(color=px.colors.qualitative.Plotly, line=dict(color='white', width=1)),
-    hovertemplate='<b>%{y}</b><br>CFs: %{x}<extra></extra>'
+    textposition="outside",     # fora pra não sumir em barras pequenas
+    cliponaxis=False,           # evita cortar texto na borda
+    marker=dict(color=px.colors.qualitative.Plotly, line=dict(color="white", width=1)),
+    hovertemplate="<b>%{y}</b><br>CFs: %{x}<extra></extra>",
 ))
 
 fig4.update_layout(
     title=dict(
-        text=f'CFs por Clube - Top {top_n} ({focus_label})',
+        text=f"CFs por Clube - Top {top_n} ({focus_label})",
         x=0.5,
-        xanchor='center',
-        font=dict(size=22, family='Roboto', color='black')
+        xanchor="center",
+        font=dict(size=22, family="Roboto", color="black"),
     ),
-    xaxis=dict(title='Quantidade de CFs', tickfont=dict(size=14), gridcolor='rgba(200,200,200,0.3)'),
-    yaxis=dict(title='Clube', tickfont=dict(size=13), automargin=True),
-    font=dict(size=13, family='Roboto'),
+    xaxis=dict(
+        title="Quantidade de CFs",
+        tickfont=dict(size=14),
+        gridcolor="rgba(200,200,200,0.3)",
+        type="log" if usar_log else "linear",
+        rangemode="tozero",
+    ),
+    yaxis=dict(title="Clube", tickfont=dict(size=13), automargin=True),
+    font=dict(size=13, family="Roboto"),
     height=800,
-    paper_bgcolor='white',
-    plot_bgcolor='white',
-    margin=dict(t=80, b=40, l=160, r=40),
+    paper_bgcolor="white",
+    plot_bgcolor="white",
+    margin=dict(t=80, b=40, l=200, r=40),  # mais espaço pros nomes
 )
+
 fig4.update_yaxes(autorange="reversed")
 
 # fig5 (Novos vs Total) — trimestre atual
