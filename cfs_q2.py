@@ -247,21 +247,39 @@ st.title("Painel de Clientes Fidelizados - Dashboard Geral")
 
 with st.sidebar:
     st.subheader("Parâmetros")
-    st.caption("O endpoint retornará todos os dados dentro do intervalo informado.")
+    st.caption("Intervalo de busca na API.")
 
     default_start = datetime(2024, 1, 1).date()
     default_end = (datetime.now(local_tz).date() + timedelta(days=1))
 
-    initialDate = st.date_input("Data inicial", value=default_start)
-    finalDate = st.date_input("Data final", value=default_end)
+    col_d1, col_d2 = st.columns(2)
+    with col_d1:
+        initialDate = st.date_input("Início", value=default_start)
+    with col_d2:
+        finalDate = st.date_input("Fim", value=default_end)
 
     st.markdown("---")
-    st.subheader("Trimestre em foco (automático)")
-    st.caption("Sempre usa o **trimestre atual** com base no horário local.")
+    st.subheader("Trimestre em foco")
 
     now_local = datetime.now(local_tz)
-    focus_year, focus_quarter = get_current_quarter_local(now_local)
-    st.write(f"**Trimestre atual:** Q{focus_quarter} {str(focus_year)[-2:]}")
+    _current_year, _current_q = get_current_quarter_local(now_local)
+
+    # Gera lista de trimestres de Q1 24 até o trimestre atual
+    _quarters_options = []
+    _y, _q = 2024, 1
+    while (_y, _q) <= (_current_year, _current_q):
+        _quarters_options.append(f"Q{_q} {str(_y)[-2:]}")
+        _q += 1
+        if _q > 4:
+            _q = 1
+            _y += 1
+
+    selected_q_label = st.selectbox(
+        "Selecione o trimestre",
+        options=_quarters_options,
+        index=len(_quarters_options) - 1,  # padrão = trimestre atual
+    )
+    focus_year, focus_quarter = parse_quarter_label(selected_q_label)
 
     if st.button("🔄 Recarregar dados"):
         invalidate_cache()
@@ -298,15 +316,6 @@ focus_label = f"Q{focus_quarter} {str(focus_year)[-2:]}"
 total_cfs_quarter_current = int(data_focus_quarter.shape[0])
 print("Total CFs Quarter:", total_cfs_quarter_current)
 
-# === RECORTES CORRETOS (para não duplicar baseline) ===
-now_local = datetime.now(local_tz)
-focus_year, focus_quarter = get_current_quarter_local(now_local)
-
-q_start_utc, q_end_utc = quarter_start_end_utc(focus_year, focus_quarter)
-data_focus_quarter = data_non_null[
-    (data_non_null["Data"] >= q_start_utc) & (data_non_null["Data"] < q_end_utc)
-].copy()
-
 # Ano atual (YTD) em UTC usando bordas do horário LOCAL
 year_start_utc = local_tz.localize(datetime(focus_year, 1, 1)).astimezone(utc_tz)
 year_end_utc = local_tz.localize(datetime(focus_year + 1, 1, 1)).astimezone(utc_tz)
@@ -330,8 +339,8 @@ total_fidelizados = (
 
 total_cfs_2026 = (total_fidelizados - total_cfs_fim_2025)
 
-# Dicionário oficial de trimestres (baseline + atual)
-total_cfs_quarter: Dict[str, int] = {
+# Dicionário oficial de trimestres (baseline histórico fixo + trimestre selecionado dinâmico)
+_baseline_cfs: Dict[str, int] = {
     "Q1 24": 796,
     "Q2 24": 531,
     "Q3 24": 853,
@@ -340,8 +349,8 @@ total_cfs_quarter: Dict[str, int] = {
     "Q2 25": 1063,
     "Q3 25": 1920,
     "Q4 25": 2416,
-    "Q1 26": total_cfs_quarter_current,  # mantém seu padrão atual (se quiser trocar dinamicamente por focus_label, me diga)
 }
+total_cfs_quarter: Dict[str, int] = {**_baseline_cfs, focus_label: total_cfs_quarter_current}
 
 # Ordenação correta
 quarter_labels_sorted = sorted(list(total_cfs_quarter.keys()), key=parse_quarter_label)
@@ -860,6 +869,11 @@ def dataframe_to_csv_bytes(df: pd.DataFrame) -> bytes:
 
 
 def criar_tabela_interativa(df: pd.DataFrame, export_file_name: str, key_suffix: str) -> None:
+    df = df.copy()
+    # Converte colunas datetime com timezone para string — ag-Grid não serializa datetimetz
+    for col in df.select_dtypes(include=["datetimetz"]).columns:
+        df[col] = df[col].dt.strftime("%Y-%m-%d %H:%M:%S")
+
     gb = GridOptionsBuilder.from_dataframe(df)
     gb.configure_default_column(filterable=True, sortable=True, editable=False, resizable=True)
     gb.configure_pagination(paginationAutoPageSize=False, paginationPageSize=20)
